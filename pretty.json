@@ -1,0 +1,179 @@
+[
+    {
+        "id": 2751006,
+        "displayName": "ModMenu v1.7.2+build.110 for 1.14.4",
+        "fileName": "modmenu-1.7.2+build.110.jar",
+        "fileDate": "2019-07-29T19:20:32.353Z",
+        "fileLength": 101650,
+        "releaseType": 1,
+        "fileStatus": 4,
+        "downloadUrl": "https://edge.forgecdn.net/files/2751/6/modmenu-1.7.2+build.110.jar",
+        "isAlternate": false,
+        "alternateFileId": 0,
+        "dependencies": [
+            {
+                "addonId": 306612,
+                "type": 1
+            }
+        ],
+        "isAvailable": true,
+        "modules": [
+            {
+                "foldername": "LICENSE",
+                "fingerprint": 3043761048
+            },
+            {
+                "foldername": "assets",
+                "fingerprint": 3389001222
+            },
+            {
+                "foldername": "fabric.mod.json",
+                "fingerprint": 1135009143
+            },
+            {
+                "foldername": "mixins.modmenu.json",
+                "fingerprint": 434864052
+            },
+            {
+                "foldername": "modmenu-refmap.json",
+                "fingerprint": 3427381348
+            },
+            {
+                "foldername": "META-INF",
+                "fingerprint": 1676236134
+            },
+            {
+                "foldername": "io",
+                "fingerprint": 2875240540
+            }
+        ],
+        "packageFingerprint": 218867948,
+        "gameVersion": [
+            "1.14.4",
+            "Fabric"
+        ],
+        "installMetadata": null,
+        "serverPackFileId": null,
+        "hasInstallScript": false,
+        "gameVersionDateReleased": "2019-07-19T00:00:00Z",
+        "gameVersionFlavor": null
+    },
+    {
+        "id": 2764289,
+        "displayName": "ModMenu v1.7.8+build.117 for 1.14.4",
+        "fileName": "modmenu-1.7.8+build.117.jar",
+        "fileDate": "2019-08-17T23:06:20.08Z",
+        "fileLength": 107822,
+        "releaseType": 1,
+        "fileStatus": 4,
+        "downloadUrl": "https://edge.forgecdn.net/files/2764/289/modmenu-1.7.8+build.117.jar",
+        "isAlternate": false,
+        "alternateFileId": 0,
+        "dependencies": [
+            {
+                "addonId": 306612,
+                "type": 1
+            }
+        ],
+        "isAvailable": true,
+        "modules": [
+            {
+                "foldername": "LICENSE",
+                "fingerprint": 3043761048
+            },
+            {
+                "foldername": "assets",
+                "fingerprint": 1986112602
+            },
+            {
+                "foldername": "fabric.mod.json",
+                "fingerprint": 3715183743
+            },
+            {
+                "foldername": "mixins.modmenu.json",
+                "fingerprint": 3806621186
+            },
+            {
+                "foldername": "modmenu-refmap.json",
+                "fingerprint": 1859892188
+            },
+            {
+                "foldername": "META-INF",
+                "fingerprint": 1676236134
+            },
+            {
+                "foldername": "io",
+                "fingerprint": 2284833858
+            }
+        ],
+        "packageFingerprint": 506861754,
+        "gameVersion": [
+            "1.14.4",
+            "Fabric"
+        ],
+        "installMetadata": null,
+        "serverPackFileId": null,
+        "hasInstallScript": false,
+        "gameVersionDateReleased": "2019-07-19T00:00:00Z",
+        "gameVersionFlavor": null
+    },
+    {
+        "id": 2781129,
+        "displayName": "ModMenu v1.7.11+build.121 for 1.14.4",
+        "fileName": "modmenu-1.7.11+build.121.jar",
+        "fileDate": "2019-09-08T17:03:42.323Z",
+        "fileLength": 109337,
+        "releaseType": 1,
+        "fileStatus": 4,
+        "downloadUrl": "https://edge.forgecdn.net/files/2781/129/modmenu-1.7.11+build.121.jar",
+        "isAlternate": false,
+        "alternateFileId": 0,
+        "dependencies": [
+            {
+                "addonId": 306612,
+                "type": 1
+            }
+        ],
+        "isAvailable": true,
+        "modules": [
+            {
+                "foldername": "LICENSE",
+                "fingerprint": 3043761048
+            },
+            {
+                "foldername": "assets",
+                "fingerprint": 813316115
+            },
+            {
+                "foldername": "fabric.mod.json",
+                "fingerprint": 1910311959
+            },
+            {
+                "foldername": "mixins.modmenu.json",
+                "fingerprint": 228766295
+            },
+            {
+                "foldername": "modmenu.refmap.json",
+                "fingerprint": 1859892188
+            },
+            {
+                "foldername": "META-INF",
+                "fingerprint": 3298323684
+            },
+            {
+                "foldername": "io",
+                "fingerprint": 2916896788
+            }
+        ],
+        "packageFingerprint": 2845308761,
+        "gameVersion": [
+            "1.14.4",
+            "Fabric"
+        ],
+        "installMetadata": null,
+        "serverPackFileId": null,
+        "hasInstallScript": false,
+        "gameVersionDateReleased": "2019-07-19T00:00:00Z",
+        "gameVersionFlavor": null
+    }
+]
