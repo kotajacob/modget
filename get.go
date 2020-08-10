@@ -10,10 +10,8 @@ import (
  * official API documentation
  */
 
-func GetAddonFiles(id int) []byte {
+func get(url string) []byte {
 	client := &http.Client{}
-
-	url := "https://addons-ecs.forgesvc.net/api/v2/addon/" + fmt.Sprintf("%d", id) + "/files"
 	req, _ := http.NewRequest("GET", url, nil)
 
 	resp, err := client.Do(req)
@@ -24,4 +22,14 @@ func GetAddonFiles(id int) []byte {
 	check(err)
 
 	return respBody
+}
+
+func GetAddonInfo(id int) []byte {
+	url := "https://addons-ecs.forgesvc.net/api/v2/addon/" + fmt.Sprintf("%d", id)
+	return get(url)
+}
+
+func GetAddonFiles(id int) []byte {
+	url := "https://addons-ecs.forgesvc.net/api/v2/addon/" + fmt.Sprintf("%d", id) + "/files"
+	return get(url)
 }
