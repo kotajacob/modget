@@ -16,5 +16,6 @@ func main() {
 	/* read the first argument as modid */
 	modid, err := strconv.Atoi(os.Args[1])
 	check(err)
+	ParseAddonInfo(GetAddonInfo(modid))
 	ParseAddonFiles(GetAddonFiles(modid))
 }
