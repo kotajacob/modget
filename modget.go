@@ -1,7 +1,10 @@
 /* modget Copyright (C) 2020 Dakota Walsh */
 package main
 
-import ()
+import (
+	"os"
+	"strconv"
+)
 
 func check(e error) {
 	if e != nil {
@@ -10,5 +13,7 @@ func check(e error) {
 }
 
 func main() {
-	parse(get(308702))
+	modid, err := strconv.Atoi(os.Args[1])
+	check(err)
+	parse(get(modid))
 }
