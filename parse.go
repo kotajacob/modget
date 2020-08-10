@@ -3,12 +3,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"strconv"
 )
-
-type Files struct {
-	Files []File
-}
 
 type File struct {
 	Id                      int          `json:"id"`
@@ -43,13 +39,15 @@ type Module struct {
 	Fingerprint int    `json:"fingerprint"`
 }
 
-func parse() {
-	b, err := ioutil.ReadFile("pretty.json")
+func parse(b []byte) {
+	var files []File
+
+	err := json.Unmarshal(b, &files)
 	check(err)
 
-	var files Files
-	err = json.Unmarshal(b, &files)
-	check(err)
-
-	fmt.Println(files)
+	for i := 0; i < len(files); i++ {
+		fmt.Println("File ID: " + strconv.Itoa(files[i].Id))
+		fmt.Println("Filename: " + files[i].FileName)
+		fmt.Println("")
+	}
 }

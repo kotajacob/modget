@@ -1,9 +1,7 @@
 /* modget Copyright (C) 2020 Dakota Walsh */
 package main
 
-import (
-	"fmt"
-)
+import ()
 
 func check(e error) {
 	if e != nil {
@@ -12,5 +10,5 @@ func check(e error) {
 }
 
 func main() {
-	fmt.Println(get(310806))
+	parse(get(308702))
 }

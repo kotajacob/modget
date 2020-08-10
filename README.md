@@ -24,3 +24,5 @@ search?!?!?!?
 https://twitchappapi.docs.apiary.io/#/reference/0/twitch-addon-search
 
 https://twitchappapi.docs.apiary.io
+
+https://tutorialedge.net/golang/parsing-json-with-golang/

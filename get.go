@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func get(id int) string {
+func get(id int) []byte {
 	client := &http.Client{}
 
 	url := "https://addons-ecs.forgesvc.net/api/v2/addon/" + fmt.Sprintf("%d", id) + "/files"
@@ -18,5 +18,5 @@ func get(id int) string {
 	defer resp.Body.Close()
 	resp_body, _ := ioutil.ReadAll(resp.Body)
 
-	return string(resp_body)
+	return resp_body
 }
