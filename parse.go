@@ -39,7 +39,7 @@ type Module struct {
 	Fingerprint int    `json:"fingerprint"`
 }
 
-func parse(b []byte) {
+func ParseAddonFiles(b []byte) {
 	var files []File
 
 	err := json.Unmarshal(b, &files)
