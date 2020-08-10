@@ -47,6 +47,9 @@ func ParseAddonFiles(b []byte) {
 
 	for i := 0; i < len(files); i++ {
 		fmt.Println("File ID: " + strconv.Itoa(files[i].Id))
+		for ii := 0; ii < len(files[i].GameVersion); ii++ {
+			fmt.Println("Game Version: " + files[i].GameVersion[ii])
+		}
 		fmt.Println("Filename: " + files[i].FileName)
 		fmt.Println("URL: " + files[i].DownloadUrl)
 		fmt.Println("")
