@@ -56,7 +56,7 @@ or by using modget's search command. This is used instead of names when
 installing and removing mods as multiple mods could technically share the same
 name.
 
-# author
+## author
 
 Maintained by Dakota Walsh <kota at nilsu.org>.
 Up-to-date sources can be found at https://git.sr.ht/~kota/modget/
