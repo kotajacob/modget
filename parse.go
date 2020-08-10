@@ -48,6 +48,7 @@ func parse(b []byte) {
 	for i := 0; i < len(files); i++ {
 		fmt.Println("File ID: " + strconv.Itoa(files[i].Id))
 		fmt.Println("Filename: " + files[i].FileName)
+		fmt.Println("URL: " + files[i].DownloadUrl)
 		fmt.Println("")
 	}
 }
