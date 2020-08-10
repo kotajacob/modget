@@ -6,6 +6,10 @@ import (
 	"net/http"
 )
 
+/* https://twitchappapi.docs.apiary.io
+ * official API documentation
+ */
+
 func GetAddonFiles(id int) []byte {
 	client := &http.Client{}
 

@@ -56,8 +56,9 @@ or by using modget's search command. This is used instead of names when
 installing and removing mods as multiple mods could technically share the same
 name.
 
-## author
+## resources
 
-Maintained by Dakota Walsh <kota at nilsu.org>.
-Up-to-date sources can be found at https://git.sr.ht/~kota/modget/
-https://twitchappapi.docs.apiary.io
+[Send patches](https://git-send-email.io) and questions to
+[~kota/modget@lists.sr.ht](https://lists.sr.ht/~kota/modget).
+
+Bugs & todo here: [~kota/modget](https://todo.sr.ht/~kota/modget)
