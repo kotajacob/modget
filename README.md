@@ -34,10 +34,10 @@ modget requires the following build dependencies:
 
 ## commands
 
-- `add, install <MODID>`
+- `add <MODID>`
 	- Download and install a mod based on its MODID.
 
-- `del, remove, uninstall <MODID>`
+- `del <MODID>`
 	- Remove and uninstall a mod based on its MODID.
 
 - `update <MODID>`
@@ -48,6 +48,25 @@ modget requires the following build dependencies:
 
 - `search <Search String>`
 	- Search curseforge for mods based on search terms. Prints mod names, MODID, Version, and a short description.
+
+## add command options
+
+- `-mc <MINECRAFT VERSION>`
+	- Limit install for a specific minecraft version.
+- `-v <VERSION>`
+	- Limit install to a specific mod version.
+- `-l <LOADER>`
+	- Limit install to a specific mod loader.
+
+## del command options
+
+- `-auto-remove`
+	- Search for uneeded dependency mods and remove them.
+
+## update command options
+
+- `-mc <MINECRAFT VERSION>`
+	- Update to a different minecraft version.
 
 ## MODID
 
