@@ -1,6 +1,9 @@
 # modget
 
-A package manager for minecraft curseforge mods.
+Modget is a package manager for minecraft curseforge mods. It provides commands
+for searching, managing, and querying information about mods. Currently it is
+unreleased and in an early development state. The below commands are slowly
+being implemented.
 
 ## install
 
@@ -17,20 +20,6 @@ modget requires the following build dependencies:
 ## uninstall
 
 1. `sudo make uninstall`
-
-## options
-
-- `-h, --help`
-	- Show help message and quit.
-
-- `--version`
-	- Show the version and quit.
-
-- `-d, --dir`
-	- Specify an install directory to work in instead of the current working directory.
-
-- `-y, --yes`
-	- Answer yes to any prompts automatically.
 
 ## commands
 
