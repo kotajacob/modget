@@ -7,7 +7,7 @@ include config.mk
 all: clean build
 
 build:
-	go build
+	go build -ldflags "-X main.Version=$(VERSION)"
 	scdoc < modget.1.scd | sed "s/VERSION/$(VERSION)/g" > modget.1
 
 clean:
