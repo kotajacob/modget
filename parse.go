@@ -122,7 +122,7 @@ type Module struct {
 	Fingerprint int    `json:"fingerprint"`
 }
 
-func ParseAddonInfo(b []byte) {
+func parseAddonInfo(b []byte) {
 	var addon Addon
 
 	err := json.Unmarshal(b, &addon)
@@ -134,7 +134,7 @@ func ParseAddonInfo(b []byte) {
 	fmt.Printf("Downloads: %f\n", addon.DownloadCount)
 }
 
-func ParseAddonFiles(b []byte) {
+func parseAddonFiles(b []byte) {
 	var files []File
 
 	err := json.Unmarshal(b, &files)

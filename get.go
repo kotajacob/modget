@@ -24,12 +24,12 @@ func get(url string) []byte {
 	return respBody
 }
 
-func GetAddonInfo(id int) []byte {
+func getAddonInfo(id int) []byte {
 	url := "https://addons-ecs.forgesvc.net/api/v2/addon/" + fmt.Sprintf("%d", id)
 	return get(url)
 }
 
-func GetAddonFiles(id int) []byte {
+func getAddonFiles(id int) []byte {
 	url := "https://addons-ecs.forgesvc.net/api/v2/addon/" + fmt.Sprintf("%d", id) + "/files"
 	return get(url)
 }

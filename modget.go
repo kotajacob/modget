@@ -35,8 +35,8 @@ func add(mods []string, mc string, loader string) {
 	fmt.Println("  loader: ", loader)
 	modid, err := strconv.Atoi(mods[0])
 	check(err)
-	ParseAddonInfo(GetAddonInfo(modid))
-	ParseAddonFiles(GetAddonFiles(modid))
+	parseAddonInfo(getAddonInfo(modid))
+	parseAddonFiles(getAddonFiles(modid))
 }
 
 func main() {
