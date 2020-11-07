@@ -26,8 +26,6 @@ func help() {
 	fmt.Printf("\tupdate - Check each installed mod and prompt to install any new mods.\n")
 	fmt.Printf("\tshow - Query and print more information about a specific mod by MODID.\n")
 	fmt.Printf("\tsearch - Search curseforge for mods based on search terms.\n")
-
-	os.Exit(1)
 }
 
 func add(mods []string, mc string, loader string) {
@@ -50,8 +48,10 @@ func main() {
 
 	updateCmd := flag.NewFlagSet("update", flag.ExitOnError)
 
+	// Print help if no subcommand specified.
 	if len(os.Args) < 2 {
 		help()
+		os.Exit(0)
 	}
 
 	switch os.Args[1] {
@@ -77,14 +77,12 @@ func main() {
 		fmt.Println("  tail:", updateCmd.Args())
 	case "help":
 		help()
+		os.Exit(0)
 	case "version":
 		fmt.Printf("modget " + Version + "\n")
 	default:
 		fmt.Printf("unknown subcommand\n\n")
 		help()
+		os.Exit(1)
 	}
-
-	/* read the first argument as modid */
-	// ParseAddonInfo(GetAddonInfo(modid))
-	// ParseAddonFiles(GetAddonFiles(modid))
 }
