@@ -1,4 +1,4 @@
-package main
+package curse
 
 import (
 	"encoding/json"
@@ -120,7 +120,7 @@ type Module struct {
 	Fingerprint int    `json:"fingerprint"`
 }
 
-func parseAddonInfo(b []byte) Addon {
+func ParseAddonInfo(b []byte) Addon {
 	var addon Addon
 
 	err := json.Unmarshal(b, &addon)
@@ -128,7 +128,7 @@ func parseAddonInfo(b []byte) Addon {
 	return addon
 }
 
-func parseAddonFileInformation(b []byte) File {
+func ParseAddonFileInformation(b []byte) File {
 	var file File
 
 	err := json.Unmarshal(b, &file)
@@ -136,11 +136,11 @@ func parseAddonFileInformation(b []byte) File {
 	return file
 }
 
-func parseAddonFileDownloadURL(b []byte) string {
+func ParseAddonFileDownloadURL(b []byte) string {
 	return string(b)
 }
 
-func parseAddonFiles(b []byte) []File {
+func ParseAddonFiles(b []byte) []File {
 	var files []File
 
 	err := json.Unmarshal(b, &files)

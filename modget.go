@@ -5,6 +5,8 @@ import (
 	"flag"
 	"fmt"
 	"os"
+
+	"git.sr.ht/~kota/modget/commands"
 )
 
 var Version string
@@ -49,7 +51,7 @@ func main() {
 		fmt.Println("subcommand 'add'")
 		mods := addCmd.Args()
 		if len(mods) > 0 {
-			add(mods, *addMc, *addLoader)
+			commands.Add(mods, *addMc, *addLoader)
 		} else {
 			fmt.Println("add subcommand requires at least one mod")
 		}

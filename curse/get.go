@@ -1,4 +1,4 @@
-package main
+package curse
 
 import (
 	"fmt"
@@ -11,6 +11,12 @@ import (
 /* https://twitchappapi.docs.apiary.io
  * official API documentation
  */
+
+func check(e error) {
+	if e != nil {
+		panic(e)
+	}
+}
 
 func get(url string) []byte {
 	client := &http.Client{}
@@ -26,7 +32,7 @@ func get(url string) []byte {
 	return respBody
 }
 
-func store(url, filename string) {
+func Download(url, filename string) {
 	response, err := http.Get(url)
 	check(err)
 	defer response.Body.Close()
@@ -39,22 +45,22 @@ func store(url, filename string) {
 	check(err)
 }
 
-func getAddonInfo(modId int) []byte {
+func GetAddonInfo(modId int) []byte {
 	url := "https://addons-ecs.forgesvc.net/api/v2/addon/" + fmt.Sprintf("%d", modId)
 	return get(url)
 }
 
-func getAddonFileInformation(modId, fileId int) []byte {
+func GetAddonFileInformation(modId, fileId int) []byte {
 	url := "https://addons-ecs.forgesvc.net/api/v2/addon/" + fmt.Sprintf("%d", modId) + "/file/" + fmt.Sprintf("%d", fileId)
 	return get(url)
 }
 
-func getAddonFileDownloadURL(modId, fileId int) []byte {
+func GetAddonFileDownloadURL(modId, fileId int) []byte {
 	url := "https://addons-ecs.forgesvc.net/api/v2/addon/" + fmt.Sprintf("%d", modId) + "/file/" + fmt.Sprintf("%d", fileId) + "/download-url"
 	return get(url)
 }
 
-func getAddonFiles(modId int) []byte {
+func GetAddonFiles(modId int) []byte {
 	url := "https://addons-ecs.forgesvc.net/api/v2/addon/" + fmt.Sprintf("%d", modId) + "/files"
 	return get(url)
 }
