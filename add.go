@@ -6,20 +6,16 @@ import (
 )
 
 func add(mods []string, mc string, loader string) {
-	// fmt.Println("  tail:", mods)
-	// fmt.Println("  mc: ", mc)
-	// fmt.Println("  loader: ", loader)
-
-	/* Currently we only handle the first MODID in the list.
-	 * Additionally there is no error checking about if it is a valid MODID.
-	 */
+	// There is no error checking about if it is a valid MODID.
 	if mc == "" && loader == "" {
-		addDefaultFile(mods)
+		for i := 0; i < len(mods); i++ {
+			addDefaultFile(mods[i])
+		}
 	}
 }
 
-func addDefaultFile(mods []string) {
-	modid, err := strconv.Atoi(mods[0])
+func addDefaultFile(mod string) {
+	modid, err := strconv.Atoi(mod)
 	check(err)
 
 	addon := parseAddonInfo(getAddonInfo(modid))
