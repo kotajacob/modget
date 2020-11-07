@@ -2,8 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
-	"strconv"
 )
 
 type Addon struct {
@@ -122,32 +120,30 @@ type Module struct {
 	Fingerprint int    `json:"fingerprint"`
 }
 
-func parseAddonInfo(b []byte) {
+func parseAddonInfo(b []byte) Addon {
 	var addon Addon
 
 	err := json.Unmarshal(b, &addon)
 	check(err)
-
-	fmt.Println("Addon Name: " + addon.Name)
-	fmt.Println("Addon Summary: " + addon.Summary)
-	fmt.Printf("Popularity: %f\n", addon.PopularityScore)
-	fmt.Printf("Downloads: %f\n", addon.DownloadCount)
+	return addon
 }
 
-func parseAddonFiles(b []byte) {
+func parseAddonFileInformation(b []byte) File {
+	var file File
+
+	err := json.Unmarshal(b, &file)
+	check(err)
+	return file
+}
+
+func parseAddonFileDownloadURL(b []byte) string {
+	return string(b)
+}
+
+func parseAddonFiles(b []byte) []File {
 	var files []File
 
 	err := json.Unmarshal(b, &files)
 	check(err)
-
-	for i := 0; i < len(files); i++ {
-		fmt.Println("File ID: " + strconv.Itoa(files[i].Id))
-		fmt.Println("File Date: " + files[i].FileDate)
-		fmt.Println("File Name: " + files[i].FileName)
-		for ii := 0; ii < len(files[i].GameVersion); ii++ {
-			fmt.Println("Game Version: " + files[i].GameVersion[ii])
-		}
-		fmt.Println("URL: " + files[i].DownloadUrl)
-		fmt.Println("")
-	}
+	return files
 }

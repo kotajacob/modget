@@ -5,7 +5,6 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"strconv"
 )
 
 var Version string
@@ -26,17 +25,6 @@ func help() {
 	fmt.Printf("\tupdate - Check each installed mod and prompt to install any new mods.\n")
 	fmt.Printf("\tshow - Query and print more information about a specific mod by MODID.\n")
 	fmt.Printf("\tsearch - Search curseforge for mods based on search terms.\n")
-}
-
-func add(mods []string, mc string, loader string) {
-	// DEBUG //
-	fmt.Println("  tail:", mods)
-	fmt.Println("  mc: ", mc)
-	fmt.Println("  loader: ", loader)
-	modid, err := strconv.Atoi(mods[0])
-	check(err)
-	parseAddonInfo(getAddonInfo(modid))
-	parseAddonFiles(getAddonFiles(modid))
 }
 
 func main() {
