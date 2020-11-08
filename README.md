@@ -9,7 +9,7 @@ being implemented.
 
 modget requires the following build dependencies:
 
-- `golang`
+- `golang >= 1.13`
 - `scdoc`
 - `make`
 
