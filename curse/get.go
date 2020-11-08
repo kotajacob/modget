@@ -12,55 +12,60 @@ import (
  * official API documentation
  */
 
-func check(e error) {
-	if e != nil {
-		panic(e)
-	}
-}
-
-func get(url string) []byte {
+func get(url string) ([]byte, error) {
 	client := &http.Client{}
 	req, _ := http.NewRequest("GET", url, nil)
 
 	resp, err := client.Do(req)
-	check(err)
+	if err != nil {
+		return nil, err
+	}
 
 	defer resp.Body.Close()
 	respBody, err := ioutil.ReadAll(resp.Body)
-	check(err)
+	if err != nil {
+		return nil, err
+	}
 
-	return respBody
+	return respBody, nil
 }
 
-func Download(url, filename string) {
+func Download(url, filename string) error {
 	response, err := http.Get(url)
-	check(err)
+	if err != nil {
+		return err
+	}
 	defer response.Body.Close()
 
 	file, err := os.Create(filename)
-	check(err)
+	if err != nil {
+		return err
+	}
 	defer file.Close()
 
 	_, err = io.Copy(file, response.Body)
-	check(err)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
-func GetAddonInfo(modId int) []byte {
+func GetAddon(modId int) ([]byte, error) {
 	url := "https://addons-ecs.forgesvc.net/api/v2/addon/" + fmt.Sprintf("%d", modId)
 	return get(url)
 }
 
-func GetAddonFileInformation(modId, fileId int) []byte {
+func GetAddonFileInformation(modId, fileId int) ([]byte, error) {
 	url := "https://addons-ecs.forgesvc.net/api/v2/addon/" + fmt.Sprintf("%d", modId) + "/file/" + fmt.Sprintf("%d", fileId)
 	return get(url)
 }
 
-func GetAddonFileDownloadURL(modId, fileId int) []byte {
+func GetAddonFileDownloadURL(modId, fileId int) ([]byte, error) {
 	url := "https://addons-ecs.forgesvc.net/api/v2/addon/" + fmt.Sprintf("%d", modId) + "/file/" + fmt.Sprintf("%d", fileId) + "/download-url"
 	return get(url)
 }
 
-func GetAddonFiles(modId int) []byte {
+func GetAddonFiles(modId int) ([]byte, error) {
 	url := "https://addons-ecs.forgesvc.net/api/v2/addon/" + fmt.Sprintf("%d", modId) + "/files"
 	return get(url)
 }

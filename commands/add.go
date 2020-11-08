@@ -30,11 +30,25 @@ func addDefaultFile(mod string) error {
 		return err
 	}
 
-	addon := curse.ParseAddonInfo(curse.GetAddonInfo(modid))
+	response, err := curse.GetAddon(modid)
+	if err != nil {
+		return err
+	}
+	addon, err := curse.ParseAddon(response)
+	if err != nil {
+		return err
+	}
 	fmt.Println("Addon Name: " + addon.Name)
 	fmt.Printf("Default File ID: %v\n", addon.DefaultFileId)
 
-	file := curse.ParseAddonFileInformation(curse.GetAddonFileInformation(modid, addon.DefaultFileId))
+	response, err = curse.GetAddonFileInformation(modid, addon.DefaultFileId)
+	if err != nil {
+		return err
+	}
+	file, err := curse.ParseAddonFileInformation(response)
+	if err != nil {
+		return err
+	}
 	fmt.Println("File Date: " + file.FileDate)
 	fmt.Println("File Name: " + file.FileName)
 	for i := 0; i < len(file.GameVersion); i++ {

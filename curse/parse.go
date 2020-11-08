@@ -120,30 +120,27 @@ type Module struct {
 	Fingerprint int    `json:"fingerprint"`
 }
 
-func ParseAddonInfo(b []byte) Addon {
+func ParseAddon(b []byte) (Addon, error) {
 	var addon Addon
 
 	err := json.Unmarshal(b, &addon)
-	check(err)
-	return addon
+	return addon, err
 }
 
-func ParseAddonFileInformation(b []byte) File {
+func ParseAddonFileInformation(b []byte) (File, error) {
 	var file File
 
 	err := json.Unmarshal(b, &file)
-	check(err)
-	return file
+	return file, err
 }
 
 func ParseAddonFileDownloadURL(b []byte) string {
 	return string(b)
 }
 
-func ParseAddonFiles(b []byte) []File {
+func ParseAddonFiles(b []byte) ([]File, error) {
 	var files []File
 
 	err := json.Unmarshal(b, &files)
-	check(err)
-	return files
+	return files, err
 }
