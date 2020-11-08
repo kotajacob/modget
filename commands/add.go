@@ -1,30 +1,34 @@
 package commands
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 
 	"git.sr.ht/~kota/modget/curse"
 )
 
-func check(e error) {
-	if e != nil {
-		panic(e)
-	}
-}
-
-func Add(mods []string, mc string, loader string) {
-	// There is no error checking about if it is a valid MODID.
-	if mc == "" && loader == "" {
-		for i := 0; i < len(mods); i++ {
-			addDefaultFile(mods[i])
+func Add(mods []string, mc string, loader string) error {
+	if len(mods) > 0 {
+		if mc == "" && loader == "" {
+			for i := 0; i < len(mods); i++ {
+				err := addDefaultFile(mods[i])
+				if err != nil {
+					return err
+				}
+			}
 		}
+	} else {
+		return errors.New("modget add requires at least one MODID")
 	}
+	return nil
 }
 
-func addDefaultFile(mod string) {
+func addDefaultFile(mod string) error {
 	modid, err := strconv.Atoi(mod)
-	check(err)
+	if err != nil {
+		return err
+	}
 
 	addon := curse.ParseAddonInfo(curse.GetAddonInfo(modid))
 	fmt.Println("Addon Name: " + addon.Name)
@@ -39,4 +43,6 @@ func addDefaultFile(mod string) {
 	fmt.Println("URL: " + file.DownloadUrl)
 
 	curse.Download(file.DownloadUrl, file.FileName)
+
+	return err
 }

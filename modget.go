@@ -11,12 +11,6 @@ import (
 
 var Version string
 
-func check(e error) {
-	if e != nil {
-		panic(e)
-	}
-}
-
 func help() {
 	fmt.Printf("modget " + Version + "\n")
 	fmt.Printf("Usage: modget command\n\n")
@@ -48,22 +42,19 @@ func main() {
 	// For each subcommand we parse its own flags.
 	case "add":
 		addCmd.Parse(os.Args[2:])
-		fmt.Println("subcommand 'add'")
 		mods := addCmd.Args()
-		if len(mods) > 0 {
-			commands.Add(mods, *addMc, *addLoader)
-		} else {
-			fmt.Println("add subcommand requires at least one mod")
+		err := commands.Add(mods, *addMc, *addLoader)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
 		}
 	case "del":
 		delCmd.Parse(os.Args[2:])
 		// DEBUG //
-		fmt.Println("subcommand 'del'")
 		fmt.Println("  tail:", delCmd.Args())
 	case "update":
 		updateCmd.Parse(os.Args[2:])
 		// DEBUG //
-		fmt.Println("subcommand 'update'")
 		fmt.Println("  tail:", updateCmd.Args())
 	case "help":
 		help()
