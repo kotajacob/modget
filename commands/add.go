@@ -8,6 +8,9 @@ import (
 	"git.sr.ht/~kota/modget/curse"
 )
 
+// Add searches and downloads one or more mods and records the result in the
+// database. Additionally it can accept a manually specified mc version and
+// loader, or fallback to the default one in the database.
 func Add(mods []string, mc string, loader string) error {
 	if len(mods) > 0 {
 		if mc == "" && loader == "" {
