@@ -56,7 +56,7 @@ func addDefaultFile(mod string) error {
 	}
 	fmt.Println("URL: " + file.DownloadUrl)
 
-	curse.Download(file.DownloadUrl, file.FileName)
+	err = curse.Download(file.DownloadUrl, file.FileName)
 
 	return err
 }
