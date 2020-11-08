@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"time"
 )
 
 /* https://twitchappapi.docs.apiary.io
@@ -13,20 +14,22 @@ import (
  */
 
 func get(url string) ([]byte, error) {
-	client := &http.Client{}
-	req, _ := http.NewRequest("GET", url, nil)
-
+	client := &http.Client{
+		Timeout: time.Second * 10, // Timeout after 10 seconds
+	}
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
 	}
-
 	defer resp.Body.Close()
 	respBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
-
 	return respBody, nil
 }
 
