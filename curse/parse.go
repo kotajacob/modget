@@ -4,6 +4,9 @@ import (
 	"encoding/json"
 )
 
+// An addon represents a distinct project on curseforge. It contains nearly
+// everything you would see when visiting a mod's landing page in a web
+// browser. It even contains a list of the latest files uploaded.
 type Addon struct {
 	Id                     int                     `json:"id"`
 	Name                   string                  `json:"name"`
@@ -35,6 +38,9 @@ type Addon struct {
 	IsExperimental         bool                    `json:"isExperimental"`
 }
 
+// An author is a user's profile on curseforge. An Addon can have several
+// authors, but unforunately the author struct does not contain a list of the
+// author's projects.
 type Author struct {
 	Name              string `json:"name"`
 	Url               string `json:"url"`
@@ -46,6 +52,8 @@ type Author struct {
 	TwitchId          int    `json:"twitchId"`
 }
 
+// An attachement is a file uploaded to the Addon page that is NOT the mod
+// itself. Normally this will be something like a screenshot or gif.
 type Attachment struct {
 	Id           int    `json:"id"`
 	ProjectId    int    `json:"projectId"`
@@ -57,6 +65,11 @@ type Attachment struct {
 	Status       int    `json:"status"`
 }
 
+// An addon can be in several categories chosed by the authors. This is useful
+// for user's discovering new mods. These are the things on the sidebar when
+// you're browsing through the mods on curseforge. Not to be confused with
+// CategorySection which refers to if the Addon is a mod, modpack,
+// resourcepack, world, and so on.
 type Category struct {
 	CategoryId int    `json:"categoryId"`
 	Name       string `json:"name"`
@@ -69,6 +82,9 @@ type Category struct {
 	GameId     int    `json:"gameId"`
 }
 
+// An addon only has one CategorySection. The CategorySection refers to if the
+// Addon is a mod, modpack, resourcepack, world, and so on. All mods will be in
+// the "Mods" CategorySection.
 type CategorySection struct {
 	Id                      int    `json:"id"`
 	GameId                  int    `json:"gameId"`
@@ -80,6 +96,11 @@ type CategorySection struct {
 	GameCategoryId          int    `json:"gameCategoryId"`
 }
 
+// An addon contains a list of GameVersionLatestFile(s) which essentially just
+// tells you which file is the latest for each "GameVersion" this is obviously
+// very useful, but it notably doesn't contain any information about the file
+// other than the "ProjectFileId" which can then be used to get more info about
+// the file in question.
 type GameVersionLatestFile struct {
 	GameVersion     string `json:"gameVersion"`
 	ProjectFileId   int    `json:"projectFileId"`
@@ -87,6 +108,9 @@ type GameVersionLatestFile struct {
 	FileType        int    `json:"fileType"`
 }
 
+// File represents a specific .jar mod file uploaded to curseforge as part of
+// an Addon. It has lots of important information about the file and contains a
+// DownloadUrl should you want to save it locally.
 type File struct {
 	Id                      int          `json:"id"`
 	DisplayName             string       `json:"displayName"`
@@ -110,35 +134,42 @@ type File struct {
 	GameVersionFlavor       string       `json:"gameVersionFlavor"`
 }
 
+// An Addon can mark another Addon as a dependency. In this case the dependency
+// should also be automatically fetched.
 type Dependency struct {
 	AddonId int `json:"addonId"`
 	Type    int `json:"type"`
 }
 
+// A File contains information about the specific files an folder inside the
+// .jar which can be downloaded. Normally a .jar will have a META-INF,
+// mcmod.info, pack.mcmeta, and a folder with the class files. This varies with
+// different loaders. Additionally a fingerprint is given which could later be
+// used for verification.
 type Module struct {
 	Foldername  string `json:"foldername"`
 	Fingerprint int    `json:"fingerprint"`
 }
 
-func ParseAddon(b []byte) (Addon, error) {
+func parseAddonInfo(b []byte) (Addon, error) {
 	var addon Addon
 
 	err := json.Unmarshal(b, &addon)
 	return addon, err
 }
 
-func ParseAddonFileInformation(b []byte) (File, error) {
+func parseAddonFileInformation(b []byte) (File, error) {
 	var file File
 
 	err := json.Unmarshal(b, &file)
 	return file, err
 }
 
-func ParseAddonFileDownloadURL(b []byte) string {
+func parseAddonFileDownloadURL(b []byte) string {
 	return string(b)
 }
 
-func ParseAddonFiles(b []byte) ([]File, error) {
+func parseAddonFiles(b []byte) ([]File, error) {
 	var files []File
 
 	err := json.Unmarshal(b, &files)

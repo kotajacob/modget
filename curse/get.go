@@ -30,6 +30,7 @@ func get(url string) ([]byte, error) {
 	return respBody, nil
 }
 
+// Download gets a file at a specific url and saves it to a specific filename.
 func Download(url, filename string) error {
 	response, err := http.Get(url)
 	if err != nil {
@@ -50,22 +51,34 @@ func Download(url, filename string) error {
 	return nil
 }
 
-func GetAddon(modId int) ([]byte, error) {
+// AddonInfo fetches a detailed json response for a specific addon.
+func AddonInfo(modId int) (Addon, error) {
 	url := "https://addons-ecs.forgesvc.net/api/v2/addon/" + fmt.Sprintf("%d", modId)
-	return get(url)
+	response, err := get(url)
+	addon, err := parseAddonInfo(response)
+	return addon, err
 }
 
-func GetAddonFileInformation(modId, fileId int) ([]byte, error) {
+// AddonFileInformation fetches a detailed json response for a specific file of a specific addon.
+func AddonFileInformation(modId, fileId int) (File, error) {
 	url := "https://addons-ecs.forgesvc.net/api/v2/addon/" + fmt.Sprintf("%d", modId) + "/file/" + fmt.Sprintf("%d", fileId)
-	return get(url)
+	response, err := get(url)
+	file, err := parseAddonFileInformation(response)
+	return file, err
 }
 
-func GetAddonFileDownloadURL(modId, fileId int) ([]byte, error) {
+// AddonFileDownloadURL fetches only the download url as a string for a specific file of a specific addon. Note you might already have this URL if you did GetAddonFiles or GetAddonFileInformation.
+func AddonFileDownloadURL(modId, fileId int) (string, error) {
 	url := "https://addons-ecs.forgesvc.net/api/v2/addon/" + fmt.Sprintf("%d", modId) + "/file/" + fmt.Sprintf("%d", fileId) + "/download-url"
-	return get(url)
+	response, err := get(url)
+	downloadURL := parseAddonFileDownloadURL(response)
+	return downloadURL, err
 }
 
-func GetAddonFiles(modId int) ([]byte, error) {
+// AddonFiles fetches a detailed json response for all the files of a specific addon.
+func AddonFiles(modId int) ([]File, error) {
 	url := "https://addons-ecs.forgesvc.net/api/v2/addon/" + fmt.Sprintf("%d", modId) + "/files"
-	return get(url)
+	response, err := get(url)
+	files, err := parseAddonFiles(response)
+	return files, err
 }
