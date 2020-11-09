@@ -62,7 +62,8 @@ func AddonInfo(modId int) (Addon, error) {
 	return addon, err
 }
 
-// AddonFileInformation fetches a detailed json response for a specific file of a specific addon.
+// AddonFileInformation fetches a detailed json response for a specific file of
+// a specific addon.
 func AddonFileInformation(modId, fileId int) (File, error) {
 	url := "https://addons-ecs.forgesvc.net/api/v2/addon/" + fmt.Sprintf("%d", modId) + "/file/" + fmt.Sprintf("%d", fileId)
 	response, err := get(url)
@@ -70,7 +71,9 @@ func AddonFileInformation(modId, fileId int) (File, error) {
 	return file, err
 }
 
-// AddonFileDownloadURL fetches only the download url as a string for a specific file of a specific addon. Note you might already have this URL if you did GetAddonFiles or GetAddonFileInformation.
+// AddonFileDownloadURL fetches only the download url as a string for a
+// specific file of a specific addon. Note you might already have this URL if
+// you did GetAddonFiles or GetAddonFileInformation.
 func AddonFileDownloadURL(modId, fileId int) (string, error) {
 	url := "https://addons-ecs.forgesvc.net/api/v2/addon/" + fmt.Sprintf("%d", modId) + "/file/" + fmt.Sprintf("%d", fileId) + "/download-url"
 	response, err := get(url)
@@ -78,10 +81,28 @@ func AddonFileDownloadURL(modId, fileId int) (string, error) {
 	return downloadURL, err
 }
 
-// AddonFiles fetches a detailed json response for all the files of a specific addon.
+// AddonFiles fetches a detailed json response for all the files of a specific
+// addon.
 func AddonFiles(modId int) ([]File, error) {
 	url := "https://addons-ecs.forgesvc.net/api/v2/addon/" + fmt.Sprintf("%d", modId) + "/files"
 	response, err := get(url)
 	files, err := parseAddonFiles(response)
 	return files, err
+}
+
+// MinecraftVersionList returns a list of curseforge's current supported
+// released of minecraft.
+func MinecraftVersionList() ([]MinecraftVersion, error) {
+	url := "https://addons-ecs.forgesvc.net/api/v2/minecraft/version"
+	response, err := get(url)
+	minecraftVersions, err := parseMinecraftVersionList(response)
+	return minecraftVersions, err
+}
+
+// ModloaderList returns a list of curseforge's current supported modloaders.
+func ModloaderList() ([]Modloader, error) {
+	url := "https://addons-ecs.forgesvc.net/api/v2/minecraft/modloader"
+	response, err := get(url)
+	modloaders, err := parseModloaderList(response)
+	return modloaders, err
 }

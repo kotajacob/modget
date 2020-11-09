@@ -151,16 +151,39 @@ type Module struct {
 	Fingerprint int    `json:"fingerprint"`
 }
 
+// A Minecraft Version contains information about a particular update of minecraft.
+type MinecraftVersion struct {
+	Id                    int    `json:"id"`
+	GameVersionId         int    `json:"gameVersionId"`
+	VersionString         string `json:"versionString"`
+	JarDownloadUrl        string `json:"jarDownloadUrl"`
+	JsonDownloadUrl       string `json:"jsonDownloadUrl"`
+	Approved              bool   `json:"approved"`
+	DateModified          string `json:"dateModified"`
+	GameVersionTypeId     int    `json:"gameVersionTypeId"`
+	GameVersionStatus     int    `json:"gameVersionStatus"`
+	GameVersionTypeStatus int    `json:"gameVersionTypeStatus"`
+}
+
+// A Modloader defines the properties of one of the modloaders supported by
+// curseforge. Currently is seems to only support forge so this isn't very
+// useful for fabric mods.
+type Modloader struct {
+	Name         string `json:"name"`
+	GameVersion  string `json:"gameVersion"`
+	Latest       bool   `json:"latest"`
+	Recommended  bool   `json:"recommended"`
+	DateModified string `json:"dateModified"`
+}
+
 func parseAddonInfo(b []byte) (Addon, error) {
 	var addon Addon
-
 	err := json.Unmarshal(b, &addon)
 	return addon, err
 }
 
 func parseAddonFileInformation(b []byte) (File, error) {
 	var file File
-
 	err := json.Unmarshal(b, &file)
 	return file, err
 }
@@ -171,7 +194,18 @@ func parseAddonFileDownloadURL(b []byte) string {
 
 func parseAddonFiles(b []byte) ([]File, error) {
 	var files []File
-
 	err := json.Unmarshal(b, &files)
 	return files, err
+}
+
+func parseMinecraftVersionList(b []byte) ([]MinecraftVersion, error) {
+	var minecraftVersions []MinecraftVersion
+	err := json.Unmarshal(b, &minecraftVersions)
+	return minecraftVersions, err
+}
+
+func parseModloaderList(b []byte) ([]Modloader, error) {
+	var modloaders []Modloader
+	err := json.Unmarshal(b, &modloaders)
+	return modloaders, err
 }
