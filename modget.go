@@ -55,7 +55,7 @@ func main() {
 		}
 		err := command.Add(mods, *addMc, *addLoader)
 		if err != nil {
-			fmt.Println(err)
+			fmt.Printf("Failed to add mods: %v\n", err)
 			os.Exit(1)
 		}
 	case "del":
@@ -72,7 +72,7 @@ func main() {
 	case "version":
 		fmt.Printf("modget " + Version + "\n")
 	default:
-		fmt.Printf("unknown subcommand\n\n")
+		fmt.Printf("Error: unknown subcommand\n\n")
 		help()
 		os.Exit(1)
 	}
