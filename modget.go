@@ -5,8 +5,9 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strconv"
 
-	"git.sr.ht/~kota/modget/commands"
+	"git.sr.ht/~kota/modget/command"
 )
 
 var Version string
@@ -42,8 +43,17 @@ func main() {
 	// For each subcommand we parse its own flags.
 	case "add":
 		addCmd.Parse(os.Args[2:])
-		mods := addCmd.Args()
-		err := commands.Add(mods, *addMc, *addLoader)
+		input := addCmd.Args()
+		var mods []int
+		for i := 0; i < len(input); i++ {
+			id, err := strconv.Atoi(input[i])
+			mods = append(mods, id)
+			if err != nil {
+				fmt.Printf("Failed to read MODID: %v\n", input[i])
+				os.Exit(1)
+			}
+		}
+		err := command.Add(mods, *addMc, *addLoader)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
