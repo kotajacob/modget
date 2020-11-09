@@ -3,9 +3,22 @@ package command
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"git.sr.ht/~kota/modget/curse"
 )
+
+// Check if the passed loader string is a valid modloader
+func validateModloader(loader string) bool {
+	loader = strings.ToLower(loader)
+	modLoaders := []string{"fabric", "forge", "rift"}
+	for _, modLoader := range modLoaders {
+		if modLoader == loader {
+			return true
+		}
+	}
+	return false
+}
 
 // Check if the passed mc version string is a valid Minecraft Version
 func validateMinecraftVersion(version string, mcVersions []curse.MinecraftVersion) bool {
@@ -17,7 +30,7 @@ func validateMinecraftVersion(version string, mcVersions []curse.MinecraftVersio
 	return false
 }
 
-// Filters a list of Files returning only the ones that match the loader and mc version.
+// Filters a list of Files returning only the ones that match the Minecraft Version
 func matchFiles(files []curse.File, version string, loader string) ([]curse.File, error) {
 	var matchFiles []curse.File
 	mcVersions, err := curse.MinecraftVersionList()
@@ -25,7 +38,10 @@ func matchFiles(files []curse.File, version string, loader string) ([]curse.File
 		return nil, err
 	}
 	if !validateMinecraftVersion(version, mcVersions) {
-		return nil, errors.New("Minecraft Version entered is not valid!")
+		fmt.Println("Warning: Minecraft Version entered is not recognized!")
+	}
+	if !validateModloader(loader) {
+		fmt.Println("Warning: Modloader entered is not recognized!")
 	}
 	for _, file := range files {
 		for _, fileVersion := range file.GameVersion {
