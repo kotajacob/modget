@@ -1,7 +1,6 @@
 package command
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 
@@ -31,18 +30,8 @@ func validateMinecraftVersion(version string, mcVersions []curse.MinecraftVersio
 }
 
 // Filters a list of Files returning only the ones that match the Minecraft Version
-func matchFiles(files []curse.File, version string, loader string) ([]curse.File, error) {
+func matchFiles(files []curse.File, version string, loader string) []curse.File {
 	var matchFiles []curse.File
-	mcVersions, err := curse.MinecraftVersionList()
-	if err != nil {
-		return nil, err
-	}
-	if !validateMinecraftVersion(version, mcVersions) {
-		fmt.Println("Warning: Minecraft Version entered is not recognized!")
-	}
-	if !validateModloader(loader) {
-		fmt.Println("Warning: Modloader entered is not recognized!")
-	}
 	for _, file := range files {
 		for _, fileVersion := range file.GameVersion {
 			if fileVersion == version {
@@ -50,34 +39,36 @@ func matchFiles(files []curse.File, version string, loader string) ([]curse.File
 			}
 		}
 	}
-	return matchFiles, nil
+	return matchFiles
 }
 
-// Add searches and downloads one or more mods and records the result in the
-// database. Additionally it can accept a manually specified mc version and
-// loader, or fallback to the default one in the database.
-func Add(mods []int, mc string, loader string) error {
-	if len(mods) > 0 {
-		for i := 0; i < len(mods); i++ {
-			files, err := curse.AddonFiles(mods[i])
-			if err != nil {
-				return err
-			}
-			files, err = matchFiles(files, mc, loader)
-			if err != nil {
-				return err
-			}
-			for _, file := range files {
-				fmt.Println(file.FileName)
-				fmt.Println(file.FileDate)
-				fmt.Println(file.Id)
-				for _, fileVersion := range file.GameVersion {
-					fmt.Println(fileVersion)
-				}
-			}
+// Add searches and downloads a mod and records the result in the database.
+// Additionally it can accept a manually specified mc version and loader, or
+// fallback to the default one in the database.
+func Add(mod int, version string, loader string) error {
+	files, err := curse.AddonFiles(mod)
+	if err != nil {
+		return err
+	}
+	// Validate the modloader and mc version
+	mcVersions, err := curse.MinecraftVersionList()
+	if err != nil {
+		return err
+	}
+	if !validateMinecraftVersion(version, mcVersions) {
+		fmt.Println("Warning: Minecraft Version entered is not recognized!")
+	}
+	if !validateModloader(loader) {
+		fmt.Println("Warning: Modloader entered is not recognized!")
+	}
+	files = matchFiles(files, version, loader)
+	for _, file := range files {
+		fmt.Println(file.FileName)
+		fmt.Println(file.FileDate)
+		fmt.Println(file.Id)
+		for _, fileVersion := range file.GameVersion {
+			fmt.Println(fileVersion)
 		}
-	} else {
-		return errors.New("modget add requires at least one MODID")
 	}
 	return nil
 }

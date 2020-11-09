@@ -44,6 +44,7 @@ func main() {
 	case "add":
 		addCmd.Parse(os.Args[2:])
 		input := addCmd.Args()
+		// Convert input to int list of modids
 		var mods []int
 		for i := 0; i < len(input); i++ {
 			id, err := strconv.Atoi(input[i])
@@ -53,10 +54,17 @@ func main() {
 				os.Exit(1)
 			}
 		}
-		err := command.Add(mods, *addMc, *addLoader)
-		if err != nil {
-			fmt.Printf("Failed to add mods: %v\n", err)
+		// Exit if no mods listed
+		if len(mods) == 0 {
+			fmt.Println("modget add requires at least one MODID")
 			os.Exit(1)
+		}
+		for _, mod := range mods {
+			err := command.Add(mod, *addMc, *addLoader)
+			if err != nil {
+				fmt.Printf("Failed to add mod: %v\n", mod)
+				os.Exit(1)
+			}
 		}
 	case "del":
 		delCmd.Parse(os.Args[2:])
