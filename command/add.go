@@ -113,6 +113,18 @@ func versionFilter(files []curse.File, version string) []curse.File {
 	return matchFiles
 }
 
+// Print some debug info about a list of curse.File
+func debugFilePrint(files []curse.File) {
+	for _, file := range files {
+		fmt.Println(file.FileName)
+		fmt.Println(file.FileDate)
+		fmt.Println(file.Id)
+		for _, fileVersion := range file.GameVersion {
+			fmt.Println(fileVersion)
+		}
+	}
+}
+
 // Add searches and downloads a mod and records the result in the database.
 // Additionally it can accept a manually specified mc version and loader, or
 // fallback to the default one in the database.
@@ -138,13 +150,6 @@ func Add(mod int, version string, loader string) error {
 			fmt.Println("Warning: Modloader entered is not recognized!")
 		}
 	}
-	for _, file := range files {
-		fmt.Println(file.FileName)
-		fmt.Println(file.FileDate)
-		fmt.Println(file.Id)
-		for _, fileVersion := range file.GameVersion {
-			fmt.Println(fileVersion)
-		}
-	}
+	debugFilePrint(files)
 	return nil
 }
