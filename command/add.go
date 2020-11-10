@@ -76,7 +76,7 @@ func loaderFilter(files []curse.File, loader string) []curse.File {
 	loader = strings.ToLower(loader)
 	conflicts := ModLoaders.Copy()
 	conflicts = conflicts.RemoveString(loader)
-	var matchFiles []curse.File
+	var matches []curse.File
 	for _, file := range files {
 		// create a string set of the GameVersions for the file
 		var fileVersions = make(StringSet)
@@ -84,16 +84,12 @@ func loaderFilter(files []curse.File, loader string) []curse.File {
 			fileVersion = strings.ToLower(fileVersion)
 			fileVersions[fileVersion] = true
 		}
-		if fileVersions[loader] {
-			matchFiles = append(matchFiles, file)
-			break
-		}
+		// add non-conflicting files
 		if !fileVersions.Conflicts(conflicts) {
-			matchFiles = append(matchFiles, file)
-			break
+			matches = append(matches, file)
 		}
 	}
-	return matchFiles
+	return matches
 }
 
 // Filters a list of Files returning only the ones that match the Minecraft Version
