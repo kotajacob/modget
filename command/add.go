@@ -7,16 +7,23 @@ import (
 	"git.sr.ht/~kota/modget/curse"
 )
 
+// List of valid modloaders because curseforge doesn't provide one...
+// dont set to false instead use delete()
+var ModLoaders = map[string]bool{
+	"forge":      true,
+	"fabric":     true,
+	"liteloader": true,
+	"rift":       true,
+}
+
 // Check if the passed loader string is a valid modloader
-func validateModloader(loader string) bool {
+func validateModLoader(loader string) bool {
 	loader = strings.ToLower(loader)
-	modLoaders := []string{"fabric", "forge", "rift"}
-	for _, modLoader := range modLoaders {
-		if modLoader == loader {
-			return true
-		}
+	if ModLoaders[loader] {
+		return true
+	} else {
+		return false
 	}
-	return false
 }
 
 // Check if the passed mc version string is a valid Minecraft Version
@@ -29,8 +36,30 @@ func validateMinecraftVersion(version string, mcVersions []curse.MinecraftVersio
 	return false
 }
 
+// Attempts to filer a list of Files and return only those that are
+// "compatible" with a specified loader. Unfortunately curseforge doesn't allow
+// mod authors to select a loader from a dropdown when they upload a file.
+// Instead mod authors have taken to adding a loader as a "GameVersion"
+// variable alongside minecraft version numbers. This of course extends to the
+// data we can pull from the API so it kinda just sucks and this function will
+// never be perfect until curseforge fixes this issue.
+func loaderFilter(files []curse.File, loader string) []curse.File {
+	loader = strings.ToLower(loader)
+	var matchFiles []curse.File
+	for _, file := range files {
+		for _, fileVersion := range file.GameVersion {
+			fileVersion = strings.ToLower(fileVersion)
+			if fileVersion == loader {
+				// Add if the loader matches
+				matchFiles = append(matchFiles, file)
+			}
+		}
+	}
+	return matchFiles
+}
+
 // Filters a list of Files returning only the ones that match the Minecraft Version
-func matchFiles(files []curse.File, version string, loader string) []curse.File {
+func versionFilter(files []curse.File, version string) []curse.File {
 	var matchFiles []curse.File
 	for _, file := range files {
 		for _, fileVersion := range file.GameVersion {
@@ -58,10 +87,11 @@ func Add(mod int, version string, loader string) error {
 	if !validateMinecraftVersion(version, mcVersions) {
 		fmt.Println("Warning: Minecraft Version entered is not recognized!")
 	}
-	if !validateModloader(loader) {
+	if !validateModLoader(loader) {
 		fmt.Println("Warning: Modloader entered is not recognized!")
 	}
-	files = matchFiles(files, version, loader)
+	files = versionFilter(files, version)
+	files = loaderFilter(files, loader)
 	for _, file := range files {
 		fmt.Println(file.FileName)
 		fmt.Println(file.FileDate)
