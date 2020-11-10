@@ -19,6 +19,23 @@ func (a StringSet) Conflicts(b StringSet) bool {
 	return false
 }
 
+// Remove a string from a StringSet
+func (a StringSet) RemoveString(s string) StringSet {
+	if a[s] {
+		delete(a, s)
+	}
+	return a
+}
+
+// Get a StringSet of conflicting ModLoaders. Expects loader to be lowercase.
+func getConflicts(loader string) StringSet {
+	conflicts := ModLoaders
+	if ModLoaders[loader] {
+		delete(conflicts, loader)
+	}
+	return conflicts
+}
+
 // List of valid modloaders because curseforge doesn't provide one...
 // dont set to false instead use delete()
 var ModLoaders = StringSet{
@@ -48,15 +65,6 @@ func validateMinecraftVersion(version string, mcVersions []curse.MinecraftVersio
 	return false
 }
 
-// Get a list of conflicting ModLoaders. Expects loader to be lowercase.
-func getConflicts(loader string) StringSet {
-	conflicts := ModLoaders
-	if ModLoaders[loader] {
-		delete(conflicts, loader)
-	}
-	return conflicts
-}
-
 // Attempts to filer a list of Files and return only those that are
 // "compatible" with a specified loader. Unfortunately curseforge doesn't allow
 // mod authors to select a loader from a dropdown when they upload a file.
@@ -66,7 +74,7 @@ func getConflicts(loader string) StringSet {
 // never be perfect until curseforge fixes this issue.
 func loaderFilter(files []curse.File, loader string) []curse.File {
 	loader = strings.ToLower(loader)
-	conflicts := getConflicts(loader)
+	conflicts := ModLoaders.RemoveString(loader)
 	var matchFiles []curse.File
 	for _, file := range files {
 		// create a string set of the GameVersions for the file
