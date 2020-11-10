@@ -19,21 +19,21 @@ func (a StringSet) Conflicts(b StringSet) bool {
 	return false
 }
 
+// Copy a StringSet
+func (a StringSet) Copy() StringSet {
+	copy := make(StringSet)
+	for k, v := range a {
+		copy[k] = v
+	}
+	return copy
+}
+
 // Remove a string from a StringSet
 func (a StringSet) RemoveString(s string) StringSet {
 	if a[s] {
 		delete(a, s)
 	}
 	return a
-}
-
-// Get a StringSet of conflicting ModLoaders. Expects loader to be lowercase.
-func getConflicts(loader string) StringSet {
-	conflicts := ModLoaders
-	if ModLoaders[loader] {
-		delete(conflicts, loader)
-	}
-	return conflicts
 }
 
 // List of valid modloaders because curseforge doesn't provide one...
@@ -74,7 +74,8 @@ func validateMinecraftVersion(version string, mcVersions []curse.MinecraftVersio
 // never be perfect until curseforge fixes this issue.
 func loaderFilter(files []curse.File, loader string) []curse.File {
 	loader = strings.ToLower(loader)
-	conflicts := ModLoaders.RemoveString(loader)
+	conflicts := ModLoaders.Copy()
+	conflicts = conflicts.RemoveString(loader)
 	var matchFiles []curse.File
 	for _, file := range files {
 		// create a string set of the GameVersions for the file
@@ -125,14 +126,18 @@ func Add(mod int, version string, loader string) error {
 	if err != nil {
 		return err
 	}
-	if version != "" && !validateMinecraftVersion(version, mcVersions) {
-		fmt.Println("Warning: Minecraft Version entered is not recognized!")
+	if version != "" {
+		files = versionFilter(files, version)
+		if !validateMinecraftVersion(version, mcVersions) {
+			fmt.Println("Warning: Minecraft Version entered is not recognized!")
+		}
 	}
-	if loader != "" && !validateModLoader(loader) {
-		fmt.Println("Warning: Modloader entered is not recognized!")
+	if loader != "" {
+		files = loaderFilter(files, loader)
+		if !validateModLoader(loader) {
+			fmt.Println("Warning: Modloader entered is not recognized!")
+		}
 	}
-	files = versionFilter(files, version)
-	files = loaderFilter(files, loader)
 	for _, file := range files {
 		fmt.Println(file.FileName)
 		fmt.Println(file.FileDate)
