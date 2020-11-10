@@ -84,10 +84,6 @@ func loaderFilter(files []curse.File, loader string) []curse.File {
 			fileVersion = strings.ToLower(fileVersion)
 			fileVersions[fileVersion] = true
 		}
-		if loader == "" {
-			matchFiles = append(matchFiles, file)
-			break
-		}
 		if fileVersions[loader] {
 			matchFiles = append(matchFiles, file)
 			break
