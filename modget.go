@@ -7,7 +7,7 @@ import (
 	"os"
 	"strconv"
 
-	"git.sr.ht/~kota/modget/command"
+	"git.sr.ht/~kota/modget/cmd"
 )
 
 var Version string
