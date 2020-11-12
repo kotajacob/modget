@@ -38,12 +38,14 @@ modget requires the following build dependencies:
 - `search <Search String>`
 	- Search curseforge for mods based on search terms. Prints mod names, MODID, Version, and a short description.
 
-## add command options
-
-- `-mc <MINECRAFT VERSION>`
-	- Limit install for a specific minecraft version.
+## global options
 - `-v <VERSION>`
 	- Limit install to a specific mod version.
+
+## add command options
+
+- `-m <MINECRAFT VERSION>`
+	- Limit install for a specific minecraft version.
 - `-l <LOADER>`
 	- Limit install to a specific mod loader.
 
@@ -54,7 +56,7 @@ modget requires the following build dependencies:
 
 ## update command options
 
-- `-mc <MINECRAFT VERSION>`
+- `-m <MINECRAFT VERSION>`
 	- Update to a different minecraft version.
 
 ## MODID
