@@ -17,6 +17,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
 )
@@ -26,10 +27,26 @@ var searchCmd = &cobra.Command{
 	Use:   "search <Search String>",
 	Short: "Query and print more information about a specific mod by MODID.",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("search called")
+		// Exit if no search terms given
+		if len(args) == 0 {
+			fmt.Println("modget search requires at least one search term")
+			os.Exit(1)
+		}
+		for _, arg := range args {
+			err := search(arg)
+			if err != nil {
+				fmt.Printf("Search failed: %v\n", arg)
+				os.Exit(1)
+			}
+		}
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(searchCmd)
+}
+
+func search(s string) error {
+	fmt.Println(s)
+	return nil
 }
