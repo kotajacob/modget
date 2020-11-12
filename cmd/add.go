@@ -68,16 +68,6 @@ func init() {
 	addCmd.Flags().StringVarP(&Loader, "loader", "l", "", "Limit install for a specific minecraft mod loader.")
 }
 
-// Print some debug info about a list of curse.File
-func debugFilePrint(file curse.File) {
-	fmt.Println(file.FileName)
-	fmt.Println(file.FileDate)
-	fmt.Println(file.Id)
-	for _, fileVersion := range file.GameVersion {
-		fmt.Println(fileVersion)
-	}
-}
-
 // Add searches and downloads a mod and records the result in the database.
 // Additionally it can accept a manually specified mc version and loader, or
 // fallback to the default one in the database.
@@ -108,7 +98,8 @@ func add(mod int, version string, loader string) error {
 		errors.New("File not found for those search terms.")
 	}
 	selected := files[0]
-	debugFilePrint(selected)
+	// TODO: Make this toggle-able with a verbose flag
+	util.debugFilePrint(selected)
 	curse.Download(selected.DownloadUrl, selected.FileName)
 	return nil
 }

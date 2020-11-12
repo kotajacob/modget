@@ -137,3 +137,13 @@ func TimeSort(files []curse.File) []curse.File {
 	})
 	return files
 }
+
+// Print some debug info about a curse.File
+func debugFilePrint(file curse.File) {
+	fmt.Println(file.FileName)
+	fmt.Println(file.FileDate)
+	fmt.Println(file.Id)
+	for _, fileVersion := range file.GameVersion {
+		fmt.Println(fileVersion)
+	}
+}
