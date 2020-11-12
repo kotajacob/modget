@@ -200,6 +200,12 @@ func parseAddonInfo(b []byte) (Addon, error) {
 	return addon, err
 }
 
+func parseAddonSearch(b []byte) ([]Addon, error) {
+	var addons []Addon
+	err := json.Unmarshal(b, &addons)
+	return addons, err
+}
+
 func parseAddonFileInformation(b []byte) (File, error) {
 	var file File
 	err := json.Unmarshal(b, &file)

@@ -29,6 +29,17 @@ import (
  * official API documentation
  */
 
+type Search struct {
+	categoryId   int    // categoryId: 0
+	gameId       int    // gameId: 432 = minecraft, 1 = wow
+	gameVersion  string // gameVersion: 1.12.2
+	index        int    // index: 0
+	pageSize     int    // pageSize: 25
+	searchFilter string // searchFilter: appleskin (the actual search string)
+	sectionId    int    // sectionId: 6 = mods, 4561 = resource packs, 4471 = modpacks, 4560 = worlds
+	sort         int    // sort: 0
+}
+
 func get(url string) ([]byte, error) {
 	client := &http.Client{
 		Timeout: time.Second * 10, // Timeout after 10 seconds
@@ -76,6 +87,47 @@ func AddonInfo(modId int) (Addon, error) {
 	response, err := get(url)
 	addon, err := parseAddonInfo(response)
 	return addon, err
+}
+
+// AddonSearch fetches a list of Addons based on a Search.
+func AddonSearch(s Search) ([]Addon, err) {
+	url := "https://addons-ecs.forgesvc.net/api/v2/addon/search?"
+	if s.categoryId {
+		url += "categoryId="
+		url += fmt.Sprintf("%d", categoryId)
+	}
+	if s.gameId {
+		url += "&gameId="
+		url += fmt.Sprintf("%d", gameId)
+	}
+	if s.gameVersion {
+		url += "&gameVersion="
+		url += fmt.Sprintf("%v", gameVersion)
+	}
+	if s.index {
+		url += "&index="
+		url += fmt.Sprintf("%d", index)
+	}
+	if s.pageSize {
+		url += "&pageSize="
+		url += fmt.Sprintf("%d", pageSize)
+		url += "5"
+	}
+	if s.searchFilter {
+		url += "&searchFilter="
+		url += fmt.Sprintf("%v", searchFilter)
+	}
+	if s.sectionId {
+		url += "§ionId="
+		url += fmt.Sprintf("%d", sectionId)
+	}
+	if s.sort {
+		url += "&sort="
+		url += fmt.Sprintf("%d", sort)
+	}
+	response, err := get(url)
+	addons, err := parseAddonSearch(response)
+	return addons, err
 }
 
 // AddonFileInformation fetches a detailed json response for a specific file of
