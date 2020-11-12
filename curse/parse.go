@@ -20,6 +20,8 @@ import (
 	"encoding/json"
 )
 
+// Date format = RFC3339
+
 // An addon represents a distinct project on curseforge. It contains nearly
 // everything you would see when visiting a mod's landing page in a web
 // browser. It even contains a list of the latest files uploaded.

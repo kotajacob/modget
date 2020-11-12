@@ -17,6 +17,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"strconv"
@@ -68,14 +69,12 @@ func init() {
 }
 
 // Print some debug info about a list of curse.File
-func debugFilePrint(files []curse.File) {
-	for _, file := range files {
-		fmt.Println(file.FileName)
-		fmt.Println(file.FileDate)
-		fmt.Println(file.Id)
-		for _, fileVersion := range file.GameVersion {
-			fmt.Println(fileVersion)
-		}
+func debugFilePrint(file curse.File) {
+	fmt.Println(file.FileName)
+	fmt.Println(file.FileDate)
+	fmt.Println(file.Id)
+	for _, fileVersion := range file.GameVersion {
+		fmt.Println(fileVersion)
 	}
 }
 
@@ -104,6 +103,12 @@ func add(mod int, version string, loader string) error {
 			fmt.Println("Warning: Modloader entered is not recognized!")
 		}
 	}
-	debugFilePrint(files)
+	files = util.TimeSort(files)
+	if len(files) == 0 {
+		errors.New("File not found for those search terms.")
+	}
+	selected := files[0]
+	debugFilePrint(selected)
+	curse.Download(selected.DownloadUrl, selected.FileName)
 	return nil
 }

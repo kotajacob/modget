@@ -17,7 +17,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package util
 
 import (
+	"sort"
 	"strings"
+	"time"
 
 	"git.sr.ht/~kota/modget/curse"
 )
@@ -107,7 +109,7 @@ func LoaderFilter(files []curse.File, loader string) []curse.File {
 	return matches
 }
 
-// Filters a list of Files returning only the ones that match the Minecraft Version
+// Filters a list of Files returning only the ones that match the Minecraft Version.
 func VersionFilter(files []curse.File, version string) []curse.File {
 	var matchFiles []curse.File
 	for _, file := range files {
@@ -118,4 +120,20 @@ func VersionFilter(files []curse.File, version string) []curse.File {
 		}
 	}
 	return matchFiles
+}
+
+// Sorts a list of files returning them in order from newest to old.
+func TimeSort(files []curse.File) []curse.File {
+	sort.SliceStable(files, func(i, j int) bool {
+		iTime, err := time.Parse(time.RFC3339, files[i].FileDate)
+		if err != nil {
+			return false
+		}
+		jTime, err := time.Parse(time.RFC3339, files[j].FileDate)
+		if err != nil {
+			return false
+		}
+		return iTime.After(jTime)
+	})
+	return files
 }
