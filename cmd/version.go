@@ -14,13 +14,30 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
-package main
+package cmd
 
-import "git.sr.ht/~kota/modget/cmd"
+import (
+	"fmt"
 
-var Version string
+	"github.com/spf13/cobra"
+)
 
-func main() {
-	cmd.SetVersion(Version)
-	cmd.Execute()
+var version string
+
+//SetVersion initializes the aerc version displayed in template functions
+func SetVersion(v string) {
+	version = v
+}
+
+// versionCmd represents the version command
+var versionCmd = &cobra.Command{
+	Use:   "version",
+	Short: "Print the version and exit.",
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("modget " + version)
+	},
+}
+
+func init() {
+	rootCmd.AddCommand(versionCmd)
 }

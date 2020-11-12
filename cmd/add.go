@@ -14,15 +14,53 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
-package command
+package cmd
 
 import (
 	"fmt"
+	"os"
+	"strconv"
 	"strings"
 
 	"git.sr.ht/~kota/modget/curse"
 	"git.sr.ht/~kota/modget/util"
+	"github.com/spf13/cobra"
 )
+
+// addCmd represents the add command
+var addCmd = &cobra.Command{
+	Use:   "add <MODID>",
+	Short: "Download and install a mod based on its MODID.",
+	Run: func(cmd *cobra.Command, args []string) {
+		// Convert args to int list of modids
+		var mods []int
+		for i := 0; i < len(args); i++ {
+			id, err := strconv.Atoi(args[i])
+			mods = append(mods, id)
+			if err != nil {
+				fmt.Printf("Failed to read MODID: %v\n", args[i])
+				os.Exit(1)
+			}
+		}
+		// Exit if no mods listed
+		if len(mods) == 0 {
+			fmt.Println("modget add requires at least one MODID")
+			os.Exit(1)
+		}
+		for _, mod := range mods {
+			err := Add(mod, "", "")
+			if err != nil {
+				fmt.Printf("Failed to add mod: %v\n", mod)
+				os.Exit(1)
+			}
+		}
+	},
+}
+
+func init() {
+	rootCmd.AddCommand(addCmd)
+	// addCmd.Flags().BoolP("version", "v", false, "Limit install for a specific minecraft version.")
+}
 
 // Check if the passed loader string is a valid modloader
 func validateModLoader(loader string) bool {

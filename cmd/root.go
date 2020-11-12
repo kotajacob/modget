@@ -14,13 +14,27 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
-package main
+package cmd
 
-import "git.sr.ht/~kota/modget/cmd"
+import (
+	"fmt"
+	"os"
 
-var Version string
+	"github.com/spf13/cobra"
+)
 
-func main() {
-	cmd.SetVersion(Version)
-	cmd.Execute()
+// rootCmd represents the base command when called without any subcommands
+var rootCmd = &cobra.Command{
+	Use:   "modget [command]",
+	Short: "A package manager for minecraft curseforge mods.",
+	Long:  `Modget provides commands for searching, managing, and querying information about mods.`,
+}
+
+// Execute adds all child commands to the root command and sets flags appropriately.
+// This is called by main.main(). It only needs to happen once to the rootCmd.
+func Execute() {
+	if err := rootCmd.Execute(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 }
