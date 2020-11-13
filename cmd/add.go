@@ -37,20 +37,7 @@ var addCmd = &cobra.Command{
 	Use:   "add <MODID>",
 	Short: "Download and install a mod based on its MODID.",
 	Run: func(cmd *cobra.Command, args []string) {
-		// Convert args to int list of modids
-		var mods []int
-		for i := 0; i < len(args); i++ {
-			id, err := strconv.Atoi(args[i])
-			if err != nil {
-				// Attempt to convert slug to modid
-				id, err = util.GetModid(args[i])
-				if err != nil {
-					fmt.Printf("Failed to find: %v\n", args[i])
-					os.Exit(1)
-				}
-			}
-			mods = append(mods, id)
-		}
+		mods := toId(args)
 		// Exit if no mods listed
 		if len(mods) == 0 {
 			fmt.Println("modget add requires at least one MODID")
@@ -70,6 +57,25 @@ func init() {
 	rootCmd.AddCommand(addCmd)
 	addCmd.Flags().StringVarP(&MinecraftVersion, "minecraft", "m", "", "Limit install for a specific minecraft version.")
 	addCmd.Flags().StringVarP(&Loader, "loader", "l", "", "Limit install for a specific minecraft mod loader.")
+}
+
+// Convert a list of strings to MODIDs
+func toId(s []string) []int {
+	// Convert string to int list of modids
+	var mods []int
+	for i := 0; i < len(s); i++ {
+		id, err := strconv.Atoi(s[i])
+		if err != nil {
+			// Attempt to convert slug to modid
+			id, err = util.GetModid(s[i])
+			if err != nil {
+				fmt.Printf("Failed to find: %v\n", s[i])
+				os.Exit(1)
+			}
+		}
+		mods = append(mods, id)
+	}
+	return mods
 }
 
 // Add searches and downloads a mod and records the result in the database.
