@@ -18,7 +18,6 @@ package util
 
 import (
 	"errors"
-	"fmt"
 	"sort"
 	"strings"
 	"time"
@@ -158,22 +157,4 @@ func GetModid(s string) (int, error) {
 	}
 	err = errors.New("Could not find: " + s)
 	return 0, err
-}
-
-// Print some debug info about a curse.File
-func DebugFilePrint(file curse.File) {
-	fmt.Println(file.FileName)
-	fmt.Println(file.FileDate)
-	fmt.Println(file.Id)
-	for _, fileVersion := range file.GameVersion {
-		fmt.Println(fileVersion)
-	}
-}
-
-// Print some debug info about a curse.Addon
-func DebugAddonPrint(addon curse.Addon) {
-	fmt.Println(addon.Name)
-	fmt.Println(addon.Slug)
-	fmt.Println(addon.Id)
-	fmt.Printf("%d\n", int(addon.DownloadCount))
 }
