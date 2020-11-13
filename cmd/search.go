@@ -19,6 +19,8 @@ import (
 	"fmt"
 	"os"
 
+	"git.sr.ht/~kota/modget/curse"
+	"git.sr.ht/~kota/modget/util"
 	"github.com/spf13/cobra"
 )
 
@@ -47,6 +49,16 @@ func init() {
 }
 
 func search(s string) error {
-	fmt.Println(s)
+	var search curse.Search
+	search.GameId = 432     // Set game to minecraft
+	search.SectionId = 6    // Set section to mods
+	search.SearchFilter = s // Search string
+	addons, err := curse.AddonSearch(search)
+	if err != nil {
+		return err
+	}
+	for _, addon := range addons {
+		util.DebugAddonPrint(addon)
+	}
 	return nil
 }

@@ -30,14 +30,14 @@ import (
  */
 
 type Search struct {
-	categoryId   int    // categoryId: 0
-	gameId       int    // gameId: 432 = minecraft, 1 = wow
-	gameVersion  string // gameVersion: 1.12.2
-	index        int    // index: 0
-	pageSize     int    // pageSize: 25
-	searchFilter string // searchFilter: appleskin (the actual search string)
-	sectionId    int    // sectionId: 6 = mods, 4561 = resource packs, 4471 = modpacks, 4560 = worlds
-	sort         int    // sort: 0
+	CategoryId   int    // categoryId: 0
+	GameId       int    // gameId: 432 = minecraft, 1 = wow
+	GameVersion  string // gameVersion: 1.12.2
+	Index        int    // index: 0
+	PageSize     int    // pageSize: 25
+	SearchFilter string // searchFilter: appleskin (the actual search string)
+	SectionId    int    // sectionId: 6 = mods, 4561 = resource packs, 4471 = modpacks, 4560 = worlds
+	Sort         int    // sort: 0
 }
 
 func get(url string) ([]byte, error) {
@@ -90,41 +90,24 @@ func AddonInfo(modId int) (Addon, error) {
 }
 
 // AddonSearch fetches a list of Addons based on a Search.
-func AddonSearch(s Search) ([]Addon, err) {
+func AddonSearch(s Search) ([]Addon, error) {
 	url := "https://addons-ecs.forgesvc.net/api/v2/addon/search?"
-	if s.categoryId {
-		url += "categoryId="
-		url += fmt.Sprintf("%d", categoryId)
-	}
-	if s.gameId {
-		url += "&gameId="
-		url += fmt.Sprintf("%d", gameId)
-	}
-	if s.gameVersion {
-		url += "&gameVersion="
-		url += fmt.Sprintf("%v", gameVersion)
-	}
-	if s.index {
-		url += "&index="
-		url += fmt.Sprintf("%d", index)
-	}
-	if s.pageSize {
-		url += "&pageSize="
-		url += fmt.Sprintf("%d", pageSize)
-		url += "5"
-	}
-	if s.searchFilter {
-		url += "&searchFilter="
-		url += fmt.Sprintf("%v", searchFilter)
-	}
-	if s.sectionId {
-		url += "§ionId="
-		url += fmt.Sprintf("%d", sectionId)
-	}
-	if s.sort {
-		url += "&sort="
-		url += fmt.Sprintf("%d", sort)
-	}
+	url += "gameId="
+	url += fmt.Sprintf("%d", s.GameId)
+	url += "&sectionId="
+	url += fmt.Sprintf("%d", s.SectionId)
+	// url += "categoryId="
+	// url += fmt.Sprintf("%d", s.CategoryId)
+	// url += "&gameVersion="
+	// url += fmt.Sprintf("%v", s.GameVersion)
+	// url += "&index="
+	// url += fmt.Sprintf("%d", s.Index)
+	// url += "&pageSize="
+	// url += fmt.Sprintf("%d", s.PageSize)
+	// url += "&sort="
+	// url += fmt.Sprintf("%d", s.Sort)
+	url += "&searchFilter="
+	url += fmt.Sprintf("%v", s.SearchFilter)
 	response, err := get(url)
 	addons, err := parseAddonSearch(response)
 	return addons, err

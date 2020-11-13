@@ -17,6 +17,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package util
 
 import (
+	"fmt"
 	"sort"
 	"strings"
 	"time"
@@ -139,11 +140,19 @@ func TimeSort(files []curse.File) []curse.File {
 }
 
 // Print some debug info about a curse.File
-func debugFilePrint(file curse.File) {
+func DebugFilePrint(file curse.File) {
 	fmt.Println(file.FileName)
 	fmt.Println(file.FileDate)
 	fmt.Println(file.Id)
 	for _, fileVersion := range file.GameVersion {
 		fmt.Println(fileVersion)
 	}
+}
+
+// Print some debug info about a curse.Addon
+func DebugAddonPrint(addon curse.Addon) {
+	fmt.Println(addon.Name)
+	fmt.Println(addon.Slug)
+	fmt.Println(addon.Id)
+	fmt.Printf("%d\n", int(addon.DownloadCount))
 }
