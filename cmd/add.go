@@ -41,11 +41,15 @@ var addCmd = &cobra.Command{
 		var mods []int
 		for i := 0; i < len(args); i++ {
 			id, err := strconv.Atoi(args[i])
-			mods = append(mods, id)
 			if err != nil {
-				fmt.Printf("Failed to read MODID: %v\n", args[i])
-				os.Exit(1)
+				// Attempt to convert slug to modid
+				id, err = util.GetModid(args[i])
+				if err != nil {
+					fmt.Printf("Failed to find: %v\n", args[i])
+					os.Exit(1)
+				}
 			}
+			mods = append(mods, id)
 		}
 		// Exit if no mods listed
 		if len(mods) == 0 {

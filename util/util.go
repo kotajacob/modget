@@ -17,6 +17,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package util
 
 import (
+	"errors"
 	"fmt"
 	"sort"
 	"strings"
@@ -137,6 +138,26 @@ func TimeSort(files []curse.File) []curse.File {
 		return iTime.After(jTime)
 	})
 	return files
+}
+
+// GetModid takes a string, which is meant to be an addon's slug and attempts
+// to convert it to a MODID. It returns an error on failure.
+func GetModid(s string) (int, error) {
+	var search curse.Search
+	search.GameId = 432     // Set game to minecraft
+	search.SectionId = 6    // Set section to mods
+	search.SearchFilter = s // Search string
+	addons, err := curse.AddonSearch(search)
+	if err != nil {
+		return 0, err
+	}
+	for _, addon := range addons {
+		if addon.Slug == s {
+			return addon.Id, nil
+		}
+	}
+	err = errors.New("Could not find: " + s)
+	return 0, err
 }
 
 // Print some debug info about a curse.File
