@@ -28,7 +28,7 @@ modget requires the following build dependencies:
 
 - `del <MODID/Slug>`
 	- NOT YET IMPLEMENTED
-	- Remove and uninstall a mod based on its MODID.
+	- Remove and uninstall a mod based on its MODID or Slug.
 
 - `help <command>`
 	- Print help about a command and exit.
@@ -38,7 +38,7 @@ modget requires the following build dependencies:
 
 - `show <MODID/Slug>`
 	- NOT YET IMPLEMENTED
-	- Query and print more information about a specific mod by MODID.
+	- Query and print more information about a specific mod by MODID Slug.
 
 - `update <MODID/Slug>`
 	- NOT YET IMPLEMENTED
@@ -77,9 +77,8 @@ uses MODID.
 ## MODID
 
 Every mod on curseforge has a 6 digit MODID which can be found on the mods page
-or by using modget's search command. This is used instead of names when
-installing and removing mods as multiple mods could technically share the same
-name.
+or by using modget's search command. Typically using the Slug for the mod is
+easier and more userfriendly, but if that fails you can try the MODID.
 
 ## resources
 
