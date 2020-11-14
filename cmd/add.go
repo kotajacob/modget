@@ -110,6 +110,9 @@ func add(mod int, version string, loader string) error {
 	selected := files[0]
 	// TODO: Make this toggle-able with a verbose flag
 	util.DebugFilePrint(selected)
-	curse.Download(selected.DownloadUrl, selected.FileName)
+	err := curse.Download(selected.DownloadUrl, selected.FileName)
+	if err != nil {
+		return err
+	}
 	return nil
 }
