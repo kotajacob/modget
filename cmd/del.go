@@ -23,8 +23,8 @@ import (
 
 // delCmd represents the del command
 var delCmd = &cobra.Command{
-	Use:   "del <MODID>",
-	Short: "Search curseforge for mods based on search terms. Prints mod names, MODID, Version, and a short description.",
+	Use:   "del <MODID/Slug>",
+	Short: "Remove installed mod(s).",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("del called")
 	},

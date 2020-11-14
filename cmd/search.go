@@ -27,7 +27,7 @@ import (
 // searchCmd represents the search command
 var searchCmd = &cobra.Command{
 	Use:   "search <Search String>",
-	Short: "Query and print more information about a specific mod by MODID.",
+	Short: "Search for mods and print the results.",
 	Run: func(cmd *cobra.Command, args []string) {
 		// Exit if no search terms given
 		if len(args) == 0 {

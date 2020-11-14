@@ -27,7 +27,7 @@ import (
 var rootCmd = &cobra.Command{
 	Use:   "modget [command]",
 	Short: "A package manager for minecraft curseforge mods.",
-	Long:  `Modget provides commands for searching, managing, and querying information about mods.`,
+	Long:  `Modget provides commands for searching, installing, and querying information about mods.`,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.

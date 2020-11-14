@@ -34,13 +34,13 @@ var (
 
 // addCmd represents the add command
 var addCmd = &cobra.Command{
-	Use:   "add <MODID>",
-	Short: "Download and install a mod based on its MODID.",
+	Use:   "add <MODID/Slug>",
+	Short: "Download and install a mod based on its MODID or Slug.",
 	Run: func(cmd *cobra.Command, args []string) {
 		mods := toId(args)
 		// Exit if no mods listed
 		if len(mods) == 0 {
-			fmt.Println("modget add requires at least one MODID")
+			fmt.Println("modget add requires at least one MODID or Slug")
 			os.Exit(1)
 		}
 		for _, mod := range mods {
