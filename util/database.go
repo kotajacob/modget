@@ -28,6 +28,13 @@ import (
 // Default file writing mode
 var Mode os.FileMode = 0644
 
+type Database struct {
+	Version   int
+	Minecraft string
+	Loader    string
+	Files     []curse.File
+}
+
 // Get a []byte from a file
 func get(filename string) ([]byte, error) {
 	dat, err := ioutil.ReadFile(filename)
@@ -47,33 +54,33 @@ func put(filename string, dat []byte) error {
 }
 
 // Load database into memory.
-func DatabaseLoad(p string) ([]curse.File, error) {
-	var files []curse.File
+func DatabaseLoad(p string) (Database, error) {
+	var db Database
 	b, err := get(p)
 	if os.IsNotExist(err) {
-		return files, nil
+		return db, nil
 	} else if err != nil {
-		return nil, err
+		return db, err
 	}
 	dec := gob.NewDecoder(bytes.NewBuffer(b))
-	err = dec.Decode(&files)
+	err = dec.Decode(&db)
 	if err != nil {
-		return nil, err
+		return db, err
 	}
-	return files, nil
+	return db, nil
 }
 
 // Add a new mod to the database. Loads the database into memory, checks if the
 // mod is already in the database, adds or updates it depending.
 func DatabaseAdd(file curse.File, p string) error {
-	files, err := DatabaseLoad(p)
+	db, err := DatabaseLoad(p)
 	if err != nil {
 		return err
 	}
-	files = append(files, file)
+	db.Files = append(db.Files, file)
 	stream := &bytes.Buffer{}
 	en := gob.NewEncoder(stream)
-	err = en.Encode(files)
+	err = en.Encode(db)
 	if err != nil {
 		return err
 	}
