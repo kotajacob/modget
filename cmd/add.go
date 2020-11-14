@@ -46,7 +46,7 @@ var addCmd = &cobra.Command{
 		for _, mod := range mods {
 			err := add(mod, MinecraftVersion, Loader)
 			if err != nil {
-				fmt.Printf("Failed to add mod: %v\n", mod)
+				fmt.Printf("Failed to add mod: %v\n%v\n", mod, err)
 				os.Exit(1)
 			}
 		}
@@ -110,7 +110,11 @@ func add(mod int, version string, loader string) error {
 	selected := files[0]
 	// TODO: Make this toggle-able with a verbose flag
 	util.DebugFilePrint(selected)
-	err := curse.Download(selected.DownloadUrl, selected.FileName)
+	err = curse.Download(selected.DownloadUrl, selected.FileName)
+	if err != nil {
+		return err
+	}
+	err = util.DatabaseAdd(selected, "test.json")
 	if err != nil {
 		return err
 	}
