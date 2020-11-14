@@ -30,6 +30,7 @@ import (
 var (
 	MinecraftVersion string
 	Loader           string
+	Database         string // Full path to .modget file
 )
 
 // addCmd represents the add command
@@ -37,17 +38,33 @@ var addCmd = &cobra.Command{
 	Use:   "add <MODID/Slug>",
 	Short: "Download and install a mod based on its MODID or Slug.",
 	Run: func(cmd *cobra.Command, args []string) {
-		mods := toId(args)
-		// Exit if no mods listed
-		if len(mods) == 0 {
+		var files []curse.File
+		Database = ".modget" // TODO: Guess database location
+		ids := toId(args)
+		if len(ids) == 0 {
 			fmt.Println("modget add requires at least one MODID or Slug")
 			os.Exit(1)
 		}
-		for _, mod := range mods {
-			err := add(mod, MinecraftVersion, Loader)
+		for _, id := range ids {
+			file, err := find(id)
 			if err != nil {
-				fmt.Printf("Failed to add mod: %v\n%v\n", mod, err)
+				fmt.Printf("Failed to find mod: %v\n%v\n", id, err)
 				os.Exit(1)
+			}
+			files = append(files, file)
+		}
+		for _, file := range files {
+			err := get(file)
+			if err != nil {
+				fmt.Printf("Failed to download file: %v\n%v\n", file.FileName, err)
+				os.Exit(1)
+			} else {
+				err = record(file)
+				if err != nil {
+					fmt.Printf("Failed to add file to database: %v\n%v\n", file.FileName, err)
+					// TODO: remove failed downloaded file
+					os.Exit(1)
+				}
 			}
 		}
 	},
@@ -78,45 +95,40 @@ func toId(s []string) []int {
 	return mods
 }
 
-// Add searches and downloads a mod and records the result in the database.
-// Additionally it can accept a manually specified mc version and loader, or
-// fallback to the default one in the database.
-func add(mod int, version string, loader string) error {
-	files, err := curse.AddonFiles(mod)
-	if err != nil {
-		return err
-	}
+// Find returns a curse.File for a MODID. It ensures the file matches the
+// correct Minecraft version and Loader. Additionally it warns the user if the
+// enter an unknown version or loader.
+func find(id int) (curse.File, error) {
+	files, err := curse.AddonFiles(id)
 	// Validate the modloader and mc version
 	mcVersions, err := curse.MinecraftVersionList()
-	if err != nil {
-		return err
-	}
-	if version != "" {
-		files = util.VersionFilter(files, version)
-		if !util.ValidateMinecraftVersion(version, mcVersions) {
+	if MinecraftVersion != "" {
+		files = util.VersionFilter(files, MinecraftVersion)
+		if !util.ValidateMinecraftVersion(MinecraftVersion, mcVersions) {
 			fmt.Println("Warning: Minecraft Version entered is not recognized!")
 		}
 	}
-	if loader != "" {
-		files = util.LoaderFilter(files, loader)
-		if !util.ValidateModLoader(loader) {
+	if Loader != "" {
+		files = util.LoaderFilter(files, Loader)
+		if !util.ValidateModLoader(Loader) {
 			fmt.Println("Warning: Modloader entered is not recognized!")
 		}
 	}
 	files = util.TimeSort(files)
 	if len(files) == 0 {
-		errors.New("File not found for those search terms.")
+		err = errors.New("File not found for those search terms.")
 	}
-	selected := files[0]
+	return files[0], err
+}
+
+func get(f curse.File) error {
 	// TODO: Make this toggle-able with a verbose flag
-	util.DebugFilePrint(selected)
-	err = curse.Download(selected.DownloadUrl, selected.FileName)
-	if err != nil {
-		return err
-	}
-	err = util.DatabaseAdd(selected, ".modget")
-	if err != nil {
-		return err
-	}
-	return nil
+	util.DebugFilePrint(f)
+	err := curse.Download(f.DownloadUrl, f.FileName)
+	return err
+}
+
+func record(f curse.File) error {
+	err := util.DatabaseAdd(f, Database)
+	return err
 }
