@@ -20,9 +20,11 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strconv"
 
 	"git.sr.ht/~kota/modget/curse"
+	"git.sr.ht/~kota/modget/database"
 	"git.sr.ht/~kota/modget/util"
 	"github.com/spf13/cobra"
 )
@@ -30,7 +32,7 @@ import (
 var (
 	MinecraftVersion string
 	Loader           string
-	Database         string // Full path to .modget file
+	Path             string
 )
 
 // addCmd represents the add command
@@ -39,7 +41,11 @@ var addCmd = &cobra.Command{
 	Short: "Download and install a mod based on its MODID or Slug.",
 	Run: func(cmd *cobra.Command, args []string) {
 		var files []curse.File
-		Database = ".modget" // TODO: Guess database location
+		db, err := findDatabase()
+		if err != nil {
+			fmt.Printf("Failed to open database: %v\n", err)
+			os.Exit(1)
+		}
 		ids := toId(args)
 		if len(ids) == 0 {
 			fmt.Println("modget add requires at least one MODID or Slug")
@@ -58,14 +64,14 @@ var addCmd = &cobra.Command{
 			if err != nil {
 				fmt.Printf("Failed to download file: %v\n%v\n", file.FileName, err)
 				os.Exit(1)
-			} else {
-				err = record(file)
-				if err != nil {
-					fmt.Printf("Failed to add file to database: %v\n%v\n", file.FileName, err)
-					// TODO: remove failed downloaded file
-					os.Exit(1)
-				}
 			}
+			db.Files = append(db.Files, file)
+		}
+		err = db.Write(Path)
+		if err != nil {
+			fmt.Printf("Failed to write database: %v\n", err)
+			// TODO: remove failed downloaded files
+			os.Exit(1)
 		}
 	},
 }
@@ -74,6 +80,7 @@ func init() {
 	rootCmd.AddCommand(addCmd)
 	addCmd.Flags().StringVarP(&MinecraftVersion, "minecraft", "m", "", "Limit install for a specific minecraft version.")
 	addCmd.Flags().StringVarP(&Loader, "loader", "l", "", "Limit install for a specific minecraft mod loader.")
+	addCmd.Flags().StringVarP(&Path, "path", "p", "", "Mod install location.")
 }
 
 // Convert a list of strings to MODIDs
@@ -93,6 +100,21 @@ func toId(s []string) []int {
 		mods = append(mods, id)
 	}
 	return mods
+}
+
+// Find the .modget database at the path. Create the database if missing.
+func findDatabase() (database.Database, error) {
+	var db database.Database
+	if Path == "" {
+		Path = "."
+	}
+	err := util.EnsureDir(Path)
+	if err != nil {
+		return db, err
+	}
+	Path = filepath.Join(Path, ".modget")
+	db, err = database.Load(Path)
+	return db, err
 }
 
 // Find returns a curse.File for a MODID. It ensures the file matches the
@@ -123,12 +145,8 @@ func find(id int) (curse.File, error) {
 
 func get(f curse.File) error {
 	// TODO: Make this toggle-able with a verbose flag
+	p := filepath.Join(filepath.Dir(Path), f.FileName)
 	util.DebugFilePrint(f)
-	err := curse.Download(f.DownloadUrl, f.FileName)
-	return err
-}
-
-func record(f curse.File) error {
-	err := util.DatabaseAdd(f, Database)
+	err := curse.Download(f.DownloadUrl, p)
 	return err
 }

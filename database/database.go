@@ -14,7 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
-package util
+package database
 
 import (
 	"bytes"
@@ -35,6 +35,32 @@ type Database struct {
 	Files     []curse.File
 }
 
+func (db Database) Write(p string) error {
+	stream := &bytes.Buffer{}
+	en := gob.NewEncoder(stream)
+	err := en.Encode(db)
+	if err != nil {
+		return err
+	}
+	err = put(p, stream.Bytes())
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// Get a Database from a path. Return a blank database if one cannot be loaded.
+func Load(p string) (Database, error) {
+	var db Database
+	b, err := get(p)
+	if err != nil {
+		return db, nil
+	}
+	dec := gob.NewDecoder(bytes.NewBuffer(b))
+	err = dec.Decode(&db)
+	return db, err
+}
+
 // Get a []byte from a file
 func get(filename string) ([]byte, error) {
 	dat, err := ioutil.ReadFile(filename)
@@ -47,44 +73,6 @@ func get(filename string) ([]byte, error) {
 // Overwrite a file with a []byte
 func put(filename string, dat []byte) error {
 	err := ioutil.WriteFile(filename, dat, Mode)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-// Load database into memory.
-func DatabaseLoad(p string) (Database, error) {
-	var db Database
-	b, err := get(p)
-	if os.IsNotExist(err) {
-		return db, nil
-	} else if err != nil {
-		return db, err
-	}
-	dec := gob.NewDecoder(bytes.NewBuffer(b))
-	err = dec.Decode(&db)
-	if err != nil {
-		return db, err
-	}
-	return db, nil
-}
-
-// Add a new mod to the database. Loads the database into memory, checks if the
-// mod is already in the database, adds or updates it depending.
-func DatabaseAdd(file curse.File, p string) error {
-	db, err := DatabaseLoad(p)
-	if err != nil {
-		return err
-	}
-	db.Files = append(db.Files, file)
-	stream := &bytes.Buffer{}
-	en := gob.NewEncoder(stream)
-	err = en.Encode(db)
-	if err != nil {
-		return err
-	}
-	err = put(p, stream.Bytes())
 	if err != nil {
 		return err
 	}

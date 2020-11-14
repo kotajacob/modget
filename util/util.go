@@ -18,6 +18,7 @@ package util
 
 import (
 	"errors"
+	"os"
 	"sort"
 	"strings"
 	"time"
@@ -157,4 +158,14 @@ func GetModid(s string) (int, error) {
 	}
 	err = errors.New("Could not find: " + s)
 	return 0, err
+}
+
+// Create a directory if missing.
+func EnsureDir(dirName string) error {
+	err := os.Mkdir(dirName, os.ModeDir)
+	if err == nil || os.IsExist(err) {
+		return nil
+	} else {
+		return err
+	}
 }
