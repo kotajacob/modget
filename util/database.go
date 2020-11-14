@@ -17,8 +17,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package util
 
 import (
-	"encoding/json"
-	"fmt"
+	"bytes"
+	"encoding/gob"
 	"io/ioutil"
 	"os"
 
@@ -46,17 +46,17 @@ func put(filename string, dat []byte) error {
 	return nil
 }
 
-// Read the whole database returning a []curse.File
-func DatabaseRead(p string) ([]curse.File, error) {
+// Load database into memory.
+func DatabaseLoad(p string) ([]curse.File, error) {
 	var files []curse.File
 	b, err := get(p)
 	if os.IsNotExist(err) {
-		fmt.Println("FILE DOES NOT EXIST")
 		return files, nil
 	} else if err != nil {
 		return nil, err
 	}
-	err = json.Unmarshal(b, &files)
+	dec := gob.NewDecoder(bytes.NewBuffer(b))
+	err = dec.Decode(&files)
 	if err != nil {
 		return nil, err
 	}
@@ -66,16 +66,18 @@ func DatabaseRead(p string) ([]curse.File, error) {
 // Add a new mod to the database. Loads the database into memory, checks if the
 // mod is already in the database, adds or updates it depending.
 func DatabaseAdd(file curse.File, p string) error {
-	files, err := DatabaseRead(p)
+	files, err := DatabaseLoad(p)
 	if err != nil {
 		return err
 	}
 	files = append(files, file)
-	b, err := json.Marshal(files)
+	stream := &bytes.Buffer{}
+	en := gob.NewEncoder(stream)
+	err = en.Encode(files)
 	if err != nil {
 		return err
 	}
-	err = put(p, b)
+	err = put(p, stream.Bytes())
 	if err != nil {
 		return err
 	}

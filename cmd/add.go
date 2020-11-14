@@ -114,7 +114,7 @@ func add(mod int, version string, loader string) error {
 	if err != nil {
 		return err
 	}
-	err = util.DatabaseAdd(selected, "test.json")
+	err = util.DatabaseAdd(selected, ".modget")
 	if err != nil {
 		return err
 	}
