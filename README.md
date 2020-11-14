@@ -53,6 +53,8 @@ modget requires the following build dependencies:
 	- Limit install for a specific minecraft version.
 - `-l <LOADER>`
 	- Limit install to a specific mod loader.
+- `-p <PATH>`
+	- Install mods in a specific path instead of the current directory.
 
 ## del command options
 
