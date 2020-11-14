@@ -23,24 +23,29 @@ modget requires the following build dependencies:
 
 ## commands
 
-- `add <MODID>`
-	- Download and install a mod based on its MODID.
+- `add <MODID/Slug>`
+	- Download and install a mod based on its MODID or Slug.
 
-- `del <MODID>`
+- `del <MODID/Slug>`
+	- NOT YET IMPLEMENTED
 	- Remove and uninstall a mod based on its MODID.
 
-- `update <MODID>`
-	- Check each installed mod (in selected directory or current directory) and prompt to install any new mods.
-
-- `show <MODID>`
-	- Query and print more information about a specific mod by MODID.
+- `help <command>`
+	- Print help about a command and exit.
 
 - `search <Search String>`
 	- Search curseforge for mods based on search terms. Prints mod names, MODID, Version, and a short description.
 
-## global options
-- `-v <VERSION>`
-	- Limit install to a specific mod version.
+- `show <MODID/Slug>`
+	- NOT YET IMPLEMENTED
+	- Query and print more information about a specific mod by MODID.
+
+- `update <MODID/Slug>`
+	- NOT YET IMPLEMENTED
+	- Check each installed mod (in selected directory or current directory) and prompt to install any new mods.
+
+- `version`
+	- Print modget version and exit.
 
 ## add command options
 
@@ -52,12 +57,22 @@ modget requires the following build dependencies:
 ## del command options
 
 - `-auto-remove`
+	- NOT YET IMPLEMENTED
 	- Search for uneeded dependency mods and remove them.
 
 ## update command options
 
 - `-m <MINECRAFT VERSION>`
 	- Update to a different minecraft version.
+
+## Slug
+
+Every mod on curseforge has a short name called a slug which is found in the
+URL for the mod's page. For example in this url
+[https://www.curseforge.com/minecraft/mc-mods/appleskin](https://www.curseforge.com/minecraft/mc-mods/appleskin)
+the slug is `appleskin`. The modget commands are smart enough to convert slugs
+to MODIDs which makes managing your mods much easier. Internally everything
+uses MODID.
 
 ## MODID
 
