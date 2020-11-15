@@ -52,7 +52,7 @@ var addCmd = &cobra.Command{
 			os.Exit(1)
 		}
 		for _, id := range ids {
-			file, err := find(id)
+			file, err := findId(id)
 			if err != nil {
 				fmt.Printf("Failed to find mod: %v\n%v\n", id, err)
 				os.Exit(1)
@@ -120,7 +120,7 @@ func findDatabase() (database.Database, error) {
 // Find returns a curse.File for a MODID. It ensures the file matches the
 // correct Minecraft version and Loader. Additionally it warns the user if the
 // enter an unknown version or loader.
-func find(id int) (curse.File, error) {
+func findId(id int) (curse.File, error) {
 	files, err := curse.AddonFiles(id)
 	// Validate the modloader and mc version
 	mcVersions, err := curse.MinecraftVersionList()
