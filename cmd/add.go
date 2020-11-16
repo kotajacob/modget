@@ -30,9 +30,9 @@ import (
 )
 
 var (
-	MinecraftVersion string
-	Loader           string
-	Path             string
+	minecraftVersion string
+	loader           string
+	path             string
 )
 
 // addCmd represents the add command
@@ -46,13 +46,13 @@ var addCmd = &cobra.Command{
 			fmt.Printf("Failed to open database: %v\n", err)
 			os.Exit(1)
 		}
-		ids := toId(args)
+		ids := toID(args)
 		if len(ids) == 0 {
 			fmt.Println("modget add requires at least one MODID or Slug")
 			os.Exit(1)
 		}
 		for _, id := range ids {
-			file, err := findId(id)
+			file, err := findID(id)
 			if err != nil {
 				fmt.Printf("Failed to find mod: %v\n%v\n", id, err)
 				os.Exit(1)
@@ -67,7 +67,7 @@ var addCmd = &cobra.Command{
 			}
 			db.Files = append(db.Files, file)
 		}
-		err = db.Write(Path)
+		err = db.Write(path)
 		if err != nil {
 			fmt.Printf("Failed to write database: %v\n", err)
 			// TODO: remove failed downloaded files
@@ -78,13 +78,13 @@ var addCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(addCmd)
-	addCmd.Flags().StringVarP(&MinecraftVersion, "minecraft", "m", "", "Limit install for a specific minecraft version.")
-	addCmd.Flags().StringVarP(&Loader, "loader", "l", "", "Limit install for a specific minecraft mod loader.")
-	addCmd.Flags().StringVarP(&Path, "path", "p", "", "Mod install location.")
+	addCmd.Flags().StringVarP(&minecraftVersion, "minecraft", "m", "", "Limit install for a specific minecraft version.")
+	addCmd.Flags().StringVarP(&loader, "loader", "l", "", "Limit install for a specific minecraft mod loader.")
+	addCmd.Flags().StringVarP(&path, "path", "p", "", "Mod install location.")
 }
 
 // Convert a list of strings to MODIDs
-func toId(s []string) []int {
+func toID(s []string) []int {
 	// Convert string to int list of modids
 	var mods []int
 	for i := 0; i < len(s); i++ {
@@ -105,34 +105,34 @@ func toId(s []string) []int {
 // Find the .modget database at the path. Create the database if missing.
 func findDatabase() (database.Database, error) {
 	var db database.Database
-	if Path == "" {
-		Path = "."
+	if path == "" {
+		path = "."
 	}
-	err := util.EnsureDir(Path)
+	err := util.EnsureDir(path)
 	if err != nil {
 		return db, err
 	}
-	Path = filepath.Join(Path, ".modget")
-	db, err = database.Load(Path)
+	path = filepath.Join(path, ".modget")
+	db, err = database.Load(path)
 	return db, err
 }
 
 // Find returns a curse.File for a MODID. It ensures the file matches the
 // correct Minecraft version and Loader. Additionally it warns the user if the
 // enter an unknown version or loader.
-func findId(id int) (curse.File, error) {
+func findID(id int) (curse.File, error) {
 	files, err := curse.AddonFiles(id)
 	// Validate the modloader and mc version
 	mcVersions, err := curse.MinecraftVersionList()
-	if MinecraftVersion != "" {
-		files = util.VersionFilter(files, MinecraftVersion)
-		if !util.ValidateMinecraftVersion(MinecraftVersion, mcVersions) {
+	if minecraftVersion != "" {
+		files = util.VersionFilter(files, minecraftVersion)
+		if !util.ValidateMinecraftVersion(minecraftVersion, mcVersions) {
 			fmt.Println("Warning: Minecraft Version entered is not recognized!")
 		}
 	}
-	if Loader != "" {
-		files = util.LoaderFilter(files, Loader)
-		if !util.ValidateModLoader(Loader) {
+	if loader != "" {
+		files = util.LoaderFilter(files, loader)
+		if !util.ValidateModLoader(loader) {
 			fmt.Println("Warning: Modloader entered is not recognized!")
 		}
 	}
@@ -145,7 +145,7 @@ func findId(id int) (curse.File, error) {
 
 func get(f curse.File) error {
 	// TODO: Make this toggle-able with a verbose flag
-	p := filepath.Join(filepath.Dir(Path), f.FileName)
+	p := filepath.Join(filepath.Dir(path), f.FileName)
 	util.DebugFilePrint(f)
 	err := curse.Download(f.DownloadUrl, p)
 	return err
