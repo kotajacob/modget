@@ -24,6 +24,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var (
+	path string
+)
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "modget [command]",
@@ -38,4 +42,8 @@ func Execute() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
+}
+
+func init() {
+	rootCmd.PersistentFlags().StringVarP(&path, "path", "p", "", "Mod install location.")
 }

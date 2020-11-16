@@ -20,6 +20,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"git.sr.ht/~kota/modget/curse"
 	"git.sr.ht/~kota/modget/util"
@@ -29,7 +30,6 @@ import (
 var (
 	minecraftVersion string
 	loader           string
-	path             string
 )
 
 // addCmd represents the add command
@@ -70,7 +70,7 @@ var addCmd = &cobra.Command{
 			os.Exit(1)
 		}
 		fmt.Printf("Updating database... ")
-		err = db.Write(path)
+		err = db.Write(filepath.Join(path, ".modget"))
 		if err != nil {
 			fmt.Printf("Failed to write database: %v\n", err)
 			// TODO: remove failed downloaded files
@@ -84,5 +84,4 @@ func init() {
 	rootCmd.AddCommand(addCmd)
 	addCmd.Flags().StringVarP(&minecraftVersion, "minecraft", "m", "", "Limit install for a specific minecraft version.")
 	addCmd.Flags().StringVarP(&loader, "loader", "l", "", "Limit install for a specific minecraft mod loader.")
-	addCmd.Flags().StringVarP(&path, "path", "p", "", "Mod install location.")
 }
