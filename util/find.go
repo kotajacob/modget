@@ -79,33 +79,6 @@ func FindLocalMod(id int, db database.Database) (database.Mod, error) {
 	return mod, errors.New("file not found in database")
 }
 
-// GetMods downloads a list of files and updates a Database
-func GetMods(addons []curse.Addon, files []curse.File, path string, db database.Database) (database.Database, error) {
-	for i, file := range files {
-		p := filepath.Join(filepath.Dir(path), file.FileName)
-		fmt.Printf("Get:%d %v\n", i, file.DownloadURL)
-		err := curse.Download(file.DownloadURL, p)
-		db = db.AddMod(addons[i], file)
-		if err != nil {
-			return db, err
-		}
-	}
-	return db, nil
-}
-
-// RemoveMods removes a list of local mods and updates a Database
-func RemoveMods(mods []database.Mod, path string, db database.Database) (database.Database, error) {
-	for _, mod := range mods {
-		fmt.Printf("Remove: %v\n", mod.FileName)
-		err := os.Remove(filepath.Join(path, mod.FileName))
-		if err != nil {
-			return db, err
-		}
-		db = db.DelMod(mod.ID)
-	}
-	return db, nil
-}
-
 // ensureDir creates a directory if missing.
 func ensureDir(dirName string) error {
 	err := os.Mkdir(dirName, os.ModeDir)
