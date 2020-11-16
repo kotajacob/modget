@@ -72,9 +72,8 @@ func ValidateModLoader(loader string) bool {
 	loader = strings.ToLower(loader)
 	if ModLoaders[loader] {
 		return true
-	} else {
-		return false
 	}
+	return false
 }
 
 // ValidateMinecraftVersion checks if the passed mc version string is a valid Minecraft Version
@@ -169,7 +168,6 @@ func EnsureDir(dirName string) error {
 	err := os.Mkdir(dirName, os.ModeDir)
 	if err == nil || os.IsExist(err) {
 		return nil
-	} else {
-		return err
 	}
+	return err
 }
