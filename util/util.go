@@ -27,9 +27,11 @@ import (
 	"git.sr.ht/~kota/modget/curse"
 )
 
+// StringSet represents a set of strings. Although they are mapped to bool they
+// should be removed not set to false.
 type StringSet map[string]bool
 
-// Check if two StringSets conflict
+// Conflicts checks if two StringSets conflict
 func (a StringSet) Conflicts(b StringSet) bool {
 	for k, _ := range a {
 		if b[k] {
@@ -48,7 +50,7 @@ func (a StringSet) Copy() StringSet {
 	return copy
 }
 
-// Remove a string from a StringSet
+// RemoveString removes a string from a StringSet
 func (a StringSet) RemoveString(s string) StringSet {
 	if a[s] {
 		delete(a, s)
@@ -56,8 +58,8 @@ func (a StringSet) RemoveString(s string) StringSet {
 	return a
 }
 
-// List of valid modloaders because curseforge doesn't provide one...
-// dont set to false instead use delete()
+// ModLoaders is a StringSet of valid modloaders because curseforge doesn't
+// provide one...  dont set to false instead use RemoveString()
 var ModLoaders = StringSet{
 	"forge":      true,
 	"fabric":     true,
@@ -65,7 +67,7 @@ var ModLoaders = StringSet{
 	"rift":       true,
 }
 
-// Check if the passed loader string is a valid modloader
+// ValidateModLoader checks if the passed loader string is a valid modloader
 func ValidateModLoader(loader string) bool {
 	loader = strings.ToLower(loader)
 	if ModLoaders[loader] {
@@ -75,7 +77,7 @@ func ValidateModLoader(loader string) bool {
 	}
 }
 
-// Check if the passed mc version string is a valid Minecraft Version
+// ValidateMinecraftVersion checks if the passed mc version string is a valid Minecraft Version
 func ValidateMinecraftVersion(version string, mcVersions []curse.MinecraftVersion) bool {
 	for _, mcVersion := range mcVersions {
 		if mcVersion.VersionString == version {
@@ -85,7 +87,7 @@ func ValidateMinecraftVersion(version string, mcVersions []curse.MinecraftVersio
 	return false
 }
 
-// Attempts to filer a list of Files and return only those that are
+// LoaderFilter attempts to filer a list of Files and return only those that are
 // "compatible" with a specified loader. Unfortunately curseforge doesn't allow
 // mod authors to select a loader from a dropdown when they upload a file.
 // Instead mod authors have taken to adding a loader as a "GameVersion"
@@ -112,7 +114,8 @@ func LoaderFilter(files []curse.File, loader string) []curse.File {
 	return matches
 }
 
-// Filters a list of Files returning only the ones that match the Minecraft Version.
+// VersionFilter filters a list of Files returning only the ones that match the
+// Minecraft Version.
 func VersionFilter(files []curse.File, version string) []curse.File {
 	var matchFiles []curse.File
 	for _, file := range files {
@@ -125,7 +128,7 @@ func VersionFilter(files []curse.File, version string) []curse.File {
 	return matchFiles
 }
 
-// Sorts a list of files returning them in order from newest to old.
+// TimeSort sorts a list of files returning them in order from newest to old.
 func TimeSort(files []curse.File) []curse.File {
 	sort.SliceStable(files, func(i, j int) bool {
 		iTime, err := time.Parse(time.RFC3339, files[i].FileDate)
@@ -161,7 +164,7 @@ func GetModid(s string) (int, error) {
 	return 0, err
 }
 
-// Create a directory if missing.
+// EnsureDir creates a directory if missing.
 func EnsureDir(dirName string) error {
 	err := os.Mkdir(dirName, os.ModeDir)
 	if err == nil || os.IsExist(err) {

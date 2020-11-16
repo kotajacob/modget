@@ -23,7 +23,7 @@ import (
 	"git.sr.ht/~kota/modget/curse"
 )
 
-// Print some debug info about a curse.File
+// DebugFilePrint shows debug info about a curse.File
 func DebugFilePrint(file curse.File) {
 	fmt.Println(file.FileName)
 	fmt.Println(file.FileDate)
@@ -33,7 +33,7 @@ func DebugFilePrint(file curse.File) {
 	}
 }
 
-// Print some debug info about a curse.Addon
+// DebugAddonPrint shows debug info about a curse.Addon
 func DebugAddonPrint(addon curse.Addon) {
 	fmt.Println(addon.Name)
 	fmt.Println(addon.Slug)
