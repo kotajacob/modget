@@ -21,10 +21,12 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 
 	"git.sr.ht/~kota/modget/curse"
+	"git.sr.ht/~kota/modget/database"
 )
 
 // getModid takes a string, which is meant to be an addon's slug and attempts
@@ -63,6 +65,21 @@ func ToID(s []string) []int {
 		mods = append(mods, id)
 	}
 	return mods
+}
+
+// FindDatabase finds the .modget database at the path. Create the database if missing.
+func FindDatabase(path string) (database.Database, error) {
+	var db database.Database
+	if path == "" {
+		path = "."
+	}
+	err := EnsureDir(path)
+	if err != nil {
+		return db, err
+	}
+	path = filepath.Join(path, ".modget")
+	db, err = database.Load(path)
+	return db, err
 }
 
 // EnsureDir creates a directory if missing.

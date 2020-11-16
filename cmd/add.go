@@ -46,7 +46,7 @@ var addCmd = &cobra.Command{
 			os.Exit(1)
 		}
 		fmt.Printf("Reading database... ")
-		db, err := findDatabase()
+		db, err := util.FindDatabase(path)
 		if err != nil {
 			fmt.Printf("Failed to open database: %v\n", err)
 			os.Exit(1)
@@ -91,21 +91,6 @@ func init() {
 	addCmd.Flags().StringVarP(&minecraftVersion, "minecraft", "m", "", "Limit install for a specific minecraft version.")
 	addCmd.Flags().StringVarP(&loader, "loader", "l", "", "Limit install for a specific minecraft mod loader.")
 	addCmd.Flags().StringVarP(&path, "path", "p", "", "Mod install location.")
-}
-
-// Find the .modget database at the path. Create the database if missing.
-func findDatabase() (database.Database, error) {
-	var db database.Database
-	if path == "" {
-		path = "."
-	}
-	err := util.EnsureDir(path)
-	if err != nil {
-		return db, err
-	}
-	path = filepath.Join(path, ".modget")
-	db, err = database.Load(path)
-	return db, err
 }
 
 // findFile returns a curse.File for a MODID. It ensures the file matches the
