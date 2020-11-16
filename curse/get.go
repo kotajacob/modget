@@ -30,6 +30,8 @@ import (
  * official API documentation
  */
 
+// Search represents a new curseforge search. Note not all fields are
+// implemented yet, see AddonSearch for details.
 type Search struct {
 	CategoryId   int    // categoryId: 0
 	GameId       int    // gameId: 432 = minecraft, 1 = wow
