@@ -20,7 +20,22 @@ package util
 import (
 	"fmt"
 	"strings"
+
+	"git.sr.ht/~kota/modget/curse"
 )
+
+// ShowMods prints a list of mods that will be installed.
+func ShowMods(files []curse.File) {
+	fmt.Println("The following mods will be installed:")
+	var s string
+	var d int
+	for _, file := range files {
+		s += " " + file.FileName
+		d += file.FileLength
+	}
+	fmt.Printf("%v\n", s)
+	fmt.Printf("After this operation, %d of additional disk space will be used.\n", d)
+}
 
 // Ask prompts the user with a Yes/No question about continuing
 func Ask() bool {

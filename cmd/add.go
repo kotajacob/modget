@@ -20,10 +20,8 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 
 	"git.sr.ht/~kota/modget/curse"
-	"git.sr.ht/~kota/modget/database"
 	"git.sr.ht/~kota/modget/util"
 	"github.com/spf13/cobra"
 )
@@ -65,11 +63,11 @@ var addCmd = &cobra.Command{
 		// 	util.DebugFilePrint(file)
 		// }
 		fmt.Println("Done")
-		showMods(files)
+		util.ShowMods(files)
 		if !util.Ask() {
 			os.Exit(0)
 		}
-		err = getMods(files, db)
+		db, err = util.GetMods(files, path, db)
 		if err != nil {
 			fmt.Printf("Failed to download file: %v\n", err)
 			os.Exit(1)
@@ -90,29 +88,4 @@ func init() {
 	addCmd.Flags().StringVarP(&minecraftVersion, "minecraft", "m", "", "Limit install for a specific minecraft version.")
 	addCmd.Flags().StringVarP(&loader, "loader", "l", "", "Limit install for a specific minecraft mod loader.")
 	addCmd.Flags().StringVarP(&path, "path", "p", "", "Mod install location.")
-}
-
-func showMods(files []curse.File) {
-	fmt.Println("The following mods will be installed:")
-	var s string
-	var d int
-	for _, file := range files {
-		s += " " + file.FileName
-		d += file.FileLength
-	}
-	fmt.Printf("%v\n", s)
-	fmt.Printf("After this operation, %d of additional disk space will be used.\n", d)
-}
-
-func getMods(files []curse.File, db database.Database) error {
-	for i, file := range files {
-		p := filepath.Join(filepath.Dir(path), file.FileName)
-		fmt.Printf("Get:%d %v\n", i, file.DownloadURL)
-		err := curse.Download(file.DownloadURL, p)
-		db.Files = append(db.Files, file)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
 }

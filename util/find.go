@@ -68,6 +68,20 @@ func FindFile(id int, minecraftVersion string, loader string) (curse.File, error
 	return files[0], err
 }
 
+// GetMods downloads a list of files and updates a Database
+func GetMods(files []curse.File, path string, db database.Database) (database.Database, error) {
+	for i, file := range files {
+		p := filepath.Join(filepath.Dir(path), file.FileName)
+		fmt.Printf("Get:%d %v\n", i, file.DownloadURL)
+		err := curse.Download(file.DownloadURL, p)
+		db.Files = append(db.Files, file)
+		if err != nil {
+			return db, err
+		}
+	}
+	return db, nil
+}
+
 // EnsureDir creates a directory if missing.
 func EnsureDir(dirName string) error {
 	err := os.Mkdir(dirName, os.ModeDir)
