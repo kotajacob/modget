@@ -52,8 +52,8 @@ type Addon struct {
 	PortalName             string                  `json:"portalName"`
 	DateModified           string                  `json:"dateModified"`
 	DateCreated            string                  `json:"dateCreated"`
-	DateReleased           string                  `json:dateReleased"`
-	IsAvailable            bool                    `json:isAvailable"`
+	DateReleased           string                  `json:"dateReleased"`
+	IsAvailable            bool                    `json:"isAvailable"`
 	IsExperimental         bool                    `json:"isExperimental"`
 }
 
@@ -107,7 +107,7 @@ type CategorySection struct {
 	PackageType             int    `json:"packageType"`
 	Path                    string `json:"path"`
 	InitialInclusionPattern string `json:"initialInclusionPattern"`
-	ExtraIncludePattern     string `json:extraIncludePattern"`
+	ExtraIncludePattern     string `json:"extraIncludePattern"`
 	GameCategoryID          int    `json:"gameCategoryId"`
 }
 
