@@ -23,11 +23,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var version string
+var Version string
 
 //SetVersion initializes the aerc version displayed in template functions
 func SetVersion(v string) {
-	version = v
+	Version = v
 }
 
 // versionCmd represents the version command
@@ -36,7 +36,7 @@ var versionCmd = &cobra.Command{
 	Aliases: []string{"v"},
 	Short:   "Print the version and exit.",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("modget " + version)
+		fmt.Println("modget " + Version)
 	},
 }
 
