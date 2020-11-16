@@ -31,7 +31,7 @@ type Addon struct {
 	Name                   string                  `json:"name"`
 	Authors                []Author                `json:"authors"`
 	Attachments            []Attachment            `json:"attachments"`
-	WebsiteUrl             string                  `json:"websiteUrl"`
+	WebsiteURL             string                  `json:"websiteUrl"`
 	GameID                 int                     `json:"gameId"`
 	Summary                string                  `json:"summary"`
 	DefaultFileID          int                     `json:"defaultFileId"`
@@ -62,7 +62,7 @@ type Addon struct {
 // author's projects.
 type Author struct {
 	Name              string `json:"name"`
-	Url               string `json:"url"`
+	URL               string `json:"url"`
 	ProjectID         int    `json:"projectId"`
 	ID                int    `json:"id"`
 	ProjectTitleID    string `json:"projectTitleId"`
@@ -78,9 +78,9 @@ type Attachment struct {
 	ProjectID    int    `json:"projectId"`
 	Description  string `json:"description"`
 	IsDefault    bool   `json:"isDefault"`
-	ThumbnailUrl string `json:"thumbnailUrl"`
+	ThumbnailURL string `json:"thumbnailUrl"`
 	Title        string `json:"title"`
-	Url          string `json:"url"`
+	URL          string `json:"url"`
 	Status       int    `json:"status"`
 }
 
@@ -89,8 +89,8 @@ type Attachment struct {
 type Category struct {
 	CategoryID int    `json:"categoryId"`
 	Name       string `json:"name"`
-	Url        string `json:"url"`
-	AvatarUrl  string `json:"avatarUrl"`
+	URL        string `json:"url"`
+	AvatarURL  string `json:"avatarUrl"`
 	ParentID   int    `json:"parentId"`
 	RootID     int    `json:"rootId"`
 	Project    int    `json:"projectId"`
@@ -124,7 +124,7 @@ type GameVersionLatestFile struct {
 
 // File represents a specific .jar mod file uploaded to curseforge as part of
 // an Addon. It has lots of important information about the file and contains a
-// DownloadUrl should you want to save it locally.
+// DownloadURL should you want to save it locally.
 type File struct {
 	ID                      int          `json:"id"`
 	DisplayName             string       `json:"displayName"`
@@ -133,7 +133,7 @@ type File struct {
 	FileLength              int          `json:"fileLength"`
 	ReleaseType             int          `json:"releaseType"`
 	FileStatus              int          `json:"fileStatus"`
-	DownloadUrl             string       `json:"downloadUrl"`
+	DownloadURL             string       `json:"downloadUrl"`
 	IsAlternate             bool         `json:"isAlternate"`
 	AlternateFileID         int          `json:"alternateFileId"`
 	Dependencies            []Dependency `json:"dependencies"`
@@ -168,8 +168,8 @@ type MinecraftVersion struct {
 	ID                    int    `json:"id"`
 	GameVersionID         int    `json:"gameVersionId"`
 	VersionString         string `json:"versionString"`
-	JarDownloadUrl        string `json:"jarDownloadUrl"`
-	JsonDownloadUrl       string `json:"jsonDownloadUrl"`
+	JarDownloadURL        string `json:"jarDownloadUrl"`
+	JSONDownloadURL       string `json:"jsonDownloadUrl"`
 	Approved              bool   `json:"approved"`
 	DateModified          string `json:"dateModified"`
 	GameVersionTypeID     int    `json:"gameVersionTypeId"`

@@ -148,6 +148,6 @@ func get(f curse.File) error {
 	// TODO: Make this toggle-able with a verbose flag
 	p := filepath.Join(filepath.Dir(path), f.FileName)
 	util.DebugFilePrint(f)
-	err := curse.Download(f.DownloadUrl, p)
+	err := curse.Download(f.DownloadURL, p)
 	return err
 }
