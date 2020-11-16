@@ -27,7 +27,6 @@ modget requires the following build dependencies:
 	- Download and install a mod based on its MODID or Slug.
 
 - `del <MODID/Slug>`
-	- NOT YET IMPLEMENTED
 	- Remove and uninstall a mod based on its MODID or Slug.
 
 - `help <command>`
@@ -37,8 +36,7 @@ modget requires the following build dependencies:
 	- Search curseforge for mods based on search terms. Prints mod names, MODID, Version, and a short description.
 
 - `show <MODID/Slug>`
-	- NOT YET IMPLEMENTED
-	- Query and print more information about a specific mod by MODID Slug.
+	- Query and print information about installed mods or a specific mod by MODID or Slug.
 
 - `update <MODID/Slug>`
 	- NOT YET IMPLEMENTED
@@ -47,25 +45,24 @@ modget requires the following build dependencies:
 - `version`
 	- Print modget version and exit.
 
+## global command options
+
+- `-p <PATH>`
+	- Install mods in a specific path instead of the current directory.
+
 ## add command options
 
 - `-m <MINECRAFT VERSION>`
 	- Limit install for a specific minecraft version.
 - `-l <LOADER>`
 	- Limit install to a specific mod loader.
-- `-p <PATH>`
-	- Install mods in a specific path instead of the current directory.
-
-## del command options
-
-- `-auto-remove`
-	- NOT YET IMPLEMENTED
-	- Search for uneeded dependency mods and remove them.
 
 ## update command options
 
 - `-m <MINECRAFT VERSION>`
 	- Update to a different minecraft version.
+- `-l <LOADER>`
+	- Switch to a different loader.
 
 ## Slug
 
