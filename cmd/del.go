@@ -63,8 +63,11 @@ var delCmd = &cobra.Command{
 		if !util.Ask() {
 			os.Exit(0)
 		}
-		// TODO: Remove local .jar files
-		// TODO: Remove Mods from database
+		db, err = util.RemoveMods(mods, path, db)
+		if err != nil {
+			fmt.Printf("Failed to remove mod: %v\n", err)
+			os.Exit(1)
+		}
 		fmt.Printf("Updating database... ")
 		err = db.Write(filepath.Join(path, ".modget"))
 		if err != nil {

@@ -79,6 +79,17 @@ func (db Database) AddMod(addon curse.Addon, file curse.File) Database {
 	return db
 }
 
+// DelMod removed a Mod from a Database by its index
+func (db Database) DelMod(ID int) Database {
+	mods := db.Mods
+	for i, mod := range mods {
+		if mod.ID == ID {
+			db.Mods = remove(db.Mods, i)
+		}
+	}
+	return db
+}
+
 // Write saves a Database to a file at a path.
 func (db Database) Write(p string) error {
 	stream := &bytes.Buffer{}
@@ -122,4 +133,9 @@ func put(filename string, dat []byte) error {
 		return err
 	}
 	return nil
+}
+
+// Remove an element from a slice by index
+func remove(slice []Mod, i int) []Mod {
+	return append(slice[:i], slice[i+1:]...)
 }

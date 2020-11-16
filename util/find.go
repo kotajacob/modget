@@ -33,7 +33,7 @@ func FindDatabase(path string) (database.Database, error) {
 	if path == "" {
 		path = "."
 	}
-	err := EnsureDir(path)
+	err := ensureDir(path)
 	if err != nil {
 		return db, err
 	}
@@ -93,8 +93,21 @@ func GetMods(addons []curse.Addon, files []curse.File, path string, db database.
 	return db, nil
 }
 
-// EnsureDir creates a directory if missing.
-func EnsureDir(dirName string) error {
+// RemoveMods removes a list of local mods and updates a Database
+func RemoveMods(mods []database.Mod, path string, db database.Database) (database.Database, error) {
+	for _, mod := range mods {
+		fmt.Printf("Remove: %v\n", mod.FileName)
+		err := os.Remove(filepath.Join(path, mod.FileName))
+		if err != nil {
+			return db, err
+		}
+		db = db.DelMod(mod.ID)
+	}
+	return db, nil
+}
+
+// ensureDir creates a directory if missing.
+func ensureDir(dirName string) error {
 	err := os.Mkdir(dirName, os.ModeDir)
 	if err == nil || os.IsExist(err) {
 		return nil
