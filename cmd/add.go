@@ -39,7 +39,7 @@ var (
 // addCmd represents the add command
 var addCmd = &cobra.Command{
 	Use:   "add <MODID/Slug>",
-	Short: "Download and install a mod based on its MODID or Slug.",
+	Short: "Download and install mod(s) based on MODID or Slug.",
 	Run: func(cmd *cobra.Command, args []string) {
 		var files []curse.File
 		if len(args) == 0 {
