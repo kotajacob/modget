@@ -19,16 +19,43 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
 
+	"git.sr.ht/~kota/modget/util"
 	"github.com/spf13/cobra"
 )
 
 // delCmd represents the del command
 var delCmd = &cobra.Command{
 	Use:   "del <MODID/Slug>",
-	Short: "Remove installed mod(s).",
+	Short: "Remove installed mod(s) based on MODID or Slug.",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("del called")
+		if len(args) == 0 {
+			fmt.Println("modget del requires at least one MODID or Slug")
+			os.Exit(1)
+		}
+		fmt.Printf("Reading database... ")
+		db, err := util.FindDatabase(path)
+		if err != nil {
+			fmt.Printf("Failed to open database: %v\n", err)
+			os.Exit(1)
+		}
+		fmt.Println("Done")
+		// TODO: Check if args are in database. Only print those.
+		util.ShowMods(db.Files)
+		if !util.Ask() {
+			os.Exit(0)
+		}
+		// TODO: Remove local .jar files
+		// TODO: Remove Files from database
+		fmt.Printf("Updating database... ")
+		err = db.Write(filepath.Join(path, ".modget"))
+		if err != nil {
+			fmt.Printf("Failed to write database: %v\n", err)
+			os.Exit(1)
+		}
+		fmt.Println("Done")
 	},
 }
 
