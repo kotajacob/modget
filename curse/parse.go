@@ -23,7 +23,7 @@ import (
 
 // Date format = RFC3339
 
-// An addon represents a distinct project on curseforge. It contains nearly
+// Addon represents a distinct project on curseforge. It contains nearly
 // everything you would see when visiting a mod's landing page in a web
 // browser. It even contains a list of the latest files uploaded.
 type Addon struct {
@@ -57,7 +57,7 @@ type Addon struct {
 	IsExperimental         bool                    `json:"isExperimental"`
 }
 
-// An author is a user's profile on curseforge. An Addon can have several
+// Author is a user's profile on curseforge. An Addon can have several
 // authors, but unforunately the author struct does not contain a list of the
 // author's projects.
 type Author struct {
@@ -71,7 +71,7 @@ type Author struct {
 	TwitchID          int    `json:"twitchId"`
 }
 
-// An attachement is a file uploaded to the Addon page that is NOT the mod
+// Attachment is a file uploaded to the Addon page that is NOT the mod
 // itself. Normally this will be something like a screenshot or gif.
 type Attachment struct {
 	ID           int    `json:"id"`
@@ -84,11 +84,8 @@ type Attachment struct {
 	Status       int    `json:"status"`
 }
 
-// An addon can be in several categories chosed by the authors. This is useful
-// for user's discovering new mods. These are the things on the sidebar when
-// you're browsing through the mods on curseforge. Not to be confused with
-// CategorySection which refers to if the Addon is a mod, modpack,
-// resourcepack, world, and so on.
+// Category represents one of the sections on Curseforge. Addons can be in
+// multiple Categories. They are useful for discovering new mods.
 type Category struct {
 	CategoryID int    `json:"categoryId"`
 	Name       string `json:"name"`
@@ -101,9 +98,8 @@ type Category struct {
 	GameID     int    `json:"gameId"`
 }
 
-// An addon only has one CategorySection. The CategorySection refers to if the
-// Addon is a mod, modpack, resourcepack, world, and so on. All mods will be in
-// the "Mods" CategorySection.
+// CategorySection refers to if the Addon is a mod, modpack, resourcepack,
+// world, and so on. All mods will be in the "Mods" CategorySection.
 type CategorySection struct {
 	ID                      int    `json:"id"`
 	GameID                  int    `json:"gameId"`
@@ -115,11 +111,10 @@ type CategorySection struct {
 	GameCategoryID          int    `json:"gameCategoryId"`
 }
 
-// An addon contains a list of GameVersionLatestFile(s) which essentially just
-// tells you which file is the latest for each "GameVersion" this is obviously
-// very useful, but it notably doesn't contain any information about the file
-// other than the "ProjectFileID" which can then be used to get more info about
-// the file in question.
+// GameVersionLatestFile essentially tells you which file is the latest for
+// each "GameVersion" this is obviously very useful, but it notably doesn't
+// contain any information about the file other than the "ProjectFileID" which
+// can then be used to get more info about the file in question.
 type GameVersionLatestFile struct {
 	GameVersion     string `json:"gameVersion"`
 	ProjectFileID   int    `json:"projectFileId"`
@@ -153,24 +148,22 @@ type File struct {
 	GameVersionFlavor       string       `json:"gameVersionFlavor"`
 }
 
-// An Addon can mark another Addon as a dependency. In this case the dependency
-// should also be automatically fetched.
+// Dependency represents an Addon that is required by a certain other Addon.
 type Dependency struct {
 	AddonID int `json:"addonId"`
 	Type    int `json:"type"`
 }
 
-// A File contains information about the specific files an folder inside the
-// .jar which can be downloaded. Normally a .jar will have a META-INF,
-// mcmod.info, pack.mcmeta, and a folder with the class files. This varies with
-// different loaders. Additionally a fingerprint is given which could later be
-// used for verification.
+// Module is the content inside a File's .jar such as  META-INF, mcmod.info,
+// pack.mcmeta, and a folder with the class files. This varies with different
+// loaders. Additionally a fingerprint is given which could later be used for
+// verification.
 type Module struct {
 	Foldername  string `json:"foldername"`
 	Fingerprint int    `json:"fingerprint"`
 }
 
-// A Minecraft Version contains information about a particular update of minecraft.
+// MinecraftVersion contains information about a particular update of minecraft.
 type MinecraftVersion struct {
 	ID                    int    `json:"id"`
 	GameVersionID         int    `json:"gameVersionId"`
@@ -184,7 +177,7 @@ type MinecraftVersion struct {
 	GameVersionTypeStatus int    `json:"gameVersionTypeStatus"`
 }
 
-// A Modloader defines the properties of one of the modloaders supported by
+// Modloader defines the properties of one of the modloaders supported by
 // curseforge. Currently is seems to only support forge so this isn't very
 // useful for fabric mods.
 type Modloader struct {
