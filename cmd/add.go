@@ -59,9 +59,6 @@ var addCmd = &cobra.Command{
 			}
 			files = append(files, file)
 		}
-		// for _, file := range files {
-		// 	util.DebugFilePrint(file)
-		// }
 		fmt.Println("Done")
 		util.ShowMods(files)
 		if !util.Ask() {
