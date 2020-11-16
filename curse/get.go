@@ -33,13 +33,13 @@ import (
 // Search represents a new curseforge search. Note not all fields are
 // implemented yet, see AddonSearch for details.
 type Search struct {
-	CategoryId   int    // categoryId: 0
-	GameId       int    // gameId: 432 = minecraft, 1 = wow
+	CategoryID   int    // categoryID: 0
+	GameID       int    // gameID: 432 = minecraft, 1 = wow
 	GameVersion  string // gameVersion: 1.12.2
 	Index        int    // index: 0
 	PageSize     int    // pageSize: 25
 	SearchFilter string // searchFilter: appleskin (the actual search string)
-	SectionId    int    // sectionId: 6 = mods, 4561 = resource packs, 4471 = modpacks, 4560 = worlds
+	SectionID    int    // sectionID: 6 = mods, 4561 = resource packs, 4471 = modpacks, 4560 = worlds
 	Sort         int    // sort: 0
 }
 
@@ -88,8 +88,8 @@ func Download(url, filename string) error {
 }
 
 // AddonInfo fetches a detailed json response for a specific addon.
-func AddonInfo(modId int) (Addon, error) {
-	url := "https://addons-ecs.forgesvc.net/api/v2/addon/" + fmt.Sprintf("%d", modId)
+func AddonInfo(modID int) (Addon, error) {
+	url := "https://addons-ecs.forgesvc.net/api/v2/addon/" + fmt.Sprintf("%d", modID)
 	response, err := get(url)
 	addon, err := parseAddonInfo(response)
 	return addon, err
@@ -99,11 +99,11 @@ func AddonInfo(modId int) (Addon, error) {
 func AddonSearch(s Search) ([]Addon, error) {
 	url := "https://addons-ecs.forgesvc.net/api/v2/addon/search?"
 	url += "gameId="
-	url += fmt.Sprintf("%d", s.GameId)
+	url += fmt.Sprintf("%d", s.GameID)
 	url += "&sectionId="
-	url += fmt.Sprintf("%d", s.SectionId)
+	url += fmt.Sprintf("%d", s.SectionID)
 	// url += "categoryId="
-	// url += fmt.Sprintf("%d", s.CategoryId)
+	// url += fmt.Sprintf("%d", s.CategoryID)
 	// url += "&gameVersion="
 	// url += fmt.Sprintf("%v", s.GameVersion)
 	// url += "&index="
@@ -121,8 +121,8 @@ func AddonSearch(s Search) ([]Addon, error) {
 
 // AddonFileInformation fetches a detailed json response for a specific file of
 // a specific addon.
-func AddonFileInformation(modId, fileId int) (File, error) {
-	url := "https://addons-ecs.forgesvc.net/api/v2/addon/" + fmt.Sprintf("%d", modId) + "/file/" + fmt.Sprintf("%d", fileId)
+func AddonFileInformation(modID, fileID int) (File, error) {
+	url := "https://addons-ecs.forgesvc.net/api/v2/addon/" + fmt.Sprintf("%d", modID) + "/file/" + fmt.Sprintf("%d", fileID)
 	response, err := get(url)
 	file, err := parseAddonFileInformation(response)
 	return file, err
@@ -131,8 +131,8 @@ func AddonFileInformation(modId, fileId int) (File, error) {
 // AddonFileDownloadURL fetches only the download url as a string for a
 // specific file of a specific addon. Note you might already have this URL if
 // you did GetAddonFiles or GetAddonFileInformation.
-func AddonFileDownloadURL(modId, fileId int) (string, error) {
-	url := "https://addons-ecs.forgesvc.net/api/v2/addon/" + fmt.Sprintf("%d", modId) + "/file/" + fmt.Sprintf("%d", fileId) + "/download-url"
+func AddonFileDownloadURL(modID, fileID int) (string, error) {
+	url := "https://addons-ecs.forgesvc.net/api/v2/addon/" + fmt.Sprintf("%d", modID) + "/file/" + fmt.Sprintf("%d", fileID) + "/download-url"
 	response, err := get(url)
 	downloadURL := parseAddonFileDownloadURL(response)
 	return downloadURL, err
@@ -140,8 +140,8 @@ func AddonFileDownloadURL(modId, fileId int) (string, error) {
 
 // AddonFiles fetches a detailed json response for all the files of a specific
 // addon.
-func AddonFiles(modId int) ([]File, error) {
-	url := "https://addons-ecs.forgesvc.net/api/v2/addon/" + fmt.Sprintf("%d", modId) + "/files"
+func AddonFiles(modID int) ([]File, error) {
+	url := "https://addons-ecs.forgesvc.net/api/v2/addon/" + fmt.Sprintf("%d", modID) + "/files"
 	response, err := get(url)
 	files, err := parseAddonFiles(response)
 	return files, err

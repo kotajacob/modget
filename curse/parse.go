@@ -27,19 +27,19 @@ import (
 // everything you would see when visiting a mod's landing page in a web
 // browser. It even contains a list of the latest files uploaded.
 type Addon struct {
-	Id                     int                     `json:"id"`
+	ID                     int                     `json:"id"`
 	Name                   string                  `json:"name"`
 	Authors                []Author                `json:"authors"`
 	Attachments            []Attachment            `json:"attachments"`
 	WebsiteUrl             string                  `json:"websiteUrl"`
-	GameId                 int                     `json:"gameId"`
+	GameID                 int                     `json:"gameId"`
 	Summary                string                  `json:"summary"`
-	DefaultFileId          int                     `json:"defaultFileId"`
+	DefaultFileID          int                     `json:"defaultFileId"`
 	DownloadCount          float64                 `json:"downloadCount"`
 	LatestFiles            []File                  `json:"latestFiles"`
 	Categories             []Category              `json:"categories"`
 	Status                 int                     `json:"status"`
-	PrimaryCategoryId      int                     `json:"primaryCategoryId"`
+	PrimaryCategoryID      int                     `json:"primaryCategoryId"`
 	CategorySections       CategorySection         `json:"categorySection"`
 	Slug                   string                  `json:"slug"`
 	GameVersionLatestFiles []GameVersionLatestFile `json:"gameVersionLatestFiles"`
@@ -63,19 +63,19 @@ type Addon struct {
 type Author struct {
 	Name              string `json:"name"`
 	Url               string `json:"url"`
-	ProjectId         int    `json:"projectId"`
-	Id                int    `json:"id"`
-	ProjectTitleId    string `json:"projectTitleId"`
+	ProjectID         int    `json:"projectId"`
+	ID                int    `json:"id"`
+	ProjectTitleID    string `json:"projectTitleId"`
 	ProjectTitleTitle string `json:"projectTitleTitle"`
-	UserId            int    `json:"userId"`
-	TwitchId          int    `json:"twitchId"`
+	UserID            int    `json:"userId"`
+	TwitchID          int    `json:"twitchId"`
 }
 
 // An attachement is a file uploaded to the Addon page that is NOT the mod
 // itself. Normally this will be something like a screenshot or gif.
 type Attachment struct {
-	Id           int    `json:"id"`
-	ProjectId    int    `json:"projectId"`
+	ID           int    `json:"id"`
+	ProjectID    int    `json:"projectId"`
 	Description  string `json:"description"`
 	IsDefault    bool   `json:"isDefault"`
 	ThumbnailUrl string `json:"thumbnailUrl"`
@@ -90,39 +90,39 @@ type Attachment struct {
 // CategorySection which refers to if the Addon is a mod, modpack,
 // resourcepack, world, and so on.
 type Category struct {
-	CategoryId int    `json:"categoryId"`
+	CategoryID int    `json:"categoryId"`
 	Name       string `json:"name"`
 	Url        string `json:"url"`
 	AvatarUrl  string `json:"avatarUrl"`
-	ParentId   int    `json:"parentId"`
-	RootId     int    `json:"rootId"`
+	ParentID   int    `json:"parentId"`
+	RootID     int    `json:"rootId"`
 	Project    int    `json:"projectId"`
-	AvatarId   int    `json:"avatarId"`
-	GameId     int    `json:"gameId"`
+	AvatarID   int    `json:"avatarId"`
+	GameID     int    `json:"gameId"`
 }
 
 // An addon only has one CategorySection. The CategorySection refers to if the
 // Addon is a mod, modpack, resourcepack, world, and so on. All mods will be in
 // the "Mods" CategorySection.
 type CategorySection struct {
-	Id                      int    `json:"id"`
-	GameId                  int    `json:"gameId"`
+	ID                      int    `json:"id"`
+	GameID                  int    `json:"gameId"`
 	Name                    string `json:"name"`
 	PackageType             int    `json:"packageType"`
 	Path                    string `json:"path"`
 	InitialInclusionPattern string `json:"initialInclusionPattern"`
 	ExtraIncludePattern     string `json:extraIncludePattern"`
-	GameCategoryId          int    `json:"gameCategoryId"`
+	GameCategoryID          int    `json:"gameCategoryId"`
 }
 
 // An addon contains a list of GameVersionLatestFile(s) which essentially just
 // tells you which file is the latest for each "GameVersion" this is obviously
 // very useful, but it notably doesn't contain any information about the file
-// other than the "ProjectFileId" which can then be used to get more info about
+// other than the "ProjectFileID" which can then be used to get more info about
 // the file in question.
 type GameVersionLatestFile struct {
 	GameVersion     string `json:"gameVersion"`
-	ProjectFileId   int    `json:"projectFileId"`
+	ProjectFileID   int    `json:"projectFileId"`
 	ProjectFileName string `json:"projectFileName"`
 	FileType        int    `json:"fileType"`
 }
@@ -131,7 +131,7 @@ type GameVersionLatestFile struct {
 // an Addon. It has lots of important information about the file and contains a
 // DownloadUrl should you want to save it locally.
 type File struct {
-	Id                      int          `json:"id"`
+	ID                      int          `json:"id"`
 	DisplayName             string       `json:"displayName"`
 	FileName                string       `json:"fileName"`
 	FileDate                string       `json:"fileDate"`
@@ -140,14 +140,14 @@ type File struct {
 	FileStatus              int          `json:"fileStatus"`
 	DownloadUrl             string       `json:"downloadUrl"`
 	IsAlternate             bool         `json:"isAlternate"`
-	AlternateFileId         int          `json:"alternateFileId"`
+	AlternateFileID         int          `json:"alternateFileId"`
 	Dependencies            []Dependency `json:"dependencies"`
 	IsAvailable             bool         `json:"isAvailable"`
 	Modules                 []Module     `json:"modules"`
 	PackageFingerprint      int          `json:"packageFingerprint"`
 	GameVersion             []string     `json:"gameVersion"`
 	InstallMetadata         string       `json:"installMetadata"`
-	ServerPackFileId        string       `json:"serverPackFileId"`
+	ServerPackFileID        string       `json:"serverPackFileId"`
 	HasInstallScript        bool         `json:"hasInstallScript"`
 	GameVersionDateReleased string       `json:"gameVersionDateReleased"`
 	GameVersionFlavor       string       `json:"gameVersionFlavor"`
@@ -156,7 +156,7 @@ type File struct {
 // An Addon can mark another Addon as a dependency. In this case the dependency
 // should also be automatically fetched.
 type Dependency struct {
-	AddonId int `json:"addonId"`
+	AddonID int `json:"addonId"`
 	Type    int `json:"type"`
 }
 
@@ -172,14 +172,14 @@ type Module struct {
 
 // A Minecraft Version contains information about a particular update of minecraft.
 type MinecraftVersion struct {
-	Id                    int    `json:"id"`
-	GameVersionId         int    `json:"gameVersionId"`
+	ID                    int    `json:"id"`
+	GameVersionID         int    `json:"gameVersionId"`
 	VersionString         string `json:"versionString"`
 	JarDownloadUrl        string `json:"jarDownloadUrl"`
 	JsonDownloadUrl       string `json:"jsonDownloadUrl"`
 	Approved              bool   `json:"approved"`
 	DateModified          string `json:"dateModified"`
-	GameVersionTypeId     int    `json:"gameVersionTypeId"`
+	GameVersionTypeID     int    `json:"gameVersionTypeId"`
 	GameVersionStatus     int    `json:"gameVersionStatus"`
 	GameVersionTypeStatus int    `json:"gameVersionTypeStatus"`
 }

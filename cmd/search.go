@@ -52,8 +52,8 @@ func init() {
 
 func search(s string) error {
 	var search curse.Search
-	search.GameId = 432     // Set game to minecraft
-	search.SectionId = 6    // Set section to mods
+	search.GameID = 432     // Set game to minecraft
+	search.SectionID = 6    // Set section to mods
 	search.SearchFilter = s // Search string
 	addons, err := curse.AddonSearch(search)
 	if err != nil {

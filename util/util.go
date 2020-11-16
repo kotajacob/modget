@@ -145,8 +145,8 @@ func TimeSort(files []curse.File) []curse.File {
 // to convert it to a MODID. It returns an error on failure.
 func GetModid(s string) (int, error) {
 	var search curse.Search
-	search.GameId = 432     // Set game to minecraft
-	search.SectionId = 6    // Set section to mods
+	search.GameID = 432     // Set game to minecraft
+	search.SectionID = 6    // Set section to mods
 	search.SearchFilter = s // Search string
 	addons, err := curse.AddonSearch(search)
 	if err != nil {
@@ -154,7 +154,7 @@ func GetModid(s string) (int, error) {
 	}
 	for _, addon := range addons {
 		if addon.Slug == s {
-			return addon.Id, nil
+			return addon.ID, nil
 		}
 	}
 	err = errors.New("Could not find: " + s)

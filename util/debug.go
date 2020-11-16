@@ -27,7 +27,7 @@ import (
 func DebugFilePrint(file curse.File) {
 	fmt.Println(file.FileName)
 	fmt.Println(file.FileDate)
-	fmt.Println(file.Id)
+	fmt.Println(file.ID)
 	for _, fileVersion := range file.GameVersion {
 		fmt.Println(fileVersion)
 	}
@@ -37,6 +37,6 @@ func DebugFilePrint(file curse.File) {
 func DebugAddonPrint(addon curse.Addon) {
 	fmt.Println(addon.Name)
 	fmt.Println(addon.Slug)
-	fmt.Println(addon.Id)
+	fmt.Println(addon.ID)
 	fmt.Printf("%d\n", int(addon.DownloadCount))
 }
