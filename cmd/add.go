@@ -42,38 +42,48 @@ var addCmd = &cobra.Command{
 	Short: "Download and install a mod based on its MODID or Slug.",
 	Run: func(cmd *cobra.Command, args []string) {
 		var files []curse.File
+		if len(args) == 0 {
+			fmt.Println("modget add requires at least one MODID or Slug")
+			os.Exit(1)
+		}
+		fmt.Printf("Reading database... ")
 		db, err := findDatabase()
 		if err != nil {
 			fmt.Printf("Failed to open database: %v\n", err)
 			os.Exit(1)
 		}
+		fmt.Println("Done")
 		ids := toID(args)
-		if len(ids) == 0 {
-			fmt.Println("modget add requires at least one MODID or Slug")
-			os.Exit(1)
-		}
+		fmt.Printf("Finding Mods... ")
 		for _, id := range ids {
-			file, err := findID(id)
+			file, err := findFile(id)
 			if err != nil {
 				fmt.Printf("Failed to find mod: %v\n%v\n", id, err)
 				os.Exit(1)
 			}
 			files = append(files, file)
 		}
-		for _, file := range files {
-			err := get(file)
-			if err != nil {
-				fmt.Printf("Failed to download file: %v\n%v\n", file.FileName, err)
-				os.Exit(1)
-			}
-			db.Files = append(db.Files, file)
+		// for _, file := range files {
+		// 	util.DebugFilePrint(file)
+		// }
+		fmt.Println("Done")
+		showMods(files)
+		if !util.Ask() {
+			os.Exit(0)
 		}
+		err = getMods(files, db)
+		if err != nil {
+			fmt.Printf("Failed to download file: %v\n", err)
+			os.Exit(1)
+		}
+		fmt.Printf("Updating database... ")
 		err = db.Write(path)
 		if err != nil {
 			fmt.Printf("Failed to write database: %v\n", err)
 			// TODO: remove failed downloaded files
 			os.Exit(1)
 		}
+		fmt.Println("Done")
 	},
 }
 
@@ -118,10 +128,10 @@ func findDatabase() (database.Database, error) {
 	return db, err
 }
 
-// Find returns a curse.File for a MODID. It ensures the file matches the
+// findFile returns a curse.File for a MODID. It ensures the file matches the
 // correct Minecraft version and Loader. Additionally it warns the user if the
 // enter an unknown version or loader.
-func findID(id int) (curse.File, error) {
+func findFile(id int) (curse.File, error) {
 	files, err := curse.AddonFiles(id)
 	// Validate the modloader and mc version
 	mcVersions, err := curse.MinecraftVersionList()
@@ -144,10 +154,27 @@ func findID(id int) (curse.File, error) {
 	return files[0], err
 }
 
-func get(f curse.File) error {
-	// TODO: Make this toggle-able with a verbose flag
-	p := filepath.Join(filepath.Dir(path), f.FileName)
-	util.DebugFilePrint(f)
-	err := curse.Download(f.DownloadURL, p)
-	return err
+func showMods(files []curse.File) {
+	fmt.Println("The following mods will be installed:")
+	var s string
+	var d int
+	for _, file := range files {
+		s += " " + file.FileName
+		d += file.FileLength
+	}
+	fmt.Printf("%v\n", s)
+	fmt.Printf("After this operation, %d of additional disk space will be used.\n", d)
+}
+
+func getMods(files []curse.File, db database.Database) error {
+	for i, file := range files {
+		p := filepath.Join(filepath.Dir(path), file.FileName)
+		fmt.Printf("Get:%d %v\n", i, file.DownloadURL)
+		err := curse.Download(file.DownloadURL, p)
+		db.Files = append(db.Files, file)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }

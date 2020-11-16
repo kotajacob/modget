@@ -19,7 +19,9 @@ package util
 
 import (
 	"errors"
+	"fmt"
 	"os"
+	"strings"
 
 	"git.sr.ht/~kota/modget/curse"
 )
@@ -51,4 +53,16 @@ func EnsureDir(dirName string) error {
 		return nil
 	}
 	return err
+}
+
+// Ask prompts the user with a Yes/No question about continuing
+func Ask() bool {
+	fmt.Printf("Do you want to continue? [Y/n] ")
+	var answer string
+	fmt.Scanln(&answer)
+	answer = strings.ToLower(answer)
+	if answer == "y" || answer == "" {
+		return true
+	}
+	return false
 }
