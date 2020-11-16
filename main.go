@@ -19,6 +19,7 @@ package main
 
 import "git.sr.ht/~kota/modget/cmd"
 
+// Version for modget. Set via makefile.
 var Version string
 
 func main() {
