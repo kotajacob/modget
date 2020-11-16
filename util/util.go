@@ -19,18 +19,8 @@ package util
 
 import (
 	"fmt"
-	"os"
 	"strings"
 )
-
-// EnsureDir creates a directory if missing.
-func EnsureDir(dirName string) error {
-	err := os.Mkdir(dirName, os.ModeDir)
-	if err == nil || os.IsExist(err) {
-		return nil
-	}
-	return err
-}
 
 // Ask prompts the user with a Yes/No question about continuing
 func Ask() bool {

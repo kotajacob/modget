@@ -20,6 +20,7 @@ package util
 import (
 	"errors"
 	"fmt"
+	"os"
 	"path/filepath"
 
 	"git.sr.ht/~kota/modget/curse"
@@ -65,4 +66,13 @@ func FindFile(id int, minecraftVersion string, loader string) (curse.File, error
 		err = errors.New("file not found for those search terms")
 	}
 	return files[0], err
+}
+
+// EnsureDir creates a directory if missing.
+func EnsureDir(dirName string) error {
+	err := os.Mkdir(dirName, os.ModeDir)
+	if err == nil || os.IsExist(err) {
+		return nil
+	}
+	return err
 }
