@@ -26,9 +26,10 @@ import (
 	"git.sr.ht/~kota/modget/curse"
 )
 
-// Default file writing mode
+// Mode sets the default file writing mode
 var Mode os.FileMode = 0644
 
+// Database is the format of the .modget file.
 type Database struct {
 	Version   int
 	Minecraft string
@@ -50,7 +51,7 @@ func (db Database) Write(p string) error {
 	return nil
 }
 
-// Get a Database from a path. Return a blank database if one cannot be loaded.
+// Load a Database from a path. Return a blank database if one cannot be loaded.
 func Load(p string) (Database, error) {
 	var db Database
 	b, err := get(p)
