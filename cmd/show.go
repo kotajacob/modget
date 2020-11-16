@@ -27,8 +27,9 @@ import (
 
 // showCmd represents the show command
 var showCmd = &cobra.Command{
-	Use:   "show <MODID/Slug>",
-	Short: "Query and print more information about a specific mod by MODID/Slug.",
+	Use:     "show [mod]...",
+	Aliases: []string{"sh"},
+	Short:   "Query and print more information about a specific mod by MODID/Slug.",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Printf("Reading database... ")
 		db, err := util.FindDatabase(path)

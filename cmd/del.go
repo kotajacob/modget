@@ -29,8 +29,9 @@ import (
 
 // delCmd represents the del command
 var delCmd = &cobra.Command{
-	Use:   "del <MODID/Slug>",
-	Short: "Remove installed mod(s) based on MODID or Slug.",
+	Use:     "del mod...",
+	Aliases: []string{"d"},
+	Short:   "Remove installed mod(s) based on MODID or Slug.",
 	Run: func(cmd *cobra.Command, args []string) {
 		var mods []database.Mod
 		if len(args) == 0 {

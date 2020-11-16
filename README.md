@@ -23,46 +23,46 @@ modget requires the following build dependencies:
 
 ## commands
 
-- `add <MODID/Slug>`
+- `[a]dd mod...`
 	- Download and install a mod based on its MODID or Slug.
 
-- `del <MODID/Slug>`
+- `[d]el mod...`
 	- Remove and uninstall a mod based on its MODID or Slug.
 
-- `help <command>`
+- `help [command]`
 	- Print help about a command and exit.
 
-- `search <Search String>`
+- `[s]earch string...`
 	- Search curseforge for mods based on search terms. Prints mod names, MODID, Version, and a short description.
 
-- `show <MODID/Slug>`
+- `[sh]ow [mod]...`
 	- Query and print information about installed mods or a specific mod by MODID or Slug.
 
-- `update <MODID/Slug>`
+- `[u]pdate [mod]...`
 	- NOT YET IMPLEMENTED
 	- Check each installed mod (in selected directory or current directory) and prompt to install any new mods.
 
-- `version`
+- `[v]ersion`
 	- Print modget version and exit.
 
 ## global command options
 
-- `-p <PATH>`
+- `-p path`
 	- Install mods in a specific path instead of the current directory.
 
 ## add command options
 
-- `-m <MINECRAFT VERSION>`
-	- Limit install for a specific minecraft version.
-- `-l <LOADER>`
-	- Limit install to a specific mod loader.
+- `-m minecraft version`
+	- Limit install for a specific minecraft version. Ex: 1.16.3
+- `-l loader`
+	- Limit install to a specific mod loader. Ex: Fabric
 
 ## update command options
 
-- `-m <MINECRAFT VERSION>`
-	- Update to a different minecraft version.
-- `-l <LOADER>`
-	- Switch to a different loader.
+- `-m minecraft version`
+	- Limit install for a specific minecraft version. Ex: 1.16.3
+- `-l loader`
+	- Limit install to a specific mod loader. Ex: Fabric
 
 ## Slug
 

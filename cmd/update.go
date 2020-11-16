@@ -25,8 +25,9 @@ import (
 
 // updateCmd represents the update command
 var updateCmd = &cobra.Command{
-	Use:   "update <MODID/Slug>",
-	Short: "Check installed mod(s) and prompt to install any new mods.",
+	Use:     "update [mod]...",
+	Aliases: []string{"u"},
+	Short:   "Check installed mod(s) and prompt to install any new mods.",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("update called")
 	},

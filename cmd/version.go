@@ -32,8 +32,9 @@ func SetVersion(v string) {
 
 // versionCmd represents the version command
 var versionCmd = &cobra.Command{
-	Use:   "version",
-	Short: "Print the version and exit.",
+	Use:     "version",
+	Aliases: []string{"v"},
+	Short:   "Print the version and exit.",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("modget " + version)
 	},
