@@ -18,54 +18,13 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package util
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
-	"strconv"
 	"strings"
 
-	"git.sr.ht/~kota/modget/curse"
 	"git.sr.ht/~kota/modget/database"
 )
-
-// getModid takes a string, which is meant to be an addon's slug and attempts
-// to convert it to a MODID. It returns an error on failure.
-func getModid(s string) (int, error) {
-	var search curse.Search
-	search.GameID = 432     // Set game to minecraft
-	search.SectionID = 6    // Set section to mods
-	search.SearchFilter = s // Search string
-	addons, err := curse.AddonSearch(search)
-	if err != nil {
-		return 0, err
-	}
-	for _, addon := range addons {
-		if addon.Slug == s {
-			return addon.ID, nil
-		}
-	}
-	err = errors.New("Could not find: " + s)
-	return 0, err
-}
-
-// ToID converts a list of strings to MODIDs
-func ToID(s []string) []int {
-	var mods []int
-	for i := 0; i < len(s); i++ {
-		id, err := strconv.Atoi(s[i])
-		if err != nil {
-			// Attempt to convert slug to modid
-			id, err = getModid(s[i])
-			if err != nil {
-				fmt.Printf("Failed to find: %v\n", s[i])
-				os.Exit(1)
-			}
-		}
-		mods = append(mods, id)
-	}
-	return mods
-}
 
 // FindDatabase finds the .modget database at the path. Create the database if missing.
 func FindDatabase(path string) (database.Database, error) {
