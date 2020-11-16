@@ -18,7 +18,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -55,7 +54,7 @@ var addCmd = &cobra.Command{
 		ids := util.ToID(args)
 		fmt.Printf("Finding Mods... ")
 		for _, id := range ids {
-			file, err := findFile(id)
+			file, err := util.FindFile(id, minecraftVersion, loader)
 			if err != nil {
 				fmt.Printf("Failed to find mod: %v\n%v\n", id, err)
 				os.Exit(1)
@@ -91,32 +90,6 @@ func init() {
 	addCmd.Flags().StringVarP(&minecraftVersion, "minecraft", "m", "", "Limit install for a specific minecraft version.")
 	addCmd.Flags().StringVarP(&loader, "loader", "l", "", "Limit install for a specific minecraft mod loader.")
 	addCmd.Flags().StringVarP(&path, "path", "p", "", "Mod install location.")
-}
-
-// findFile returns a curse.File for a MODID. It ensures the file matches the
-// correct Minecraft version and Loader. Additionally it warns the user if the
-// enter an unknown version or loader.
-func findFile(id int) (curse.File, error) {
-	files, err := curse.AddonFiles(id)
-	// Validate the modloader and mc version
-	mcVersions, err := curse.MinecraftVersionList()
-	if minecraftVersion != "" {
-		files = util.VersionFilter(files, minecraftVersion)
-		if !util.ValidateMinecraftVersion(minecraftVersion, mcVersions) {
-			fmt.Println("warning: Minecraft Version entered is not recognized")
-		}
-	}
-	if loader != "" {
-		files = util.LoaderFilter(files, loader)
-		if !util.ValidateModLoader(loader) {
-			fmt.Println("warning: Modloader entered is not recognized")
-		}
-	}
-	files = util.TimeSort(files)
-	if len(files) == 0 {
-		err = errors.New("file not found for those search terms")
-	}
-	return files[0], err
 }
 
 func showMods(files []curse.File) {

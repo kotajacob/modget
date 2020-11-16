@@ -18,11 +18,13 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package util
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
 
+	"git.sr.ht/~kota/modget/curse"
 	"git.sr.ht/~kota/modget/database"
 )
 
@@ -39,6 +41,32 @@ func FindDatabase(path string) (database.Database, error) {
 	path = filepath.Join(path, ".modget")
 	db, err = database.Load(path)
 	return db, err
+}
+
+// FindFile returns a curse.File for a MODID. It ensures the file matches the
+// correct Minecraft version and Loader. Additionally it warns the user if the
+// enter an unknown version or loader.
+func FindFile(id int, minecraftVersion string, loader string) (curse.File, error) {
+	files, err := curse.AddonFiles(id)
+	// Validate the modloader and mc version
+	mcVersions, err := curse.MinecraftVersionList()
+	if minecraftVersion != "" {
+		files = VersionFilter(files, minecraftVersion)
+		if !ValidateMinecraftVersion(minecraftVersion, mcVersions) {
+			fmt.Println("warning: Minecraft Version entered is not recognized")
+		}
+	}
+	if loader != "" {
+		files = LoaderFilter(files, loader)
+		if !ValidateModLoader(loader) {
+			fmt.Println("warning: Modloader entered is not recognized")
+		}
+	}
+	files = TimeSort(files)
+	if len(files) == 0 {
+		err = errors.New("file not found for those search terms")
+	}
+	return files[0], err
 }
 
 // EnsureDir creates a directory if missing.
