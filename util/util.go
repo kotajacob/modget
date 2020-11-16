@@ -33,7 +33,7 @@ type StringSet map[string]bool
 
 // Conflicts checks if two StringSets conflict
 func (a StringSet) Conflicts(b StringSet) bool {
-	for k, _ := range a {
+	for k := range a {
 		if b[k] {
 			return true
 		}
