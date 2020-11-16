@@ -22,7 +22,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strconv"
 
 	"git.sr.ht/~kota/modget/curse"
 	"git.sr.ht/~kota/modget/database"
@@ -53,7 +52,7 @@ var addCmd = &cobra.Command{
 			os.Exit(1)
 		}
 		fmt.Println("Done")
-		ids := toID(args)
+		ids := util.ToID(args)
 		fmt.Printf("Finding Mods... ")
 		for _, id := range ids {
 			file, err := findFile(id)
@@ -92,25 +91,6 @@ func init() {
 	addCmd.Flags().StringVarP(&minecraftVersion, "minecraft", "m", "", "Limit install for a specific minecraft version.")
 	addCmd.Flags().StringVarP(&loader, "loader", "l", "", "Limit install for a specific minecraft mod loader.")
 	addCmd.Flags().StringVarP(&path, "path", "p", "", "Mod install location.")
-}
-
-// Convert a list of strings to MODIDs
-func toID(s []string) []int {
-	// Convert string to int list of modids
-	var mods []int
-	for i := 0; i < len(s); i++ {
-		id, err := strconv.Atoi(s[i])
-		if err != nil {
-			// Attempt to convert slug to modid
-			id, err = util.GetModid(s[i])
-			if err != nil {
-				fmt.Printf("Failed to find: %v\n", s[i])
-				os.Exit(1)
-			}
-		}
-		mods = append(mods, id)
-	}
-	return mods
 }
 
 // Find the .modget database at the path. Create the database if missing.
