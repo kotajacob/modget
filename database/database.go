@@ -29,14 +29,57 @@ import (
 // Mode sets the default file writing mode
 var Mode os.FileMode = 0644
 
+// Mod contains relevant information about a mod that needs stored in the
+// database.
+type Mod struct {
+	ID              int
+	Name            string
+	Authors         []curse.Author
+	Summary         string
+	DownloadCount   float64
+	FileID          int
+	FileName        string
+	FileLength      int
+	Status          int
+	Slug            string
+	PopularityScore float64
+	PrimaryLanguage string
+	DateModified    string
+	DateCreated     string
+	DateReleased    string
+}
+
 // Database is the format of the .modget file.
 type Database struct {
 	Version   int
 	Minecraft string
 	Loader    string
-	Files     []curse.File
+	Mods      []Mod
 }
 
+// AddMod adds a mod to a Database. Requires the mod's Addon and File.
+func (db Database) AddMod(addon curse.Addon, file curse.File) Database {
+	var mod Mod
+	mod.ID = addon.ID
+	mod.Name = addon.Name
+	mod.Authors = addon.Authors
+	mod.Summary = addon.Summary
+	mod.DownloadCount = addon.DownloadCount
+	mod.FileID = file.ID
+	mod.FileName = file.FileName
+	mod.FileLength = file.FileLength
+	mod.Status = addon.Status
+	mod.Slug = addon.Slug
+	mod.PopularityScore = addon.PopularityScore
+	mod.PrimaryLanguage = addon.PrimaryLanguage
+	mod.DateModified = addon.DateModified
+	mod.DateCreated = addon.DateCreated
+	mod.DateReleased = addon.DateReleased
+	db.Mods = append(db.Mods, mod)
+	return db
+}
+
+// Write saves a Database to a file at a path.
 func (db Database) Write(p string) error {
 	stream := &bytes.Buffer{}
 	en := gob.NewEncoder(stream)

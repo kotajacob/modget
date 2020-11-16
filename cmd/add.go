@@ -37,6 +37,7 @@ var addCmd = &cobra.Command{
 	Use:   "add <MODID/Slug>",
 	Short: "Download and install mod(s) based on MODID or Slug.",
 	Run: func(cmd *cobra.Command, args []string) {
+		var addons []curse.Addon
 		var files []curse.File
 		if len(args) == 0 {
 			fmt.Println("modget add requires at least one MODID or Slug")
@@ -49,22 +50,28 @@ var addCmd = &cobra.Command{
 			os.Exit(1)
 		}
 		fmt.Println("Done")
-		ids := util.ToID(args)
+		ids, err := util.ToID(args, db)
+		if err != nil {
+			fmt.Printf("Failed read input: %v\n", err)
+			os.Exit(1)
+		}
 		fmt.Printf("Finding Mods... ")
 		for _, id := range ids {
+			addon, err := curse.AddonInfo(id)
 			file, err := util.FindFile(id, minecraftVersion, loader)
 			if err != nil {
 				fmt.Printf("Failed to find mod: %v\n%v\n", id, err)
 				os.Exit(1)
 			}
+			addons = append(addons, addon)
 			files = append(files, file)
 		}
 		fmt.Println("Done")
-		util.ShowMods(files)
+		util.ShowNew(addons, files)
 		if !util.Ask() {
 			os.Exit(0)
 		}
-		db, err = util.GetMods(files, path, db)
+		db, err = util.GetMods(addons, files, path, db)
 		if err != nil {
 			fmt.Printf("Failed to download file: %v\n", err)
 			os.Exit(1)

@@ -21,6 +21,7 @@ import (
 	"fmt"
 
 	"git.sr.ht/~kota/modget/curse"
+	"git.sr.ht/~kota/modget/database"
 )
 
 // DebugFilePrint shows debug info about a curse.File
@@ -39,4 +40,13 @@ func DebugAddonPrint(addon curse.Addon) {
 	fmt.Println(addon.Slug)
 	fmt.Println(addon.ID)
 	fmt.Printf("%d\n", int(addon.DownloadCount))
+}
+
+// DebugModPrint shows debug info about a database.Mod
+func DebugModPrint(mod database.Mod) {
+	fmt.Println(mod.Name)
+	fmt.Println(mod.Slug)
+	fmt.Println(mod.ID)
+	fmt.Println(mod.FileName)
+	fmt.Println(mod.FileLength)
 }

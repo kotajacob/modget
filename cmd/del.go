@@ -43,12 +43,12 @@ var delCmd = &cobra.Command{
 		}
 		fmt.Println("Done")
 		// TODO: Check if args are in database. Only print those.
-		util.ShowMods(db.Files)
+		util.ShowRemove(db.Mods)
 		if !util.Ask() {
 			os.Exit(0)
 		}
 		// TODO: Remove local .jar files
-		// TODO: Remove Files from database
+		// TODO: Remove Mods from database
 		fmt.Printf("Updating database... ")
 		err = db.Write(filepath.Join(path, ".modget"))
 		if err != nil {

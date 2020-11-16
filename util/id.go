@@ -19,16 +19,15 @@ package util
 
 import (
 	"errors"
-	"fmt"
-	"os"
 	"strconv"
 
 	"git.sr.ht/~kota/modget/curse"
+	"git.sr.ht/~kota/modget/database"
 )
 
-// getModid takes a string, which is meant to be an addon's slug and attempts
-// to convert it to a MODID. It returns an error on failure.
-func getModid(s string) (int, error) {
+// searchModid takes a string, which is meant to be an addon's slug and attempts
+// to convert it to a MODID by using a search.
+func searchModid(s string) (int, error) {
 	var search curse.Search
 	search.GameID = 432     // Set game to minecraft
 	search.SectionID = 6    // Set section to mods
@@ -46,20 +45,33 @@ func getModid(s string) (int, error) {
 	return 0, err
 }
 
+// readModid takes a string, which is meant to be an addon's slug and attempts to convert it to a MODID by using the local database.
+func readModid(s string, db database.Database) (int, error) {
+	for _, mod := range db.Mods {
+		if mod.Slug == s {
+			return mod.ID, nil
+		}
+	}
+	err := errors.New("Could not find: " + s)
+	return 0, err
+}
+
 // ToID converts a list of strings to MODIDs
-func ToID(s []string) []int {
+func ToID(s []string, db database.Database) ([]int, error) {
 	var mods []int
 	for i := 0; i < len(s); i++ {
 		id, err := strconv.Atoi(s[i])
 		if err != nil {
 			// Attempt to convert slug to modid
-			id, err = getModid(s[i])
+			id, err = readModid(s[i], db)
 			if err != nil {
-				fmt.Printf("Failed to find: %v\n", s[i])
-				os.Exit(1)
+				id, err = searchModid(s[i])
+				if err != nil {
+					return nil, err
+				}
 			}
 		}
 		mods = append(mods, id)
 	}
-	return mods
+	return mods, nil
 }

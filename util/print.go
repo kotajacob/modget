@@ -22,16 +22,30 @@ import (
 	"strings"
 
 	"git.sr.ht/~kota/modget/curse"
+	"git.sr.ht/~kota/modget/database"
 )
 
-// ShowMods prints a list of mods that will be installed.
-func ShowMods(files []curse.File) {
+// ShowRemove prints a list of mods that will be installed.
+func ShowRemove(mods []database.Mod) {
+	fmt.Println("The following mods will be removed:")
+	var s string
+	var d int
+	for _, mod := range mods {
+		s += " " + mod.Slug
+		d += mod.FileLength
+	}
+	fmt.Printf("%v\n", s)
+	fmt.Printf("After this operation, %d of additional disk space will be freed.\n", d)
+}
+
+// ShowNew prints a list of mods that will be installed.
+func ShowNew(addons []curse.Addon, files []curse.File) {
 	fmt.Println("The following mods will be installed:")
 	var s string
 	var d int
-	for _, file := range files {
-		s += " " + file.FileName
-		d += file.FileLength
+	for i, addon := range addons {
+		s += " " + addon.Slug
+		d += files[i].FileLength
 	}
 	fmt.Printf("%v\n", s)
 	fmt.Printf("After this operation, %d of additional disk space will be used.\n", d)
