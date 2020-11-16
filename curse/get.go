@@ -43,9 +43,12 @@ type Search struct {
 	Sort         int    // sort: 0
 }
 
+// RequestTimeout sets how long a request will wait before it gives up.
+var RequestTimeout time.Duration = 10
+
 func get(url string) ([]byte, error) {
 	client := &http.Client{
-		Timeout: time.Second * 10, // Timeout after 10 seconds
+		Timeout: time.Second * RequestTimeout,
 	}
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
