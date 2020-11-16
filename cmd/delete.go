@@ -27,15 +27,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// delCmd represents the del command
-var delCmd = &cobra.Command{
-	Use:     "del mod...",
+// deleteCmd represents the delete command
+var deleteCmd = &cobra.Command{
+	Use:     "delete mod...",
 	Aliases: []string{"d"},
 	Short:   "Remove installed mod(s) based on MODID or Slug.",
 	Run: func(cmd *cobra.Command, args []string) {
 		var mods []database.Mod
 		if len(args) == 0 {
-			fmt.Println("modget del requires at least one MODID or Slug")
+			fmt.Println("modget delete requires at least one MODID or Slug")
 			os.Exit(1)
 		}
 		fmt.Printf("Reading database... ")
@@ -80,5 +80,5 @@ var delCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(delCmd)
+	rootCmd.AddCommand(deleteCmd)
 }

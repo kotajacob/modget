@@ -26,7 +26,7 @@ modget requires the following build dependencies:
 - `[a]dd mod...`
 	- Download and install a mod based on its MODID or Slug.
 
-- `[d]el mod...`
+- `[d]elete mod...`
 	- Remove and uninstall a mod based on its MODID or Slug.
 
 - `help [command]`
