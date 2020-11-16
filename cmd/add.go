@@ -127,18 +127,18 @@ func findID(id int) (curse.File, error) {
 	if minecraftVersion != "" {
 		files = util.VersionFilter(files, minecraftVersion)
 		if !util.ValidateMinecraftVersion(minecraftVersion, mcVersions) {
-			fmt.Println("Warning: Minecraft Version entered is not recognized!")
+			fmt.Println("warning: Minecraft Version entered is not recognized")
 		}
 	}
 	if loader != "" {
 		files = util.LoaderFilter(files, loader)
 		if !util.ValidateModLoader(loader) {
-			fmt.Println("Warning: Modloader entered is not recognized!")
+			fmt.Println("warning: Modloader entered is not recognized")
 		}
 	}
 	files = util.TimeSort(files)
 	if len(files) == 0 {
-		err = errors.New("File not found for those search terms.")
+		err = errors.New("file not found for those search terms")
 	}
 	return files[0], err
 }
