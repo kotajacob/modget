@@ -68,6 +68,17 @@ func FindFile(id int, minecraftVersion string, loader string) (curse.File, error
 	return files[0], err
 }
 
+// FindLocalMod returns a database.Mod for a MODID.
+func FindLocalMod(id int, db database.Database) (database.Mod, error) {
+	var mod database.Mod
+	for _, mod := range db.Mods {
+		if mod.ID == id {
+			return mod, nil
+		}
+	}
+	return mod, errors.New("file not found in database")
+}
+
 // GetMods downloads a list of files and updates a Database
 func GetMods(addons []curse.Addon, files []curse.File, path string, db database.Database) (database.Database, error) {
 	for i, file := range files {

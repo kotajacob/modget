@@ -22,6 +22,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"git.sr.ht/~kota/modget/database"
 	"git.sr.ht/~kota/modget/util"
 	"github.com/spf13/cobra"
 )
@@ -31,6 +32,7 @@ var delCmd = &cobra.Command{
 	Use:   "del <MODID/Slug>",
 	Short: "Remove installed mod(s) based on MODID or Slug.",
 	Run: func(cmd *cobra.Command, args []string) {
+		var mods []database.Mod
 		if len(args) == 0 {
 			fmt.Println("modget del requires at least one MODID or Slug")
 			os.Exit(1)
@@ -42,8 +44,22 @@ var delCmd = &cobra.Command{
 			os.Exit(1)
 		}
 		fmt.Println("Done")
-		// TODO: Check if args are in database. Only print those.
-		util.ShowRemove(db.Mods)
+		ids, err := util.ToID(args, db)
+		if err != nil {
+			fmt.Printf("Failed read input: %v\n", err)
+			os.Exit(1)
+		}
+		fmt.Printf("Finding Mods... ")
+		for _, id := range ids {
+			mod, err := util.FindLocalMod(id, db)
+			if err != nil {
+				fmt.Printf("Failed to find mod: %v\n%v\n", id, err)
+				os.Exit(1)
+			}
+			mods = append(mods, mod)
+		}
+		fmt.Println("Done")
+		util.ShowRemove(mods)
 		if !util.Ask() {
 			os.Exit(0)
 		}
