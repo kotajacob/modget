@@ -23,13 +23,14 @@ import (
 	"path/filepath"
 
 	"git.sr.ht/~kota/modget/curse"
+	"git.sr.ht/~kota/modget/database"
 	"git.sr.ht/~kota/modget/util"
 	"github.com/spf13/cobra"
 )
 
 var (
-	minecraftVersion string
-	loader           string
+	minecraft string
+	loader    string
 )
 
 // addCmd represents the add command
@@ -45,10 +46,9 @@ var addCmd = &cobra.Command{
 			os.Exit(1)
 		}
 		fmt.Printf("Reading database... ")
-		db, err := util.FindDatabase(path)
+		db, err := database.Load(filepath.Join(path, ".modget"))
 		if err != nil {
-			fmt.Printf("Failed to open database: %v\n", err)
-			os.Exit(1)
+			db = database.Create(Version, minecraft, loader)
 		}
 		fmt.Println("Done")
 		ids, err := util.ToID(args, db)
@@ -59,7 +59,7 @@ var addCmd = &cobra.Command{
 		fmt.Printf("Finding Mods... ")
 		for _, id := range ids {
 			addon, err := curse.AddonInfo(id)
-			file, err := util.FindFile(id, minecraftVersion, loader)
+			file, err := util.FindFile(id, minecraft, loader)
 			if err != nil {
 				fmt.Printf("Failed to find mod: %v\n%v\n", id, err)
 				os.Exit(1)
@@ -90,6 +90,6 @@ var addCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(addCmd)
-	addCmd.Flags().StringVarP(&minecraftVersion, "minecraft", "m", "", "Limit install for a specific minecraft version.")
+	addCmd.Flags().StringVarP(&minecraft, "minecraft", "m", "", "Limit install for a specific minecraft version.")
 	addCmd.Flags().StringVarP(&loader, "loader", "l", "", "Limit install for a specific minecraft mod loader.")
 }

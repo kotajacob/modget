@@ -51,7 +51,7 @@ type Mod struct {
 
 // Database is the format of the .modget file.
 type Database struct {
-	Version   int
+	Version   string
 	Minecraft string
 	Loader    string
 	Mods      []Mod
@@ -105,12 +105,21 @@ func (db Database) Write(p string) error {
 	return nil
 }
 
-// Load a Database from a path. Return a blank database if one cannot be loaded.
+// Create a Database.
+func Create(version, minecraft, loader string) Database {
+	var db Database
+	db.Version = version
+	db.Minecraft = minecraft
+	db.Loader = loader
+	return db
+}
+
+// Load a Database from a path.
 func Load(p string) (Database, error) {
 	var db Database
 	b, err := get(p)
 	if err != nil {
-		return db, nil
+		return db, err
 	}
 	dec := gob.NewDecoder(bytes.NewBuffer(b))
 	err = dec.Decode(&db)

@@ -21,26 +21,10 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"path/filepath"
 
 	"git.sr.ht/~kota/modget/curse"
 	"git.sr.ht/~kota/modget/database"
 )
-
-// FindDatabase finds the .modget database at the path. Create the database if missing.
-func FindDatabase(path string) (database.Database, error) {
-	var db database.Database
-	if path == "" {
-		path = "."
-	}
-	err := ensureDir(path)
-	if err != nil {
-		return db, err
-	}
-	path = filepath.Join(path, ".modget")
-	db, err = database.Load(path)
-	return db, err
-}
 
 // FindFile returns a curse.File for a MODID. It ensures the file matches the
 // correct Minecraft version and Loader. Additionally it warns the user if the

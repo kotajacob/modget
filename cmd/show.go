@@ -20,8 +20,9 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 
-	"git.sr.ht/~kota/modget/util"
+	"git.sr.ht/~kota/modget/database"
 	"github.com/spf13/cobra"
 )
 
@@ -32,15 +33,13 @@ var showCmd = &cobra.Command{
 	Short:   "Query and print more information about a specific mod by MODID/Slug.",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Printf("Reading database... ")
-		db, err := util.FindDatabase(path)
+		db, err := database.Load(filepath.Join(path, ".modget"))
 		if err != nil {
 			fmt.Printf("Failed to open database: %v\n", err)
 			os.Exit(1)
 		}
 		fmt.Println("Done")
-		for _, mod := range db.Mods {
-			util.DebugModPrint(mod)
-		}
+		fmt.Println(db)
 	},
 }
 

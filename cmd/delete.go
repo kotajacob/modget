@@ -39,7 +39,7 @@ var deleteCmd = &cobra.Command{
 			os.Exit(1)
 		}
 		fmt.Printf("Reading database... ")
-		db, err := util.FindDatabase(path)
+		db, err := database.Load(filepath.Join(path, ".modget"))
 		if err != nil {
 			fmt.Printf("Failed to open database: %v\n", err)
 			os.Exit(1)
