@@ -40,6 +40,7 @@ type Mod struct {
 	FileID          int
 	FileName        string
 	FileLength      int
+	FileDate        string
 	Status          int
 	Slug            string
 	PopularityScore float64
@@ -68,6 +69,7 @@ func (db Database) AddMod(addon curse.Addon, file curse.File) Database {
 	mod.FileID = file.ID
 	mod.FileName = file.FileName
 	mod.FileLength = file.FileLength
+	mod.FileDate = file.FileDate
 	mod.Status = addon.Status
 	mod.Slug = addon.Slug
 	mod.PopularityScore = addon.PopularityScore
