@@ -58,8 +58,8 @@ type Database struct {
 	Mods      []Mod
 }
 
-// AddMod adds a mod to a Database. Requires the mod's Addon and File.
-func (db Database) AddMod(addon curse.Addon, file curse.File) Database {
+// Add inserts a mod into a Database. Requires the mod's Addon and File.
+func (db Database) Add(addon curse.Addon, file curse.File) Database {
 	var mod Mod
 	mod.ID = addon.ID
 	mod.Name = addon.Name
@@ -81,8 +81,8 @@ func (db Database) AddMod(addon curse.Addon, file curse.File) Database {
 	return db
 }
 
-// DelMod removed a Mod from a Database by its index
-func (db Database) DelMod(ID int) Database {
+// Del removes a Mod from a Database by its index
+func (db Database) Del(ID int) Database {
 	mods := db.Mods
 	for i, mod := range mods {
 		if mod.ID == ID {

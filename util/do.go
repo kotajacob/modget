@@ -32,7 +32,7 @@ func GetMods(addons []curse.Addon, files []curse.File, path string, db database.
 		p := filepath.Join(filepath.Dir(path), file.FileName)
 		fmt.Printf("Get:%d %v\n", i, file.DownloadURL)
 		err := curse.Download(file.DownloadURL, p)
-		db = db.AddMod(addons[i], file)
+		db = db.Add(addons[i], file)
 		if err != nil {
 			return db, err
 		}
@@ -48,7 +48,7 @@ func RemoveMods(mods []database.Mod, path string, db database.Database) (databas
 		if err != nil {
 			return db, err
 		}
-		db = db.DelMod(mod.ID)
+		db = db.Del(mod.ID)
 	}
 	return db, nil
 }
