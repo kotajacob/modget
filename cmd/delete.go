@@ -23,6 +23,7 @@ import (
 	"path/filepath"
 
 	"git.sr.ht/~kota/modget/database"
+	"git.sr.ht/~kota/modget/slug"
 	"git.sr.ht/~kota/modget/util"
 	"github.com/spf13/cobra"
 )
@@ -45,7 +46,7 @@ var deleteCmd = &cobra.Command{
 			os.Exit(1)
 		}
 		fmt.Println("Done")
-		ids, err := util.ToID(args, db)
+		ids, err := slug.Slug(args, db)
 		if err != nil {
 			fmt.Printf("Failed read input: %v\n", err)
 			os.Exit(1)

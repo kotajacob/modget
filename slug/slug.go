@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package util
+package slug
 
 import (
 	"errors"
@@ -56,8 +56,8 @@ func readModid(s string, db database.Database) (int, error) {
 	return 0, err
 }
 
-// ToID converts a list of strings to MODIDs
-func ToID(s []string, db database.Database) ([]int, error) {
+// Slug converts a list of strings to MODIDs
+func Slug(s []string, db database.Database) ([]int, error) {
 	var mods []int
 	for i := 0; i < len(s); i++ {
 		id, err := strconv.Atoi(s[i])

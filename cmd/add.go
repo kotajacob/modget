@@ -24,6 +24,7 @@ import (
 
 	"git.sr.ht/~kota/modget/curse"
 	"git.sr.ht/~kota/modget/database"
+	"git.sr.ht/~kota/modget/slug"
 	"git.sr.ht/~kota/modget/util"
 	"github.com/spf13/cobra"
 )
@@ -51,7 +52,7 @@ var addCmd = &cobra.Command{
 			db = database.Create(Version, minecraft, loader)
 		}
 		fmt.Println("Done")
-		ids, err := util.ToID(args, db)
+		ids, err := slug.Slug(args, db)
 		if err != nil {
 			fmt.Printf("Failed read input: %v\n", err)
 			os.Exit(1)
