@@ -25,6 +25,7 @@ import (
 
 	"git.sr.ht/~kota/modget/curse"
 	"git.sr.ht/~kota/modget/database"
+	"github.com/dustin/go-humanize"
 	"github.com/spf13/cobra"
 )
 
@@ -62,7 +63,7 @@ func showRemove(mods []database.Mod) {
 		d += mod.FileLength
 	}
 	fmt.Printf("%v\n", s)
-	fmt.Printf("After this operation, %d of additional disk space will be freed.\n", d)
+	fmt.Printf("After this operation, %s of additional disk space will be freed.\n", humanize.Bytes(uint64(d)))
 }
 
 // showNew prints a list of mods that will be installed.
@@ -75,7 +76,7 @@ func showNew(addons []curse.Addon, files []curse.File) {
 		d += files[i].FileLength
 	}
 	fmt.Printf("%v\n", s)
-	fmt.Printf("After this operation, %d of additional disk space will be used.\n", d)
+	fmt.Printf("After this operation, %s of additional disk space will be used.\n", humanize.Bytes(uint64(d)))
 }
 
 // ask prompts the user with a Yes/No question about continuing
