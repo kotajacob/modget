@@ -116,3 +116,30 @@ func removeMods(mods []database.Mod, path string, db database.Database) (databas
 	}
 	return db, nil
 }
+
+// debugFilePrint shows debug info about a curse.File
+func debugFilePrint(file curse.File) {
+	fmt.Println(file.FileName)
+	fmt.Println(file.FileDate)
+	fmt.Println(file.ID)
+	for _, fileVersion := range file.GameVersion {
+		fmt.Println(fileVersion)
+	}
+}
+
+// debugAddonPrint shows debug info about a curse.Addon
+func debugAddonPrint(addon curse.Addon) {
+	fmt.Println(addon.Name)
+	fmt.Println(addon.Slug)
+	fmt.Println(addon.ID)
+	fmt.Printf("%d\n", int(addon.DownloadCount))
+}
+
+// debugModPrint shows debug info about a database.Mod
+func debugModPrint(mod database.Mod) {
+	fmt.Println(mod.Name)
+	fmt.Println(mod.Slug)
+	fmt.Println(mod.ID)
+	fmt.Println(mod.FileName)
+	fmt.Println(mod.FileLength)
+}

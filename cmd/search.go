@@ -22,7 +22,6 @@ import (
 	"os"
 
 	"git.sr.ht/~kota/modget/curse"
-	"git.sr.ht/~kota/modget/util"
 	"github.com/spf13/cobra"
 )
 
@@ -61,7 +60,7 @@ func search(s string) error {
 		return err
 	}
 	for _, addon := range addons {
-		util.DebugAddonPrint(addon)
+		debugAddonPrint(addon)
 	}
 	return nil
 }
