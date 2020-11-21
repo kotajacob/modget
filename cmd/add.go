@@ -24,8 +24,8 @@ import (
 
 	"git.sr.ht/~kota/modget/curse"
 	"git.sr.ht/~kota/modget/database"
+	"git.sr.ht/~kota/modget/filter"
 	"git.sr.ht/~kota/modget/slug"
-	"git.sr.ht/~kota/modget/util"
 	"github.com/spf13/cobra"
 )
 
@@ -60,7 +60,7 @@ var addCmd = &cobra.Command{
 		fmt.Printf("Finding Mods... ")
 		for _, id := range ids {
 			addon, err := curse.AddonInfo(id)
-			file, err := util.FindFile(id, minecraft, loader)
+			file, err := filter.FindFile(id, minecraft, loader)
 			if err != nil {
 				fmt.Printf("Failed to find mod: %v\n%v\n", id, err)
 				os.Exit(1)

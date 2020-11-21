@@ -23,8 +23,8 @@ import (
 	"path/filepath"
 
 	"git.sr.ht/~kota/modget/database"
+	"git.sr.ht/~kota/modget/filter"
 	"git.sr.ht/~kota/modget/slug"
-	"git.sr.ht/~kota/modget/util"
 	"github.com/spf13/cobra"
 )
 
@@ -53,7 +53,7 @@ var deleteCmd = &cobra.Command{
 		}
 		fmt.Printf("Finding Mods... ")
 		for _, id := range ids {
-			mod, err := util.FindLocalMod(id, db)
+			mod, err := filter.FindLocalMod(id, db)
 			if err != nil {
 				fmt.Printf("Failed to find mod: %v\n%v\n", id, err)
 				os.Exit(1)
