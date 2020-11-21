@@ -20,6 +20,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"git.sr.ht/~kota/modget/curse"
@@ -87,4 +88,31 @@ func ask() bool {
 		return true
 	}
 	return false
+}
+
+// getMods downloads a list of files and updates a Database
+func getMods(addons []curse.Addon, files []curse.File, path string, db database.Database) (database.Database, error) {
+	for i, file := range files {
+		p := filepath.Join(filepath.Dir(path), file.FileName)
+		fmt.Printf("Get:%d %v\n", i, file.DownloadURL)
+		err := curse.Download(file.DownloadURL, p)
+		db = db.Add(addons[i], file)
+		if err != nil {
+			return db, err
+		}
+	}
+	return db, nil
+}
+
+// removeMods removes a list of local mods and updates a Database
+func removeMods(mods []database.Mod, path string, db database.Database) (database.Database, error) {
+	for _, mod := range mods {
+		fmt.Printf("Remove: %v\n", mod.FileName)
+		err := os.Remove(filepath.Join(path, mod.FileName))
+		if err != nil {
+			return db, err
+		}
+		db = db.Del(mod.ID)
+	}
+	return db, nil
 }

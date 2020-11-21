@@ -72,7 +72,7 @@ var addCmd = &cobra.Command{
 		if !ask() {
 			os.Exit(0)
 		}
-		db, err = util.GetMods(addons, files, path, db)
+		db, err = getMods(addons, files, path, db)
 		if err != nil {
 			fmt.Printf("Failed to download file: %v\n", err)
 			os.Exit(1)
