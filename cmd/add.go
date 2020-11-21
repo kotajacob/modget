@@ -68,8 +68,8 @@ var addCmd = &cobra.Command{
 			files = append(files, file)
 		}
 		fmt.Println("Done")
-		util.ShowNew(addons, files)
-		if !util.Ask() {
+		showNew(addons, files)
+		if !ask() {
 			os.Exit(0)
 		}
 		db, err = util.GetMods(addons, files, path, db)

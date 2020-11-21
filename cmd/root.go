@@ -20,7 +20,10 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
 
+	"git.sr.ht/~kota/modget/curse"
+	"git.sr.ht/~kota/modget/database"
 	"github.com/spf13/cobra"
 )
 
@@ -46,4 +49,42 @@ func Execute() {
 
 func init() {
 	rootCmd.PersistentFlags().StringVarP(&path, "path", "p", "", "Mod install location.")
+}
+
+// showRemove prints a list of mods that will be installed.
+func showRemove(mods []database.Mod) {
+	fmt.Println("The following mods will be removed:")
+	var s string
+	var d int
+	for _, mod := range mods {
+		s += " " + mod.Slug
+		d += mod.FileLength
+	}
+	fmt.Printf("%v\n", s)
+	fmt.Printf("After this operation, %d of additional disk space will be freed.\n", d)
+}
+
+// showNew prints a list of mods that will be installed.
+func showNew(addons []curse.Addon, files []curse.File) {
+	fmt.Println("The following mods will be installed:")
+	var s string
+	var d int
+	for i, addon := range addons {
+		s += " " + addon.Slug
+		d += files[i].FileLength
+	}
+	fmt.Printf("%v\n", s)
+	fmt.Printf("After this operation, %d of additional disk space will be used.\n", d)
+}
+
+// ask prompts the user with a Yes/No question about continuing
+func ask() bool {
+	fmt.Printf("Do you want to continue? [Y/n] ")
+	var answer string
+	fmt.Scanln(&answer)
+	answer = strings.ToLower(answer)
+	if answer == "y" || answer == "" {
+		return true
+	}
+	return false
 }
