@@ -65,7 +65,7 @@ var deleteCmd = &cobra.Command{
 		if !ask() {
 			os.Exit(0)
 		}
-		err = removeMods(mods, path, db)
+		err = deleteMods(mods, path, db)
 		if err != nil {
 			fmt.Printf("failed to remove mod: %v\n", err)
 			os.Exit(1)

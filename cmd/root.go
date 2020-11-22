@@ -105,13 +105,13 @@ func getMods(addons []curse.Addon, files []curse.File, path string, db *database
 	return nil
 }
 
-// removeMods removes a list of local mods and updates a Database
-func removeMods(mods []database.Mod, path string, db *database.Database) error {
+// deleteMods deleted a list of local mods and updates a Database
+func deleteMods(mods []database.Mod, path string, db *database.Database) error {
 	for _, mod := range mods {
-		fmt.Printf("Remove: %v\n", mod.FileName)
+		fmt.Printf("Delete: %v\n", mod.FileName)
 		err := os.Remove(filepath.Join(path, mod.FileName))
 		if err != nil {
-			return fmt.Errorf("remove mod: %s: %v\n", mod.FileName, err)
+			return fmt.Errorf("delete mod: %s: %v\n", mod.FileName, err)
 		}
 		db.Del(mod.ID)
 	}
