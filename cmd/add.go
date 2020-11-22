@@ -40,8 +40,7 @@ var addCmd = &cobra.Command{
 	Aliases: []string{"a"},
 	Short:   "Download and install mod(s) based on MODID or Slug.",
 	Run: func(cmd *cobra.Command, args []string) {
-		var addons []curse.Addon
-		var files []curse.File
+		var mods []database.Mod
 		if len(args) == 0 {
 			fmt.Println("modget add requires at least one MODID or Slug")
 			os.Exit(1)
@@ -69,15 +68,14 @@ var addCmd = &cobra.Command{
 				fmt.Printf("failed to find mod: %v\n%v\n", id, err)
 				os.Exit(1)
 			}
-			addons = append(addons, addon)
-			files = append(files, file)
+			mods = append(mods, database.NewMod(addon, file))
 		}
 		fmt.Println("Done")
-		showNew(addons, files)
+		show(mods, "added")
 		if !ask() {
 			os.Exit(0)
 		}
-		err = getMods(addons, files, path, db)
+		err = get(mods, path, db)
 		if err != nil {
 			fmt.Printf("failed to download file: %v\n", err)
 			os.Exit(1)

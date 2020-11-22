@@ -42,6 +42,7 @@ type Mod struct {
 	FileName        string
 	FileLength      int
 	FileDate        string
+	DownloadURL     string
 	Status          int
 	Slug            string
 	PopularityScore float64
@@ -59,8 +60,8 @@ type Database struct {
 	Mods      []Mod
 }
 
-// Add inserts a mod into a Database from the mod's Addon and File.
-func (db *Database) Add(addon curse.Addon, file curse.File) {
+// NewMod creates a new Mod from an Addon and File.
+func NewMod(addon curse.Addon, file curse.File) Mod {
 	var mod Mod
 	mod.ID = addon.ID
 	mod.Name = addon.Name
@@ -71,6 +72,7 @@ func (db *Database) Add(addon curse.Addon, file curse.File) {
 	mod.FileName = file.FileName
 	mod.FileLength = file.FileLength
 	mod.FileDate = file.FileDate
+	mod.DownloadURL = file.DownloadURL
 	mod.Status = addon.Status
 	mod.Slug = addon.Slug
 	mod.PopularityScore = addon.PopularityScore
@@ -78,6 +80,11 @@ func (db *Database) Add(addon curse.Addon, file curse.File) {
 	mod.DateModified = addon.DateModified
 	mod.DateCreated = addon.DateCreated
 	mod.DateReleased = addon.DateReleased
+	return mod
+}
+
+// Add inserts a mod into a Database from the mod's Addon and File.
+func (db *Database) Add(mod Mod) {
 	db.Mods = append(db.Mods, mod)
 }
 

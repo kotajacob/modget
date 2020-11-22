@@ -53,9 +53,10 @@ func init() {
 	rootCmd.PersistentFlags().StringVarP(&path, "path", "p", "", "Mod install location.")
 }
 
-// showRemove prints a list of mods that will be installed.
-func showRemove(mods []database.Mod) {
-	fmt.Println("The following mods will be removed:")
+// show prints a list of mods that will be added, deleted, or updated.
+// mode should be "added", "deleted", or "updated"
+func show(mods []database.Mod, mode string) {
+	fmt.Printf("The following mods will be %s:\n", mode)
 	var s string
 	var d int
 	for _, mod := range mods {
@@ -63,20 +64,11 @@ func showRemove(mods []database.Mod) {
 		d += mod.FileLength
 	}
 	fmt.Printf("%v\n", s)
-	fmt.Printf("After this operation, %s of additional disk space will be freed.\n", humanize.Bytes(uint64(d)))
-}
-
-// showNew prints a list of mods that will be installed.
-func showNew(addons []curse.Addon, files []curse.File) {
-	fmt.Println("The following mods will be installed:")
-	var s string
-	var d int
-	for i, addon := range addons {
-		s += " " + addon.Slug
-		d += files[i].FileLength
+	if mode == "deleted" {
+		fmt.Printf("After this operation, %s of disk space will be freed.\n", humanize.Bytes(uint64(d)))
+	} else {
+		fmt.Printf("After this operation, %s of additional disk space will be used.\n", humanize.Bytes(uint64(d)))
 	}
-	fmt.Printf("%v\n", s)
-	fmt.Printf("After this operation, %s of additional disk space will be used.\n", humanize.Bytes(uint64(d)))
 }
 
 // ask prompts the user with a Yes/No question about continuing
@@ -91,27 +83,27 @@ func ask() bool {
 	return false
 }
 
-// getMods downloads a list of files and updates a Database
-func getMods(addons []curse.Addon, files []curse.File, path string, db *database.Database) error {
-	for i, file := range files {
-		p := filepath.Join(filepath.Dir(path), file.FileName)
-		fmt.Printf("Get:%d %v\n", i, file.DownloadURL)
-		err := curse.Download(file.DownloadURL, p)
-		db.Add(addons[i], file)
+// get downloads a list of mods and updates a Database
+func get(mods []database.Mod, path string, db *database.Database) error {
+	for i, mod := range mods {
+		p := filepath.Join(filepath.Dir(path), mod.FileName)
+		fmt.Printf("Get:%d %v\n", i, mod.DownloadURL)
+		err := curse.Download(mod.DownloadURL, p)
 		if err != nil {
-			return fmt.Errorf("add mod to database: %s: %v\n", file.FileName, err)
+			return fmt.Errorf("failed to download mod: %s: %v\n", mod.FileName, err)
 		}
+		db.Add(mod)
 	}
 	return nil
 }
 
-// deleteMods deleted a list of local mods and updates a Database
-func deleteMods(mods []database.Mod, path string, db *database.Database) error {
+// remove deletes a list of local mods and updates a Database
+func remove(mods []database.Mod, path string, db *database.Database) error {
 	for _, mod := range mods {
-		fmt.Printf("Delete: %v\n", mod.FileName)
+		fmt.Printf("Deleted: %v\n", mod.FileName)
 		err := os.Remove(filepath.Join(path, mod.FileName))
 		if err != nil {
-			return fmt.Errorf("delete mod: %s: %v\n", mod.FileName, err)
+			return fmt.Errorf("remove mod: %s: %v\n", mod.FileName, err)
 		}
 		db.Del(mod.ID)
 	}
