@@ -35,7 +35,7 @@ var showCmd = &cobra.Command{
 		fmt.Printf("Reading database... ")
 		db, err := database.Load(filepath.Join(path, ".modget"))
 		if err != nil {
-			fmt.Printf("Failed to open database: %v\n", err)
+			fmt.Printf("failed to open database: %v\n", err)
 			os.Exit(1)
 		}
 		fmt.Println("Done")

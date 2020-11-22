@@ -92,30 +92,30 @@ func ask() bool {
 }
 
 // getMods downloads a list of files and updates a Database
-func getMods(addons []curse.Addon, files []curse.File, path string, db database.Database) (database.Database, error) {
+func getMods(addons []curse.Addon, files []curse.File, path string, db *database.Database) error {
 	for i, file := range files {
 		p := filepath.Join(filepath.Dir(path), file.FileName)
 		fmt.Printf("Get:%d %v\n", i, file.DownloadURL)
 		err := curse.Download(file.DownloadURL, p)
-		db = db.Add(addons[i], file)
+		db.Add(addons[i], file)
 		if err != nil {
-			return db, err
+			return fmt.Errorf("add mod to database: %s: %v\n", file.FileName, err)
 		}
 	}
-	return db, nil
+	return nil
 }
 
 // removeMods removes a list of local mods and updates a Database
-func removeMods(mods []database.Mod, path string, db database.Database) (database.Database, error) {
+func removeMods(mods []database.Mod, path string, db *database.Database) error {
 	for _, mod := range mods {
 		fmt.Printf("Remove: %v\n", mod.FileName)
 		err := os.Remove(filepath.Join(path, mod.FileName))
 		if err != nil {
-			return db, err
+			return fmt.Errorf("remove mod: %s: %v\n", mod.FileName, err)
 		}
-		db = db.Del(mod.ID)
+		db.Del(mod.ID)
 	}
-	return db, nil
+	return nil
 }
 
 // debugFilePrint shows debug info about a curse.File

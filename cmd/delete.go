@@ -42,20 +42,20 @@ var deleteCmd = &cobra.Command{
 		fmt.Printf("Reading database... ")
 		db, err := database.Load(filepath.Join(path, ".modget"))
 		if err != nil {
-			fmt.Printf("Failed to open database: %v\n", err)
+			fmt.Printf("failed to open database: %v\n", err)
 			os.Exit(1)
 		}
 		fmt.Println("Done")
 		ids, err := slug.Slug(args, db)
 		if err != nil {
-			fmt.Printf("Failed read input: %v\n", err)
+			fmt.Printf("failed read input: %v\n", err)
 			os.Exit(1)
 		}
 		fmt.Printf("Finding Mods... ")
 		for _, id := range ids {
 			mod, err := filter.FindLocalMod(id, db)
 			if err != nil {
-				fmt.Printf("Failed to find mod: %v\n%v\n", id, err)
+				fmt.Printf("failed to find mod: %v\n%v\n", id, err)
 				os.Exit(1)
 			}
 			mods = append(mods, mod)
@@ -65,15 +65,15 @@ var deleteCmd = &cobra.Command{
 		if !ask() {
 			os.Exit(0)
 		}
-		db, err = removeMods(mods, path, db)
+		err = removeMods(mods, path, db)
 		if err != nil {
-			fmt.Printf("Failed to remove mod: %v\n", err)
+			fmt.Printf("failed to remove mod: %v\n", err)
 			os.Exit(1)
 		}
 		fmt.Printf("Updating database... ")
 		err = db.Write(filepath.Join(path, ".modget"))
 		if err != nil {
-			fmt.Printf("Failed to write database: %v\n", err)
+			fmt.Printf("failed to write database: %v\n", err)
 			os.Exit(1)
 		}
 		fmt.Println("Done")

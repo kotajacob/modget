@@ -172,7 +172,7 @@ func FindFile(id int, minecraftVersion string, loader string) (curse.File, error
 }
 
 // FindLocalMod returns a database.Mod for a MODID.
-func FindLocalMod(id int, db database.Database) (database.Mod, error) {
+func FindLocalMod(id int, db *database.Database) (database.Mod, error) {
 	var mod database.Mod
 	for _, mod := range db.Mods {
 		if mod.ID == id {

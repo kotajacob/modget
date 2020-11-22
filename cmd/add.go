@@ -49,12 +49,16 @@ var addCmd = &cobra.Command{
 		fmt.Printf("Reading database... ")
 		db, err := database.Load(filepath.Join(path, ".modget"))
 		if err != nil {
-			db = database.Create(Version, minecraft, loader)
+			db = &database.Database{
+				Version:   Version,
+				Minecraft: minecraft,
+				Loader:    loader,
+			}
 		}
 		fmt.Println("Done")
 		ids, err := slug.Slug(args, db)
 		if err != nil {
-			fmt.Printf("Failed read input: %v\n", err)
+			fmt.Printf("failed read input: %v\n", err)
 			os.Exit(1)
 		}
 		fmt.Printf("Finding Mods... ")
@@ -62,7 +66,7 @@ var addCmd = &cobra.Command{
 			addon, err := curse.AddonInfo(id)
 			file, err := filter.FindFile(id, minecraft, loader)
 			if err != nil {
-				fmt.Printf("Failed to find mod: %v\n%v\n", id, err)
+				fmt.Printf("failed to find mod: %v\n%v\n", id, err)
 				os.Exit(1)
 			}
 			addons = append(addons, addon)
@@ -73,15 +77,15 @@ var addCmd = &cobra.Command{
 		if !ask() {
 			os.Exit(0)
 		}
-		db, err = getMods(addons, files, path, db)
+		err = getMods(addons, files, path, db)
 		if err != nil {
-			fmt.Printf("Failed to download file: %v\n", err)
+			fmt.Printf("failed to download file: %v\n", err)
 			os.Exit(1)
 		}
 		fmt.Printf("Updating database... ")
 		err = db.Write(filepath.Join(path, ".modget"))
 		if err != nil {
-			fmt.Printf("Failed to write database: %v\n", err)
+			fmt.Printf("failed to write database: %v\n", err)
 			// TODO: remove failed downloaded files
 			os.Exit(1)
 		}

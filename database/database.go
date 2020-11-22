@@ -20,6 +20,7 @@ package database
 import (
 	"bytes"
 	"encoding/gob"
+	"fmt"
 	"io/ioutil"
 	"os"
 
@@ -58,8 +59,8 @@ type Database struct {
 	Mods      []Mod
 }
 
-// Add inserts a mod into a Database. Requires the mod's Addon and File.
-func (db Database) Add(addon curse.Addon, file curse.File) Database {
+// Add inserts a mod into a Database from the mod's Addon and File.
+func (db *Database) Add(addon curse.Addon, file curse.File) {
 	var mod Mod
 	mod.ID = addon.ID
 	mod.Name = addon.Name
@@ -78,72 +79,46 @@ func (db Database) Add(addon curse.Addon, file curse.File) Database {
 	mod.DateCreated = addon.DateCreated
 	mod.DateReleased = addon.DateReleased
 	db.Mods = append(db.Mods, mod)
-	return db
 }
 
 // Del removes a Mod from a Database by its index
-func (db Database) Del(ID int) Database {
+func (db *Database) Del(ID int) {
 	mods := db.Mods
 	for i, mod := range mods {
 		if mod.ID == ID {
 			db.Mods = remove(db.Mods, i)
 		}
 	}
-	return db
 }
 
 // Write saves a Database to a file at a path.
-func (db Database) Write(p string) error {
+func (db *Database) Write(p string) error {
 	stream := &bytes.Buffer{}
 	en := gob.NewEncoder(stream)
 	err := en.Encode(db)
 	if err != nil {
-		return err
+		return fmt.Errorf("encoding database: %v\n", err)
 	}
-	err = put(p, stream.Bytes())
+	err = ioutil.WriteFile(p, stream.Bytes(), Mode)
 	if err != nil {
-		return err
+		return fmt.Errorf("writing database: %v\n", err)
 	}
 	return nil
-}
-
-// Create a Database.
-func Create(version, minecraft, loader string) Database {
-	var db Database
-	db.Version = version
-	db.Minecraft = minecraft
-	db.Loader = loader
-	return db
 }
 
 // Load a Database from a path.
-func Load(p string) (Database, error) {
+func Load(p string) (*Database, error) {
 	var db Database
-	b, err := get(p)
+	b, err := ioutil.ReadFile(p)
 	if err != nil {
-		return db, err
+		return nil, fmt.Errorf("reading database: %v\n", err)
 	}
 	dec := gob.NewDecoder(bytes.NewBuffer(b))
 	err = dec.Decode(&db)
-	return db, err
-}
-
-// Get a []byte from a file
-func get(filename string) ([]byte, error) {
-	dat, err := ioutil.ReadFile(filename)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("decoding database: %v\n", err)
 	}
-	return dat, nil
-}
-
-// Overwrite a file with a []byte
-func put(filename string, dat []byte) error {
-	err := ioutil.WriteFile(filename, dat, Mode)
-	if err != nil {
-		return err
-	}
-	return nil
+	return &db, err
 }
 
 // Remove an element from a slice by index
