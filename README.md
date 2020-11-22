@@ -69,15 +69,16 @@ modget requires the following build dependencies:
 Every mod on curseforge has a short name called a slug which is found in the
 URL for the mod's page. For example in this url
 [https://www.curseforge.com/minecraft/mc-mods/appleskin](https://www.curseforge.com/minecraft/mc-mods/appleskin)
-the slug is `appleskin`. The modget commands are smart enough to convert slugs
-to MODIDs which makes managing your mods much easier. Internally everything
-uses MODID.
+the slug is `appleskin`. The modget commands will attempt to convert slugs to
+MODIDs which makes managing your mods much easier. Internally everything uses
+MODID. Currently this feature is broken for the majority of curseforge mods.
 
 ## MODID
 
 Every mod on curseforge has a 6 digit MODID which can be found on the mods page
-or by using modget's search command. Typically using the Slug for the mod is
-easier and more userfriendly, but if that fails you can try the MODID.
+or by using modget's search command. This is used instead of names when
+installing and removing mods as that is what is supported by the curseforge
+API.
 
 ## resources
 
