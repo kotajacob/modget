@@ -19,7 +19,13 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
+	"time"
 
+	"git.sr.ht/~kota/modget/database"
+	"git.sr.ht/~kota/modget/filter"
+	"git.sr.ht/~kota/modget/slug"
 	"github.com/spf13/cobra"
 )
 
@@ -29,7 +35,60 @@ var updateCmd = &cobra.Command{
 	Aliases: []string{"u"},
 	Short:   "Check installed mod(s) and prompt to install any new mods.",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("update called")
+		var mods []database.Mod
+		var updates []database.Mod
+		fmt.Printf("Reading database... ")
+		db, err := database.Load(filepath.Join(path, ".modget"))
+		if err != nil {
+			fmt.Printf("failed to open database: %v\n", err)
+			os.Exit(1)
+		}
+		fmt.Println("Done")
+		ids, err := slug.Slug(args, db)
+		if err != nil {
+			fmt.Printf("failed read input: %v\n", err)
+			os.Exit(1)
+		}
+		fmt.Printf("Finding Mods... ")
+		if len(ids) == 0 {
+			mods = db.Mods
+		} else {
+			for _, id := range ids {
+				mod, err := filter.FindLocalMod(id, db)
+				if err != nil {
+					fmt.Printf("failed to find mod: %v\n%v\n", id, err)
+					os.Exit(1)
+				}
+				mods = append(mods, mod)
+			}
+		}
+		fmt.Println("Done")
+		fmt.Printf("Checking for updates... ")
+		for _, mod := range mods {
+			file, err := filter.FindFile(mod.ID, minecraft, loader)
+			if err != nil {
+				fmt.Printf("failed to find mod: %v\n%v\n", mod.ID, err)
+				os.Exit(1)
+			}
+			mTime, err := time.Parse(time.RFC3339, mod.FileDate)
+			if err != nil {
+				fmt.Printf("failed to parse time: %v\n%v\n", mod.ID, err)
+				os.Exit(1)
+			}
+			fTime, err := time.Parse(time.RFC3339, file.FileDate)
+			if err != nil {
+				fmt.Printf("failed to parse time: %v\n%v\n", mod.ID, err)
+				os.Exit(1)
+			}
+			if fTime.After(mTime) {
+				updates = append(updates, mod)
+			}
+		}
+		fmt.Println("Done")
+		show(updates, "updated")
+		if !prompt() {
+			os.Exit(0)
+		}
 	},
 }
 
