@@ -48,6 +48,13 @@ var addCmd = &cobra.Command{
 		fmt.Printf("Reading database... ")
 		db, err := database.Load(filepath.Join(path, ".modget"))
 		if err != nil {
+			fmt.Println("not found!")
+			if minecraft == "" {
+				minecraft = ask("minecraft version")
+			}
+			if loader == "" {
+				loader = ask("modloader")
+			}
 			db = &database.Database{
 				Version:   Version,
 				Minecraft: minecraft,
@@ -72,7 +79,7 @@ var addCmd = &cobra.Command{
 		}
 		fmt.Println("Done")
 		show(mods, "added")
-		if !ask() {
+		if !prompt() {
 			os.Exit(0)
 		}
 		err = get(mods, path, db)

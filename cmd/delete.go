@@ -62,7 +62,7 @@ var deleteCmd = &cobra.Command{
 		}
 		fmt.Println("Done")
 		show(mods, "deleted")
-		if !ask() {
+		if !prompt() {
 			os.Exit(0)
 		}
 		err = remove(mods, path, db)

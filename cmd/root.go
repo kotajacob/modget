@@ -71,13 +71,21 @@ func show(mods []database.Mod, mode string) {
 	}
 }
 
-// ask prompts the user with a Yes/No question about continuing
-func ask() bool {
+// asks the user to provide a string
+func ask(q string) string {
+	fmt.Printf("Enter a %s for the new database: ", q)
+	var a string
+	fmt.Scanln(&a)
+	return strings.ToLower(a)
+}
+
+// prompt the user with a Yes/No question about continuing
+func prompt() bool {
 	fmt.Printf("Do you want to continue? [Y/n] ")
-	var answer string
-	fmt.Scanln(&answer)
-	answer = strings.ToLower(answer)
-	if answer == "y" || answer == "" {
+	var a string
+	fmt.Scanln(&a)
+	a = strings.ToLower(a)
+	if a == "y" || a == "" {
 		return true
 	}
 	return false
