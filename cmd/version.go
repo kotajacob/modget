@@ -23,6 +23,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// Version represents the current version of modget. It is set in config.mk
 var Version string
 
 //SetVersion initializes the aerc version displayed in template functions

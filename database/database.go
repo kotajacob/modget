@@ -104,11 +104,11 @@ func (db *Database) Write(p string) error {
 	en := gob.NewEncoder(stream)
 	err := en.Encode(db)
 	if err != nil {
-		return fmt.Errorf("encoding database: %v\n", err)
+		return fmt.Errorf("encoding database: %v", err)
 	}
 	err = ioutil.WriteFile(p, stream.Bytes(), Mode)
 	if err != nil {
-		return fmt.Errorf("writing database: %v\n", err)
+		return fmt.Errorf("writing database: %v", err)
 	}
 	return nil
 }
@@ -118,12 +118,12 @@ func Load(p string) (*Database, error) {
 	var db Database
 	b, err := ioutil.ReadFile(p)
 	if err != nil {
-		return nil, fmt.Errorf("reading database: %v\n", err)
+		return nil, fmt.Errorf("reading database: %v", err)
 	}
 	dec := gob.NewDecoder(bytes.NewBuffer(b))
 	err = dec.Decode(&db)
 	if err != nil {
-		return nil, fmt.Errorf("decoding database: %v\n", err)
+		return nil, fmt.Errorf("decoding database: %v", err)
 	}
 	return &db, err
 }

@@ -98,7 +98,7 @@ func get(mods []database.Mod, path string, db *database.Database) error {
 		fmt.Printf("Get:%d %v\n", i, mod.DownloadURL)
 		err := curse.Download(mod.DownloadURL, p)
 		if err != nil {
-			return fmt.Errorf("failed to download mod: %s: %v\n", mod.FileName, err)
+			return fmt.Errorf("failed to download mod: %s: %v", mod.FileName, err)
 		}
 		db.Add(mod)
 	}
@@ -111,7 +111,7 @@ func remove(mods []database.Mod, path string, db *database.Database) error {
 		fmt.Printf("Deleted: %v\n", mod.FileName)
 		err := os.Remove(filepath.Join(path, mod.FileName))
 		if err != nil {
-			return fmt.Errorf("remove mod: %s: %v\n", mod.FileName, err)
+			return fmt.Errorf("remove mod: %s: %v", mod.FileName, err)
 		}
 		db.Del(mod.ID)
 	}
