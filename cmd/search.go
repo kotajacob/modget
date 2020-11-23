@@ -60,7 +60,7 @@ func search(s string) error {
 		return err
 	}
 	for _, addon := range addons {
-		debugAddonPrint(addon)
+		fmt.Println(addon)
 	}
 	return nil
 }
