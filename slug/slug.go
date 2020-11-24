@@ -19,6 +19,7 @@ package slug
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 
 	"git.sr.ht/~kota/modget/curse"
@@ -34,15 +35,14 @@ func searchModid(s string) (int, error) {
 	search.SearchFilter = s // Search string
 	addons, err := curse.AddonSearch(search)
 	if err != nil {
-		return 0, err
+		return 0, fmt.Errorf("failed to search for slug: %s: %v", s, err)
 	}
 	for _, addon := range addons {
 		if addon.Slug == s {
 			return addon.ID, nil
 		}
 	}
-	err = errors.New("Could not find: " + s)
-	return 0, err
+	return 0, fmt.Errorf("slug not found in search results: %s: %v", s, err)
 }
 
 // readModid takes a string, which is meant to be an addon's slug and attempts to convert it to a MODID by using the local database.
