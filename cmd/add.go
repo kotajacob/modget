@@ -61,6 +61,8 @@ var addCmd = &cobra.Command{
 				Loader:    loader,
 			}
 		}
+		minecraft = db.Minecraft
+		loader = db.Loader
 		fmt.Println("Done")
 		ids, err := slug.Slug(args, db)
 		if err != nil {
