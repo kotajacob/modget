@@ -42,6 +42,7 @@ type Mod struct {
 	FileName        string
 	FileLength      int
 	FileDate        string
+	GameVersion     []string
 	DownloadURL     string
 	Status          int
 	Slug            string
@@ -72,6 +73,7 @@ func NewMod(addon curse.Addon, file curse.File) Mod {
 	mod.FileName = file.FileName
 	mod.FileLength = file.FileLength
 	mod.FileDate = file.FileDate
+	mod.GameVersion = file.GameVersion
 	mod.DownloadURL = file.DownloadURL
 	mod.Status = addon.Status
 	mod.Slug = addon.Slug

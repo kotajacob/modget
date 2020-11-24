@@ -39,7 +39,22 @@ var showCmd = &cobra.Command{
 			os.Exit(1)
 		}
 		fmt.Println("Done")
-		fmt.Println(db)
+		fmt.Printf("Database: %s\nMinecraft: %s\nLoader: %s\n\n", db.Version, db.Minecraft, db.Loader)
+		for _, mod := range db.Mods {
+			v := mod.GameVersion[0]
+			for i := 1; i < len(mod.GameVersion); i++ {
+				v += ", "
+				v += mod.GameVersion[i]
+			}
+			fmt.Printf("%d/%s - %s\n\tDownloads: %d\n\tDate: %s\n\tVersions: %s\n\t%s\n\n",
+				mod.ID,
+				mod.Slug,
+				mod.FileName,
+				int(mod.DownloadCount),
+				mod.FileDate,
+				v,
+				mod.Summary)
+		}
 	},
 }
 
