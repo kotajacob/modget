@@ -52,16 +52,21 @@ modget requires the following build dependencies:
 
 ## add command options
 
-- `-m minecraft version`
+- `-m, --minecraft <minecraft version>`
 	- Limit install for a specific minecraft version. Ex: 1.16.3
-- `-l loader`
+- `-l --loader <modloader>`
 	- Limit install to a specific mod loader. Ex: Fabric
+
+## show command options
+
+- `-l, --oneline`
+	- Display mods one per line.
 
 ## update command options
 
-- `-m minecraft version`
+- `-m, --minecraft <minecraft version>`
 	- Limit install for a specific minecraft version. Ex: 1.16.3
-- `-l loader`
+- `-l --loader <modloader>`
 	- Limit install to a specific mod loader. Ex: Fabric
 
 ## Slug

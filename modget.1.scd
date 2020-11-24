@@ -41,23 +41,28 @@ modget - A package manager for minecraft curseforge mods.
 
 # ADD OPTIONS
 
-*-m <Minecraft Version>*
+*-m, --minecraft <Minecraft Version>*
 	Specify a minecraft version when installing mod(s). For example 1.16.3
 	or 1.12
 
-*-l <Loader>*
+*-l, --loader <Modloader>*
 	Specify a modloader installing mod(s). For example fabric, forge, rift,
 	or liteloader.
 
+# SHOW OPTIONS
+
+*-l, --oneline*
+	Display mods one per line.
+
 # UPDATE OPTIONS
 
-*-m <Minecraft Version>*
+*-m, --minecraft <Minecraft Version>*
 	Specify a new minecraft version. This will update your database to the
 	new minecraft version and check if any/all of your mods have updates.
 	Additionally you will be prompted for mods which do not support the
 	version and may delete them. For example 1.16.3 or 1.12
 
-*-l <Loader>*
+*-l, --loader <Modloader>*
 	Specify a new modloader. This will update your database to the new
 	loader and check if any/all of your mods have updates. Additionally you
 	will be prompted for mods which do not support the version and may

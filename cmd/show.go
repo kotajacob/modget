@@ -28,6 +28,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var (
+	one bool
+)
+
 // showCmd represents the show command
 var showCmd = &cobra.Command{
 	Use:     "show [mod]...",
@@ -62,24 +66,51 @@ var showCmd = &cobra.Command{
 		}
 		fmt.Println("Done")
 		fmt.Printf("Database: %s\nMinecraft: %s\nLoader: %s\n\n", db.Version, db.Minecraft, db.Loader)
-		for _, mod := range mods {
-			v := mod.GameVersion[0]
-			for i := 1; i < len(mod.GameVersion); i++ {
-				v += ", "
-				v += mod.GameVersion[i]
-			}
-			fmt.Printf("%d/%s - %s\n\tDownloads: %d\n\tDate: %s\n\tVersions: %s\n\t%s\n\n",
-				mod.ID,
-				mod.Slug,
-				mod.FileName,
-				int(mod.DownloadCount),
-				mod.FileDate,
-				v,
-				mod.Summary)
+		if !one {
+			showNormal(mods)
+		} else {
+			showOne(mods)
 		}
 	},
 }
 
+// showNormal prints a list of mods and displays a reasonable amount of
+// information for each one.
+func showNormal(mods []database.Mod) {
+	for _, mod := range mods {
+		v := mod.GameVersion[0]
+		for i := 1; i < len(mod.GameVersion); i++ {
+			v += ", "
+			v += mod.GameVersion[i]
+		}
+		fmt.Printf("%d/%s - %d/%s\n\tDownloads: %d\n\tDate: %s\n\tVersions: %s\n\t%s\n\n",
+			mod.ID,
+			mod.Slug,
+			mod.FileID,
+			mod.FileName,
+			int(mod.DownloadCount),
+			mod.FileDate,
+			v,
+			mod.Summary)
+	}
+}
+
+// showOne prints a list of mods and displays each mod on a single line.
+func showOne(mods []database.Mod) {
+	for _, mod := range mods {
+		v := mod.GameVersion[0]
+		for i := 1; i < len(mod.GameVersion); i++ {
+			v += ", "
+			v += mod.GameVersion[i]
+		}
+		fmt.Printf("%d/%s - %s\n",
+			mod.ID,
+			mod.Slug,
+			mod.FileName)
+	}
+}
+
 func init() {
 	rootCmd.AddCommand(showCmd)
+	showCmd.Flags().BoolVarP(&one, "oneline", "l", false, "Show mods one per line")
 }
