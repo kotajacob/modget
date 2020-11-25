@@ -82,9 +82,9 @@ func showNormal(IDs []int, db *database.Database) {
 			v += ", "
 			v += db.Mods[ID].GameVersion[i]
 		}
-		fmt.Printf("%d/%s - %d/%s\n\tDownloads: %d\n\tDate: %s\n\tVersions: %s\n\t%s\n\n",
-			ID,
+		fmt.Printf("%s/%d - %d/%s\n\tDownloads: %d\n\tDate: %s\n\tVersions: %s\n\t%s\n\n",
 			db.Mods[ID].Slug,
+			ID,
 			db.Mods[ID].FileID,
 			db.Mods[ID].FileName,
 			int(db.Mods[ID].DownloadCount),
@@ -97,9 +97,9 @@ func showNormal(IDs []int, db *database.Database) {
 // showOneLine prints a list of mods and displays each mod on a single line.
 func showOneLine(IDs []int, db *database.Database) {
 	for _, ID := range IDs {
-		fmt.Printf("%d/%s - %s\n",
-			ID,
+		fmt.Printf("%s/%d - %s\n",
 			db.Mods[ID].Slug,
+			ID,
 			db.Mods[ID].FileName)
 	}
 }
