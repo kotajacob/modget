@@ -78,12 +78,13 @@ func showNormal(ids []int, db *database.Database) {
 			v += ", "
 			v += db.Mods[id].GameVersion[i]
 		}
-		fmt.Printf("%s/%d - %s\n%d/%s\n\tDownloads: %d\n\tDate: %s\n\tVersions: %s\n\t\n",
+		fmt.Printf("%s/%d\n\t%s\n\t%d/%s\n\tHold: %t\n\tDownloads: %d\n\tDate: %s\n\tVersions: %s\n\t\n",
 			db.Mods[id].Slug,
 			id,
 			db.Mods[id].Summary,
 			db.Mods[id].FileID,
 			db.Mods[id].FileName,
+			db.Mods[id].Hold,
 			int(db.Mods[id].DownloadCount),
 			db.Mods[id].FileDate, // TODO: Format this a little better
 			v)

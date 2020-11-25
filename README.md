@@ -32,6 +32,9 @@ modget requires the following build dependencies:
 - `help [command]`
 	- Print help about a command and exit.
 
+- `[m]ark [mod]...`
+	- Change the update status of a mod.
+
 - `[s]earch string...`
 	- Search curseforge for mods based on search terms. Prints mod names, MODID, Version, and a short description.
 

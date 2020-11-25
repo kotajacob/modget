@@ -16,9 +16,15 @@ modget - A package manager for minecraft curseforge mods.
 *delete, d <MODID>*
 	Remove and uninstall a mod based on its MODID.
 
-*update, u <MODID>*
-	Check each installed mod (in selected directory or current directory)
-	and prompt to install any new mods.
+*help <command>*
+	Show help message and quit.
+
+*mark, m <MODID>*
+	Mark allows you to hold or unhold your mods. When a mod has a hold
+	status it will be ignored by the update command and will remain at its
+	exact version until the hold is removed or a different version is
+	manually installed. By default the hold status of your selected mod(s)
+	is toggled and printed.
 
 *search <Search String>*
 	Search curseforge for mods based on search terms.
@@ -27,11 +33,12 @@ modget - A package manager for minecraft curseforge mods.
 *show, sh <MODID>*
 	Query and print more information about a specific mod by MODID.
 
+*update, u <MODID>*
+	Check each installed mod (in selected directory or current directory)
+	and prompt to install any new mods.
+
 *version*
 	Show the version and quit.
-
-*help <command>*
-	Show help message and quit.
 
 # GLOBAL OPTIONS
 

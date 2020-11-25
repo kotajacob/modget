@@ -74,6 +74,10 @@ func update(cmd *cobra.Command, args []string) {
 	}
 	fmt.Printf("Checking for updates... ")
 	for _, id := range ids {
+		// Skip if the mod has a hold
+		if db.Mods[id].Hold == true {
+			continue
+		}
 		addon, err := curse.AddonInfo(id)
 		file, err := filter.FindFile(id, minecraft, loader)
 		if err != nil {
