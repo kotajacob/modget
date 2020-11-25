@@ -58,20 +58,20 @@ func readModid(s string, db *database.Database) (int, error) {
 
 // Slug converts a list of strings to MODIDs
 func Slug(s []string, db *database.Database) ([]int, error) {
-	var mods []int
-	for i := 0; i < len(s); i++ {
-		id, err := strconv.Atoi(s[i])
+	var IDs []int
+	for _, v := range s {
+		ID, err := strconv.Atoi(v)
 		if err != nil {
 			// Attempt to convert slug to modid
-			id, err = readModid(s[i], db)
+			ID, err = readModid(v, db)
 			if err != nil {
-				id, err = searchModid(s[i])
+				ID, err = searchModid(v)
 				if err != nil {
 					return nil, err
 				}
 			}
 		}
-		mods = append(mods, id)
+		IDs = append(IDs, ID)
 	}
-	return mods, nil
+	return IDs, nil
 }
