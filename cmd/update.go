@@ -53,7 +53,7 @@ func init() {
 // 5. Remove old versions
 // 6. Add new versions
 func update(cmd *cobra.Command, args []string) {
-	updateMods := make(map[int]database.Mod)
+	updateMods := make(map[int]*database.Mod)
 	var updateIDs []int
 	fmt.Printf("Reading database... ")
 	db, err := database.Load(filepath.Join(path, ".modget"))

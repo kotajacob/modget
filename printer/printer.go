@@ -30,7 +30,7 @@ func Prompt() bool {
 
 // Show prints a list of mods that will be added, deleted, or updated.
 // mode should be "added", "deleted", or "updated"
-func Show(ids []int, mode string, mods map[int]database.Mod) {
+func Show(ids []int, mode string, mods map[int]*database.Mod) {
 	fmt.Printf("The following mods will be %s:\n", mode)
 	var s string
 	var d int

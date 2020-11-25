@@ -45,7 +45,7 @@ func init() {
 }
 
 func add(cmd *cobra.Command, args []string) {
-	mods := make(map[int]database.Mod)
+	mods := make(map[int]*database.Mod)
 	if len(args) == 0 {
 		fmt.Println("modget add requires at least one MODID or Slug")
 		os.Exit(1)
@@ -64,7 +64,7 @@ func add(cmd *cobra.Command, args []string) {
 			Version:   Version,
 			Minecraft: minecraft,
 			Loader:    loader,
-			Mods:      make(map[int]database.Mod),
+			Mods:      make(map[int]*database.Mod),
 		}
 	}
 	minecraft = db.Minecraft

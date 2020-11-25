@@ -50,6 +50,7 @@ type Mod struct {
 	DateModified    string
 	DateCreated     string
 	DateReleased    string
+	Hold            bool
 }
 
 // Database is the format of the .modget file.
@@ -57,11 +58,11 @@ type Database struct {
 	Version   string
 	Minecraft string
 	Loader    string
-	Mods      map[int]Mod
+	Mods      map[int]*Mod
 }
 
 // NewMod creates a new Mod from an Addon and File.
-func NewMod(addon curse.Addon, file curse.File) Mod {
+func NewMod(addon curse.Addon, file curse.File) *Mod {
 	var mod Mod
 	mod.Name = addon.Name
 	mod.Authors = addon.Authors
@@ -80,11 +81,12 @@ func NewMod(addon curse.Addon, file curse.File) Mod {
 	mod.DateModified = addon.DateModified
 	mod.DateCreated = addon.DateCreated
 	mod.DateReleased = addon.DateReleased
-	return mod
+	mod.Hold = false
+	return &mod
 }
 
 // Add inserts a mod into a Database from the mod's Addon and File.
-func (db *Database) Add(id int, mod Mod) {
+func (db *Database) Add(id int, mod *Mod) {
 	db.Mods[id] = mod
 }
 
