@@ -90,7 +90,7 @@ func add(cmd *cobra.Command, args []string) {
 		fmt.Println("no mods found with those search terms")
 		os.Exit(0)
 	}
-	printer.Show(ids, "added", mods)
+	printer.Changes(ids, "added", mods)
 	if !printer.Continue() {
 		os.Exit(0)
 	}

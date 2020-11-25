@@ -105,7 +105,7 @@ func update(cmd *cobra.Command, args []string) {
 		fmt.Println("your mods are up to date")
 		os.Exit(0)
 	}
-	printer.Show(updateIDs, "updated", updateMods)
+	printer.Changes(updateIDs, "updated", updateMods)
 	if !printer.Continue() {
 		os.Exit(0)
 	}

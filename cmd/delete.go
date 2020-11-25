@@ -57,7 +57,7 @@ func del(cmd *cobra.Command, args []string) {
 		fmt.Printf("failed read input: %v\n", err)
 		os.Exit(1)
 	}
-	printer.Show(ids, "deleted", db.Mods)
+	printer.Changes(ids, "deleted", db.Mods)
 	if !printer.Continue() {
 		os.Exit(0)
 	}

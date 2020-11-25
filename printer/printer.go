@@ -16,7 +16,7 @@ func Ask(q string) string {
 	return strings.ToLower(a)
 }
 
-// Prompt the user with a Yes/No question about continuing
+// Continue prompts the user with a Yes/No question about continuing
 func Continue() bool {
 	fmt.Printf("Do you want to continue? [Y/n] ")
 	var a string
@@ -28,9 +28,9 @@ func Continue() bool {
 	return false
 }
 
-// Show prints a list of mods that will be added, deleted, or updated.
+// Changes prints a list of mods that will be added, deleted, or updated.
 // mode should be "added", "deleted", or "updated"
-func Show(ids []int, mode string, mods map[int]*database.Mod) {
+func Changes(ids []int, mode string, mods map[int]*database.Mod) {
 	fmt.Printf("The following mods will be %s:\n", mode)
 	var s string
 	var d int
