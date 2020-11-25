@@ -167,7 +167,7 @@ func FindFile(id int, minecraftVersion string, loader string) (curse.File, error
 	}
 	files = TimeSort(files)
 	if len(files) == 0 {
-		return file, fmt.Errorf("file not found for those terms")
+		return file, fmt.Errorf("%d not found", id)
 	}
 	file = files[0]
 	return file, nil

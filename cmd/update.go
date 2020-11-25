@@ -82,7 +82,7 @@ func update(cmd *cobra.Command, args []string) {
 		file, err := filter.FindFile(id, minecraft, loader)
 		if err != nil {
 			fmt.Printf("failed to find mod: %v\n%v\n", id, err)
-			os.Exit(1)
+			continue
 		}
 		mTime, err := time.Parse(time.RFC3339, db.Mods[id].FileDate)
 		if err != nil {
@@ -101,6 +101,10 @@ func update(cmd *cobra.Command, args []string) {
 		}
 	}
 	fmt.Println("Done")
+	if len(updateIDs) == 0 {
+		fmt.Println("your mods are up to date")
+		os.Exit(0)
+	}
 	printer.Show(updateIDs, "updated", updateMods)
 	if !printer.Prompt() {
 		os.Exit(0)

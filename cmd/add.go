@@ -80,12 +80,16 @@ func add(cmd *cobra.Command, args []string) {
 		addon, err := curse.AddonInfo(id)
 		file, err := filter.FindFile(id, minecraft, loader)
 		if err != nil {
-			fmt.Printf("failed to find mod: %v\n%v\n", id, err)
+			fmt.Printf("\n%v\n", err)
 			os.Exit(1)
 		}
 		mods[id] = database.NewMod(addon, file)
 	}
 	fmt.Println("Done")
+	if len(mods) == 0 {
+		fmt.Println("no mods found with those search terms")
+		os.Exit(0)
+	}
 	printer.Show(ids, "added", mods)
 	if !printer.Prompt() {
 		os.Exit(0)
