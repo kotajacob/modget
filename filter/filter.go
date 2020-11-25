@@ -153,6 +153,9 @@ func FindFile(id int, minecraftVersion string, loader string) (curse.File, error
 	}
 	// Validate the modloader and mc version
 	mcVersions, err := curse.MinecraftVersionList()
+	if err != nil {
+		return file, fmt.Errorf("could not get minecraft version list: %v", err)
+	}
 	if minecraftVersion != "" {
 		files = VersionFilter(files, minecraftVersion)
 		if !ValidateMinecraftVersion(minecraftVersion, mcVersions) {

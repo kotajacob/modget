@@ -78,6 +78,10 @@ func add(cmd *cobra.Command, args []string) {
 	fmt.Printf("Finding Mods... ")
 	for _, id := range ids {
 		addon, err := curse.AddonInfo(id)
+		if err != nil {
+			fmt.Printf("\n%v\n", err)
+			os.Exit(1)
+		}
 		file, err := filter.FindFile(id, minecraft, loader)
 		if err != nil {
 			fmt.Printf("\n%v\n", err)

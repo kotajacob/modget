@@ -79,9 +79,13 @@ func update(cmd *cobra.Command, args []string) {
 			continue
 		}
 		addon, err := curse.AddonInfo(id)
+		if err != nil {
+			fmt.Printf("%v\n%v\n", id, err)
+			continue
+		}
 		file, err := filter.FindFile(id, minecraft, loader)
 		if err != nil {
-			fmt.Printf("failed to find mod: %v\n%v\n", id, err)
+			fmt.Printf("%v\n%v\n", id, err)
 			continue
 		}
 		mTime, err := time.Parse(time.RFC3339, db.Mods[id].FileDate)
