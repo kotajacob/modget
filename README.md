@@ -39,7 +39,6 @@ modget requires the following build dependencies:
 	- Query and print information about installed mods or a specific mod by MODID or Slug.
 
 - `[u]pdate [mod]...`
-	- NOT YET IMPLEMENTED
 	- Check each installed mod (in selected directory or current directory) and prompt to install any new mods.
 
 - `[v]ersion`
