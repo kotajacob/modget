@@ -19,7 +19,6 @@ package filter
 
 import (
 	"fmt"
-	"os"
 	"sort"
 	"strings"
 	"time"
@@ -172,13 +171,4 @@ func FindFile(id int, minecraftVersion string, loader string) (curse.File, error
 	}
 	file = files[0]
 	return file, nil
-}
-
-// ensureDir creates a directory if missing.
-func ensureDir(dirName string) error {
-	err := os.Mkdir(dirName, os.ModeDir)
-	if err == nil || os.IsExist(err) {
-		return nil
-	}
-	return err
 }
