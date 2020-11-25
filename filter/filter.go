@@ -26,7 +26,6 @@ import (
 	"time"
 
 	"git.sr.ht/~kota/modget/curse"
-	"git.sr.ht/~kota/modget/database"
 )
 
 // StringSet represents a set of strings. Although they are mapped to bool they
@@ -169,17 +168,6 @@ func FindFile(id int, minecraftVersion string, loader string) (curse.File, error
 		err = errors.New("file not found for those search terms")
 	}
 	return files[0], err
-}
-
-// FindLocalMod returns a database.Mod for a MODID.
-func FindLocalMod(id int, db *database.Database) (database.Mod, error) {
-	var mod database.Mod
-	for _, mod := range db.Mods {
-		if mod.ID == id {
-			return mod, nil
-		}
-	}
-	return mod, errors.New("file not found in database")
 }
 
 // ensureDir creates a directory if missing.

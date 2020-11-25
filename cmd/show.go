@@ -23,7 +23,6 @@ import (
 	"path/filepath"
 
 	"git.sr.ht/~kota/modget/database"
-	"git.sr.ht/~kota/modget/filter"
 	"git.sr.ht/~kota/modget/slug"
 	"github.com/spf13/cobra"
 )
@@ -38,7 +37,6 @@ var showCmd = &cobra.Command{
 	Aliases: []string{"sh"},
 	Short:   "Query and print more information about a specific mod by MODID/Slug.",
 	Run: func(cmd *cobra.Command, args []string) {
-		var mods []database.Mod
 		fmt.Printf("Reading database... ")
 		db, err := database.Load(filepath.Join(path, ".modget"))
 		if err != nil {
@@ -46,67 +44,53 @@ var showCmd = &cobra.Command{
 			os.Exit(1)
 		}
 		fmt.Println("Done")
-		ids, err := slug.Slug(args, db)
+		IDs, err := slug.Slug(args, db)
 		if err != nil {
 			fmt.Printf("failed read input: %v\n", err)
 			os.Exit(1)
 		}
-		fmt.Printf("Finding Mods... ")
-		if len(ids) == 0 {
-			mods = db.Mods
-		} else {
-			for _, id := range ids {
-				mod, err := filter.FindLocalMod(id, db)
-				if err != nil {
-					fmt.Printf("failed to find mod: %v\n%v\n", id, err)
-					os.Exit(1)
-				}
-				mods = append(mods, mod)
+		if len(IDs) == 0 { // select all mods
+			for ID := range db.Mods {
+				IDs = append(IDs, ID)
 			}
 		}
-		fmt.Println("Done")
 		fmt.Printf("Database: %s\nMinecraft: %s\nLoader: %s\n\n", db.Version, db.Minecraft, db.Loader)
 		if !one {
-			showNormal(mods)
+			showNormal(IDs, db)
 		} else {
-			showOne(mods)
+			showOne(IDs, db)
 		}
 	},
 }
 
 // showNormal prints a list of mods and displays a reasonable amount of
 // information for each one.
-func showNormal(mods []database.Mod) {
-	for _, mod := range mods {
-		v := mod.GameVersion[0]
-		for i := 1; i < len(mod.GameVersion); i++ {
+func showNormal(IDs []int, db *database.Database) {
+	for _, ID := range IDs {
+		v := db.Mods[ID].GameVersion[0]
+		for i := 1; i < len(db.Mods[ID].GameVersion); i++ {
 			v += ", "
-			v += mod.GameVersion[i]
+			v += db.Mods[ID].GameVersion[i]
 		}
 		fmt.Printf("%d/%s - %d/%s\n\tDownloads: %d\n\tDate: %s\n\tVersions: %s\n\t%s\n\n",
-			mod.ID,
-			mod.Slug,
-			mod.FileID,
-			mod.FileName,
-			int(mod.DownloadCount),
-			mod.FileDate,
+			ID,
+			db.Mods[ID].Slug,
+			db.Mods[ID].FileID,
+			db.Mods[ID].FileName,
+			int(db.Mods[ID].DownloadCount),
+			db.Mods[ID].FileDate,
 			v,
-			mod.Summary)
+			db.Mods[ID].Summary)
 	}
 }
 
 // showOne prints a list of mods and displays each mod on a single line.
-func showOne(mods []database.Mod) {
-	for _, mod := range mods {
-		v := mod.GameVersion[0]
-		for i := 1; i < len(mod.GameVersion); i++ {
-			v += ", "
-			v += mod.GameVersion[i]
-		}
+func showOne(IDs []int, db *database.Database) {
+	for _, ID := range IDs {
 		fmt.Printf("%d/%s - %s\n",
-			mod.ID,
-			mod.Slug,
-			mod.FileName)
+			ID,
+			db.Mods[ID].Slug,
+			db.Mods[ID].FileName)
 	}
 }
 

@@ -22,8 +22,8 @@ import (
 	"os"
 	"path/filepath"
 
+	"git.sr.ht/~kota/modget/ask"
 	"git.sr.ht/~kota/modget/database"
-	"git.sr.ht/~kota/modget/filter"
 	"git.sr.ht/~kota/modget/slug"
 	"github.com/spf13/cobra"
 )
@@ -34,7 +34,6 @@ var deleteCmd = &cobra.Command{
 	Aliases: []string{"d"},
 	Short:   "Remove installed mod(s) based on MODID or Slug.",
 	Run: func(cmd *cobra.Command, args []string) {
-		var mods []database.Mod
 		if len(args) == 0 {
 			fmt.Println("modget delete requires at least one MODID or Slug")
 			os.Exit(1)
@@ -46,29 +45,18 @@ var deleteCmd = &cobra.Command{
 			os.Exit(1)
 		}
 		fmt.Println("Done")
-		ids, err := slug.Slug(args, db)
+		IDs, err := slug.Slug(args, db)
 		if err != nil {
 			fmt.Printf("failed read input: %v\n", err)
 			os.Exit(1)
 		}
-		fmt.Printf("Finding Mods... ")
-		for _, id := range ids {
-			mod, err := filter.FindLocalMod(id, db)
-			if err != nil {
-				fmt.Printf("failed to find mod: %v\n%v\n", id, err)
-				os.Exit(1)
-			}
-			mods = append(mods, mod)
-		}
-		fmt.Println("Done")
-		show(mods, "deleted")
-		if !prompt() {
+		ask.Show(IDs, "deleted", db.Mods)
+		if !ask.Prompt() {
 			os.Exit(0)
 		}
-		err = remove(mods, path, db)
+		err = remove(IDs, path, db)
 		if err != nil {
 			fmt.Printf("failed to remove mod: %v\n", err)
-			os.Exit(1)
 		}
 		fmt.Printf("Updating database... ")
 		err = db.Write(filepath.Join(path, ".modget"))

@@ -22,6 +22,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"git.sr.ht/~kota/modget/ask"
 	"git.sr.ht/~kota/modget/curse"
 	"git.sr.ht/~kota/modget/database"
 	"git.sr.ht/~kota/modget/filter"
@@ -40,7 +41,7 @@ var addCmd = &cobra.Command{
 	Aliases: []string{"a"},
 	Short:   "Download and install mod(s) based on MODID or Slug.",
 	Run: func(cmd *cobra.Command, args []string) {
-		var mods []database.Mod
+		mods := make(map[int]database.Mod)
 		if len(args) == 0 {
 			fmt.Println("modget add requires at least one MODID or Slug")
 			os.Exit(1)
@@ -50,38 +51,39 @@ var addCmd = &cobra.Command{
 		if err != nil {
 			fmt.Println("not found!")
 			if minecraft == "" {
-				minecraft = ask("minecraft version")
+				minecraft = ask.Ask("minecraft version")
 			}
 			if loader == "" {
-				loader = ask("modloader")
+				loader = ask.Ask("modloader")
 			}
 			db = &database.Database{
 				Version:   Version,
 				Minecraft: minecraft,
 				Loader:    loader,
+				Mods:      make(map[int]database.Mod),
 			}
 		}
 		minecraft = db.Minecraft
 		loader = db.Loader
 		fmt.Println("Done")
-		ids, err := slug.Slug(args, db)
+		IDs, err := slug.Slug(args, db)
 		if err != nil {
 			fmt.Printf("failed read input: %v\n", err)
 			os.Exit(1)
 		}
 		fmt.Printf("Finding Mods... ")
-		for _, id := range ids {
-			addon, err := curse.AddonInfo(id)
-			file, err := filter.FindFile(id, minecraft, loader)
+		for _, ID := range IDs {
+			addon, err := curse.AddonInfo(ID)
+			file, err := filter.FindFile(ID, minecraft, loader)
 			if err != nil {
-				fmt.Printf("failed to find mod: %v\n%v\n", id, err)
+				fmt.Printf("failed to find mod: %v\n%v\n", ID, err)
 				os.Exit(1)
 			}
-			mods = append(mods, database.NewMod(addon, file))
+			mods[ID] = database.NewMod(addon, file)
 		}
 		fmt.Println("Done")
-		show(mods, "added")
-		if !prompt() {
+		ask.Show(IDs, "added", mods)
+		if !ask.Prompt() {
 			os.Exit(0)
 		}
 		err = get(mods, path, db)

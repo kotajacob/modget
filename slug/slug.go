@@ -47,9 +47,9 @@ func searchModid(s string) (int, error) {
 
 // readModid takes a string, which is meant to be an addon's slug and attempts to convert it to a MODID by using the local database.
 func readModid(s string, db *database.Database) (int, error) {
-	for _, mod := range db.Mods {
+	for ID, mod := range db.Mods {
 		if mod.Slug == s {
-			return mod.ID, nil
+			return ID, nil
 		}
 	}
 	err := errors.New("Could not find: " + s)

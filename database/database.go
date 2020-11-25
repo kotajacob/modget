@@ -33,7 +33,6 @@ var Mode os.FileMode = 0644
 // Mod contains relevant information about a mod that needs stored in the
 // database.
 type Mod struct {
-	ID              int
 	Name            string
 	Authors         []curse.Author
 	Summary         string
@@ -58,13 +57,12 @@ type Database struct {
 	Version   string
 	Minecraft string
 	Loader    string
-	Mods      []Mod
+	Mods      map[int]Mod
 }
 
 // NewMod creates a new Mod from an Addon and File.
 func NewMod(addon curse.Addon, file curse.File) Mod {
 	var mod Mod
-	mod.ID = addon.ID
 	mod.Name = addon.Name
 	mod.Authors = addon.Authors
 	mod.Summary = addon.Summary
@@ -86,18 +84,13 @@ func NewMod(addon curse.Addon, file curse.File) Mod {
 }
 
 // Add inserts a mod into a Database from the mod's Addon and File.
-func (db *Database) Add(mod Mod) {
-	db.Mods = append(db.Mods, mod)
+func (db *Database) Add(ID int, mod Mod) {
+	db.Mods[ID] = mod
 }
 
 // Del removes a Mod from a Database by its index
 func (db *Database) Del(ID int) {
-	mods := db.Mods
-	for i, mod := range mods {
-		if mod.ID == ID {
-			db.Mods = remove(db.Mods, i)
-		}
-	}
+	delete(db.Mods, ID)
 }
 
 // Write saves a Database to a file at a path.
@@ -128,9 +121,4 @@ func Load(p string) (*Database, error) {
 		return nil, fmt.Errorf("decoding database: %v", err)
 	}
 	return &db, err
-}
-
-// Remove an element from a slice by index
-func remove(slice []Mod, i int) []Mod {
-	return append(slice[:i], slice[i+1:]...)
 }
