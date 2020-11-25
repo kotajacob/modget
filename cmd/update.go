@@ -62,38 +62,38 @@ func update(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 	fmt.Println("Done")
-	IDs, err := slug.Slug(args, db)
+	ids, err := slug.Slug(args, db)
 	if err != nil {
 		fmt.Printf("failed read input: %v\n", err)
 		os.Exit(1)
 	}
-	if len(IDs) == 0 { // select all mods
-		for ID := range db.Mods {
-			IDs = append(IDs, ID)
+	if len(ids) == 0 { // select all mods
+		for id := range db.Mods {
+			ids = append(ids, id)
 		}
 	}
 	fmt.Printf("Checking for updates... ")
-	for _, ID := range IDs {
-		addon, err := curse.AddonInfo(ID)
-		file, err := filter.FindFile(ID, minecraft, loader)
+	for _, id := range ids {
+		addon, err := curse.AddonInfo(id)
+		file, err := filter.FindFile(id, minecraft, loader)
 		if err != nil {
-			fmt.Printf("failed to find mod: %v\n%v\n", ID, err)
+			fmt.Printf("failed to find mod: %v\n%v\n", id, err)
 			os.Exit(1)
 		}
-		mTime, err := time.Parse(time.RFC3339, db.Mods[ID].FileDate)
+		mTime, err := time.Parse(time.RFC3339, db.Mods[id].FileDate)
 		if err != nil {
-			fmt.Printf("failed to parse time: %v\n%v\n", ID, err)
+			fmt.Printf("failed to parse time: %v\n%v\n", id, err)
 			os.Exit(1)
 		}
 		fTime, err := time.Parse(time.RFC3339, file.FileDate)
 		if err != nil {
-			fmt.Printf("failed to parse time: %v\n%v\n", ID, err)
+			fmt.Printf("failed to parse time: %v\n%v\n", id, err)
 			os.Exit(1)
 		}
 		// Is the file newer than the installed mod?
 		if fTime.After(mTime) {
-			updateMods[ID] = database.NewMod(addon, file)
-			updateIDs = append(updateIDs, ID)
+			updateMods[id] = database.NewMod(addon, file)
+			updateIDs = append(updateIDs, id)
 		}
 	}
 	fmt.Println("Done")
@@ -101,7 +101,7 @@ func update(cmd *cobra.Command, args []string) {
 	if !printer.Prompt() {
 		os.Exit(0)
 	}
-	for ID, mod := range updateMods {
+	for id, mod := range updateMods {
 		fmt.Printf("Delete: %v\n", mod.FileName)
 		err := os.Remove(filepath.Join(path, mod.FileName))
 		if err != nil {
@@ -109,17 +109,17 @@ func update(cmd *cobra.Command, args []string) {
 				fmt.Printf("failed to remove mod: %v\n", err)
 			}
 		}
-		db.Del(ID)
+		db.Del(id)
 	}
-	for ID, mod := range updateMods {
+	for id, mod := range updateMods {
 		p := filepath.Join(filepath.Dir(path), mod.FileName)
-		fmt.Printf("Get:%d %v\n", ID, mod.DownloadURL)
+		fmt.Printf("Get:%d %v\n", id, mod.DownloadURL)
 		err := curse.Download(mod.DownloadURL, p)
 		if err != nil {
 			fmt.Printf("failed to download file: %v\n", err)
 			os.Exit(1)
 		}
-		db.Add(ID, mod)
+		db.Add(id, mod)
 	}
 	fmt.Printf("Updating database... ")
 	err = db.Write(filepath.Join(path, ".modget"))

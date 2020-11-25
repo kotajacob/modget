@@ -84,13 +84,13 @@ func NewMod(addon curse.Addon, file curse.File) Mod {
 }
 
 // Add inserts a mod into a Database from the mod's Addon and File.
-func (db *Database) Add(ID int, mod Mod) {
-	db.Mods[ID] = mod
+func (db *Database) Add(id int, mod Mod) {
+	db.Mods[id] = mod
 }
 
 // Del removes a Mod from a Database by its index
-func (db *Database) Del(ID int) {
-	delete(db.Mods, ID)
+func (db *Database) Del(id int) {
+	delete(db.Mods, id)
 }
 
 // Write saves a Database to a file at a path.

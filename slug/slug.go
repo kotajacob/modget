@@ -47,9 +47,9 @@ func searchModid(s string) (int, error) {
 
 // readModid takes a string, which is meant to be an addon's slug and attempts to convert it to a MODID by using the local database.
 func readModid(s string, db *database.Database) (int, error) {
-	for ID, mod := range db.Mods {
+	for id, mod := range db.Mods {
 		if mod.Slug == s {
-			return ID, nil
+			return id, nil
 		}
 	}
 	err := errors.New("Could not find: " + s)
@@ -58,20 +58,20 @@ func readModid(s string, db *database.Database) (int, error) {
 
 // Slug converts a list of strings to MODIDs
 func Slug(s []string, db *database.Database) ([]int, error) {
-	var IDs []int
+	var ids []int
 	for _, v := range s {
-		ID, err := strconv.Atoi(v)
+		id, err := strconv.Atoi(v)
 		if err != nil {
 			// Attempt to convert slug to modid
-			ID, err = readModid(v, db)
+			id, err = readModid(v, db)
 			if err != nil {
-				ID, err = searchModid(v)
+				id, err = searchModid(v)
 				if err != nil {
 					return nil, err
 				}
 			}
 		}
-		IDs = append(IDs, ID)
+		ids = append(ids, id)
 	}
-	return IDs, nil
+	return ids, nil
 }

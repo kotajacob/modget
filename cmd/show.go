@@ -48,14 +48,14 @@ func show(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 	fmt.Println("Done")
-	IDs, err := slug.Slug(args, db)
+	ids, err := slug.Slug(args, db)
 	if err != nil {
 		fmt.Printf("failed read input: %v\n", err)
 		os.Exit(1)
 	}
-	if len(IDs) == 0 { // select all mods
-		for ID := range db.Mods {
-			IDs = append(IDs, ID)
+	if len(ids) == 0 { // select all mods
+		for id := range db.Mods {
+			ids = append(ids, id)
 		}
 	}
 	fmt.Printf("Database: %s\nMinecraft: %s\nLoader: %s\n\n",
@@ -63,39 +63,39 @@ func show(cmd *cobra.Command, args []string) {
 		db.Minecraft,
 		db.Loader)
 	if !one {
-		showNormal(IDs, db)
+		showNormal(ids, db)
 	} else {
-		showOneLine(IDs, db)
+		showOneLine(ids, db)
 	}
 }
 
 // showNormal prints a list of mods and displays a reasonable amount of
 // information for each one.
-func showNormal(IDs []int, db *database.Database) {
-	for _, ID := range IDs {
-		v := db.Mods[ID].GameVersion[0]
-		for i := 1; i < len(db.Mods[ID].GameVersion); i++ {
+func showNormal(ids []int, db *database.Database) {
+	for _, id := range ids {
+		v := db.Mods[id].GameVersion[0]
+		for i := 1; i < len(db.Mods[id].GameVersion); i++ {
 			v += ", "
-			v += db.Mods[ID].GameVersion[i]
+			v += db.Mods[id].GameVersion[i]
 		}
 		fmt.Printf("%s/%d - %s\n%d/%s\n\tDownloads: %d\n\tDate: %s\n\tVersions: %s\n\t\n",
-			db.Mods[ID].Slug,
-			ID,
-			db.Mods[ID].Summary,
-			db.Mods[ID].FileID,
-			db.Mods[ID].FileName,
-			int(db.Mods[ID].DownloadCount),
-			db.Mods[ID].FileDate, // TODO: Format this a little better
+			db.Mods[id].Slug,
+			id,
+			db.Mods[id].Summary,
+			db.Mods[id].FileID,
+			db.Mods[id].FileName,
+			int(db.Mods[id].DownloadCount),
+			db.Mods[id].FileDate, // TODO: Format this a little better
 			v)
 	}
 }
 
 // showOneLine prints a list of mods and displays each mod on a single line.
-func showOneLine(IDs []int, db *database.Database) {
-	for _, ID := range IDs {
+func showOneLine(ids []int, db *database.Database) {
+	for _, id := range ids {
 		fmt.Printf("%s/%d - %s\n",
-			db.Mods[ID].Slug,
-			ID,
-			db.Mods[ID].FileName)
+			db.Mods[id].Slug,
+			id,
+			db.Mods[id].FileName)
 	}
 }

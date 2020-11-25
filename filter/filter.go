@@ -146,11 +146,11 @@ func TimeSort(files []curse.File) []curse.File {
 // FindFile returns a curse.File for a MODID. It ensures the file matches the
 // correct Minecraft version and Loader. Additionally it warns the user if the
 // enter an unknown version or loader.
-func FindFile(ID int, minecraftVersion string, loader string) (curse.File, error) {
+func FindFile(id int, minecraftVersion string, loader string) (curse.File, error) {
 	var file curse.File
-	files, err := curse.AddonFiles(ID)
+	files, err := curse.AddonFiles(id)
 	if err != nil {
-		return file, fmt.Errorf("addon not found at ID: %d: %v", ID, err)
+		return file, fmt.Errorf("addon not found at ID: %d: %v", id, err)
 	}
 	// Validate the modloader and mc version
 	mcVersions, err := curse.MinecraftVersionList()

@@ -52,24 +52,24 @@ func del(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 	fmt.Println("Done")
-	IDs, err := slug.Slug(args, db)
+	ids, err := slug.Slug(args, db)
 	if err != nil {
 		fmt.Printf("failed read input: %v\n", err)
 		os.Exit(1)
 	}
-	printer.Show(IDs, "deleted", db.Mods)
+	printer.Show(ids, "deleted", db.Mods)
 	if !printer.Prompt() {
 		os.Exit(0)
 	}
-	for _, ID := range IDs {
-		fmt.Printf("Delete: %v\n", db.Mods[ID].FileName)
-		err := os.Remove(filepath.Join(path, db.Mods[ID].FileName))
+	for _, id := range ids {
+		fmt.Printf("Delete: %v\n", db.Mods[id].FileName)
+		err := os.Remove(filepath.Join(path, db.Mods[id].FileName))
 		if err != nil {
 			if err != nil {
 				fmt.Printf("failed to remove mod: %v\n", err)
 			}
 		}
-		db.Del(ID)
+		db.Del(id)
 	}
 	fmt.Printf("Updating database... ")
 	err = db.Write(filepath.Join(path, ".modget"))

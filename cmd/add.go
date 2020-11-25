@@ -70,35 +70,35 @@ func add(cmd *cobra.Command, args []string) {
 	minecraft = db.Minecraft
 	loader = db.Loader
 	fmt.Println("Done")
-	IDs, err := slug.Slug(args, db)
+	ids, err := slug.Slug(args, db)
 	if err != nil {
 		fmt.Printf("failed read input: %v\n", err)
 		os.Exit(1)
 	}
 	fmt.Printf("Finding Mods... ")
-	for _, ID := range IDs {
-		addon, err := curse.AddonInfo(ID)
-		file, err := filter.FindFile(ID, minecraft, loader)
+	for _, id := range ids {
+		addon, err := curse.AddonInfo(id)
+		file, err := filter.FindFile(id, minecraft, loader)
 		if err != nil {
-			fmt.Printf("failed to find mod: %v\n%v\n", ID, err)
+			fmt.Printf("failed to find mod: %v\n%v\n", id, err)
 			os.Exit(1)
 		}
-		mods[ID] = database.NewMod(addon, file)
+		mods[id] = database.NewMod(addon, file)
 	}
 	fmt.Println("Done")
-	printer.Show(IDs, "added", mods)
+	printer.Show(ids, "added", mods)
 	if !printer.Prompt() {
 		os.Exit(0)
 	}
-	for ID, mod := range mods {
+	for id, mod := range mods {
 		p := filepath.Join(filepath.Dir(path), mod.FileName)
-		fmt.Printf("Get:%d %v\n", ID, mod.DownloadURL)
+		fmt.Printf("Get:%d %v\n", id, mod.DownloadURL)
 		err := curse.Download(mod.DownloadURL, p)
 		if err != nil {
 			fmt.Printf("failed to download file: %v\n", err)
 			os.Exit(1)
 		}
-		db.Add(ID, mod)
+		db.Add(id, mod)
 	}
 	fmt.Printf("Updating database... ")
 	err = db.Write(filepath.Join(path, ".modget"))
