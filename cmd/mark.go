@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"text/tabwriter"
 
 	"git.sr.ht/~kota/modget/database"
 	"git.sr.ht/~kota/modget/slug"
@@ -63,10 +64,12 @@ func mark(cmd *cobra.Command, args []string) {
 			ids = append(ids, id)
 		}
 	}
+	w := tabwriter.NewWriter(os.Stdout, 0, 0, 3, '-', 0)
 	for _, id := range ids {
 		db.Mods[id].Hold = !db.Mods[id].Hold
-		fmt.Printf("%s - %t\n", db.Mods[id].Slug, db.Mods[id].Hold)
+		fmt.Fprintf(w, "%s/%d \t %t\n", db.Mods[id].Slug, id, db.Mods[id].Hold)
 	}
+	w.Flush()
 	fmt.Printf("Updating database... ")
 	err = db.Write(filepath.Join(path, ".modget"))
 	if err != nil {

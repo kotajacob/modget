@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"text/tabwriter"
 
 	"git.sr.ht/~kota/modget/database"
 	"git.sr.ht/~kota/modget/slug"
@@ -93,10 +94,12 @@ func showNormal(ids []int, db *database.Database) {
 
 // showOneLine prints a list of mods and displays each mod on a single line.
 func showOneLine(ids []int, db *database.Database) {
+	w := tabwriter.NewWriter(os.Stdout, 0, 0, 3, '-', 0)
 	for _, id := range ids {
-		fmt.Printf("%s/%d - %s\n",
+		fmt.Fprintf(w, "%s/%d \t %s\n",
 			db.Mods[id].Slug,
 			id,
 			db.Mods[id].FileName)
 	}
+	w.Flush()
 }
