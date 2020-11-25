@@ -30,11 +30,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (
-	minecraft string
-	loader    string
-)
-
 // addCmd represents the add command
 var addCmd = &cobra.Command{
 	Use:     "add mod...",
@@ -109,7 +104,6 @@ func add(cmd *cobra.Command, args []string) {
 	err = db.Write(filepath.Join(path, ".modget"))
 	if err != nil {
 		fmt.Printf("failed to write database: %v\n", err)
-		// TODO: remove failed downloaded files
 		os.Exit(1)
 	}
 	fmt.Println("Done")

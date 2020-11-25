@@ -25,7 +25,10 @@ import (
 )
 
 var (
-	path string
+	path      string
+	minecraft string
+	loader    string
+	one       bool
 )
 
 // rootCmd represents the base command when called without any subcommands

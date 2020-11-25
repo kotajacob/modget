@@ -27,10 +27,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (
-	one bool
-)
-
 // showCmd represents the show command
 var showCmd = &cobra.Command{
 	Use:     "show [mod]...",
@@ -82,15 +78,15 @@ func showNormal(IDs []int, db *database.Database) {
 			v += ", "
 			v += db.Mods[ID].GameVersion[i]
 		}
-		fmt.Printf("%s/%d - %d/%s\n\tDownloads: %d\n\tDate: %s\n\tVersions: %s\n\t%s\n\n",
+		fmt.Printf("%s/%d - %s\n%d/%s\n\tDownloads: %d\n\tDate: %s\n\tVersions: %s\n\t\n",
 			db.Mods[ID].Slug,
 			ID,
+			db.Mods[ID].Summary,
 			db.Mods[ID].FileID,
 			db.Mods[ID].FileName,
 			int(db.Mods[ID].DownloadCount),
-			db.Mods[ID].FileDate,
-			v,
-			db.Mods[ID].Summary)
+			db.Mods[ID].FileDate, // TODO: Format this a little better
+			v)
 	}
 }
 

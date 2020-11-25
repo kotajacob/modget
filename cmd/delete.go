@@ -62,7 +62,7 @@ func del(cmd *cobra.Command, args []string) {
 		os.Exit(0)
 	}
 	for _, ID := range IDs {
-		fmt.Printf("Deleted: %v\n", db.Mods[ID].FileName)
+		fmt.Printf("Delete: %v\n", db.Mods[ID].FileName)
 		err := os.Remove(filepath.Join(path, db.Mods[ID].FileName))
 		if err != nil {
 			if err != nil {
