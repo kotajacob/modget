@@ -40,70 +40,77 @@ var addCmd = &cobra.Command{
 	Use:     "add mod...",
 	Aliases: []string{"a"},
 	Short:   "Download and install mod(s) based on MODID or Slug.",
-	Run: func(cmd *cobra.Command, args []string) {
-		mods := make(map[int]database.Mod)
-		if len(args) == 0 {
-			fmt.Println("modget add requires at least one MODID or Slug")
-			os.Exit(1)
-		}
-		fmt.Printf("Reading database... ")
-		db, err := database.Load(filepath.Join(path, ".modget"))
-		if err != nil {
-			fmt.Println("not found!")
-			if minecraft == "" {
-				minecraft = printer.Ask("minecraft version")
-			}
-			if loader == "" {
-				loader = printer.Ask("modloader")
-			}
-			db = &database.Database{
-				Version:   Version,
-				Minecraft: minecraft,
-				Loader:    loader,
-				Mods:      make(map[int]database.Mod),
-			}
-		}
-		minecraft = db.Minecraft
-		loader = db.Loader
-		fmt.Println("Done")
-		IDs, err := slug.Slug(args, db)
-		if err != nil {
-			fmt.Printf("failed read input: %v\n", err)
-			os.Exit(1)
-		}
-		fmt.Printf("Finding Mods... ")
-		for _, ID := range IDs {
-			addon, err := curse.AddonInfo(ID)
-			file, err := filter.FindFile(ID, minecraft, loader)
-			if err != nil {
-				fmt.Printf("failed to find mod: %v\n%v\n", ID, err)
-				os.Exit(1)
-			}
-			mods[ID] = database.NewMod(addon, file)
-		}
-		fmt.Println("Done")
-		printer.Show(IDs, "added", mods)
-		if !printer.Prompt() {
-			os.Exit(0)
-		}
-		err = get(mods, path, db)
-		if err != nil {
-			fmt.Printf("failed to download file: %v\n", err)
-			os.Exit(1)
-		}
-		fmt.Printf("Updating database... ")
-		err = db.Write(filepath.Join(path, ".modget"))
-		if err != nil {
-			fmt.Printf("failed to write database: %v\n", err)
-			// TODO: remove failed downloaded files
-			os.Exit(1)
-		}
-		fmt.Println("Done")
-	},
+	Run:     add,
 }
 
 func init() {
 	rootCmd.AddCommand(addCmd)
 	addCmd.Flags().StringVarP(&minecraft, "minecraft", "m", "", "Limit install for a specific minecraft version.")
 	addCmd.Flags().StringVarP(&loader, "loader", "l", "", "Limit install for a specific minecraft mod loader.")
+}
+
+func add(cmd *cobra.Command, args []string) {
+	mods := make(map[int]database.Mod)
+	if len(args) == 0 {
+		fmt.Println("modget add requires at least one MODID or Slug")
+		os.Exit(1)
+	}
+	fmt.Printf("Reading database... ")
+	db, err := database.Load(filepath.Join(path, ".modget"))
+	if err != nil {
+		fmt.Println("not found!")
+		if minecraft == "" {
+			minecraft = printer.Ask("minecraft version")
+		}
+		if loader == "" {
+			loader = printer.Ask("modloader")
+		}
+		db = &database.Database{
+			Version:   Version,
+			Minecraft: minecraft,
+			Loader:    loader,
+			Mods:      make(map[int]database.Mod),
+		}
+	}
+	minecraft = db.Minecraft
+	loader = db.Loader
+	fmt.Println("Done")
+	IDs, err := slug.Slug(args, db)
+	if err != nil {
+		fmt.Printf("failed read input: %v\n", err)
+		os.Exit(1)
+	}
+	fmt.Printf("Finding Mods... ")
+	for _, ID := range IDs {
+		addon, err := curse.AddonInfo(ID)
+		file, err := filter.FindFile(ID, minecraft, loader)
+		if err != nil {
+			fmt.Printf("failed to find mod: %v\n%v\n", ID, err)
+			os.Exit(1)
+		}
+		mods[ID] = database.NewMod(addon, file)
+	}
+	fmt.Println("Done")
+	printer.Show(IDs, "added", mods)
+	if !printer.Prompt() {
+		os.Exit(0)
+	}
+	for ID, mod := range mods {
+		p := filepath.Join(filepath.Dir(path), mod.FileName)
+		fmt.Printf("Get:%d %v\n", ID, mod.DownloadURL)
+		err := curse.Download(mod.DownloadURL, p)
+		if err != nil {
+			fmt.Printf("failed to download file: %v\n", err)
+			os.Exit(1)
+		}
+		db.Add(ID, mod)
+	}
+	fmt.Printf("Updating database... ")
+	err = db.Write(filepath.Join(path, ".modget"))
+	if err != nil {
+		fmt.Printf("failed to write database: %v\n", err)
+		// TODO: remove failed downloaded files
+		os.Exit(1)
+	}
+	fmt.Println("Done")
 }

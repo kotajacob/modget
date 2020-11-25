@@ -35,54 +35,56 @@ var updateCmd = &cobra.Command{
 	Use:     "update [mod]...",
 	Aliases: []string{"u"},
 	Short:   "Check installed mod(s) and prompt to install any new mods.",
-	Run: func(cmd *cobra.Command, args []string) {
-		var updates []int
-		fmt.Printf("Reading database... ")
-		db, err := database.Load(filepath.Join(path, ".modget"))
-		if err != nil {
-			fmt.Printf("failed to open database: %v\n", err)
-			os.Exit(1)
-		}
-		fmt.Println("Done")
-		IDs, err := slug.Slug(args, db)
-		if err != nil {
-			fmt.Printf("failed read input: %v\n", err)
-			os.Exit(1)
-		}
-		if len(IDs) == 0 { // select all mods
-			for ID := range db.Mods {
-				IDs = append(IDs, ID)
-			}
-		}
-		fmt.Printf("Checking for updates... ")
-		for _, ID := range IDs {
-			file, err := filter.FindFile(ID, minecraft, loader)
-			if err != nil {
-				fmt.Printf("failed to find mod: %v\n%v\n", ID, err)
-				os.Exit(1)
-			}
-			mTime, err := time.Parse(time.RFC3339, db.Mods[ID].FileDate)
-			if err != nil {
-				fmt.Printf("failed to parse time: %v\n%v\n", ID, err)
-				os.Exit(1)
-			}
-			fTime, err := time.Parse(time.RFC3339, file.FileDate)
-			if err != nil {
-				fmt.Printf("failed to parse time: %v\n%v\n", ID, err)
-				os.Exit(1)
-			}
-			if fTime.After(mTime) {
-				updates = append(updates, ID)
-			}
-		}
-		fmt.Println("Done")
-		printer.Show(updates, "updated", db.Mods)
-		if !printer.Prompt() {
-			os.Exit(0)
-		}
-	},
+	Run:     update,
 }
 
 func init() {
 	rootCmd.AddCommand(updateCmd)
+}
+
+func update(cmd *cobra.Command, args []string) {
+	var updates []int
+	fmt.Printf("Reading database... ")
+	db, err := database.Load(filepath.Join(path, ".modget"))
+	if err != nil {
+		fmt.Printf("failed to open database: %v\n", err)
+		os.Exit(1)
+	}
+	fmt.Println("Done")
+	IDs, err := slug.Slug(args, db)
+	if err != nil {
+		fmt.Printf("failed read input: %v\n", err)
+		os.Exit(1)
+	}
+	if len(IDs) == 0 { // select all mods
+		for ID := range db.Mods {
+			IDs = append(IDs, ID)
+		}
+	}
+	fmt.Printf("Checking for updates... ")
+	for _, ID := range IDs {
+		file, err := filter.FindFile(ID, minecraft, loader)
+		if err != nil {
+			fmt.Printf("failed to find mod: %v\n%v\n", ID, err)
+			os.Exit(1)
+		}
+		mTime, err := time.Parse(time.RFC3339, db.Mods[ID].FileDate)
+		if err != nil {
+			fmt.Printf("failed to parse time: %v\n%v\n", ID, err)
+			os.Exit(1)
+		}
+		fTime, err := time.Parse(time.RFC3339, file.FileDate)
+		if err != nil {
+			fmt.Printf("failed to parse time: %v\n%v\n", ID, err)
+			os.Exit(1)
+		}
+		if fTime.After(mTime) {
+			updates = append(updates, ID)
+		}
+	}
+	fmt.Println("Done")
+	printer.Show(updates, "updated", db.Mods)
+	if !printer.Prompt() {
+		os.Exit(0)
+	}
 }

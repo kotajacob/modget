@@ -36,31 +36,41 @@ var showCmd = &cobra.Command{
 	Use:     "show [mod]...",
 	Aliases: []string{"sh"},
 	Short:   "Query and print more information about a specific mod by MODID/Slug.",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("Reading database... ")
-		db, err := database.Load(filepath.Join(path, ".modget"))
-		if err != nil {
-			fmt.Printf("failed to open database: %v\n", err)
-			os.Exit(1)
+	Run:     show,
+}
+
+func init() {
+	rootCmd.AddCommand(showCmd)
+	showCmd.Flags().BoolVarP(&one, "oneline", "l", false, "Show mods one per line")
+}
+
+func show(cmd *cobra.Command, args []string) {
+	fmt.Printf("Reading database... ")
+	db, err := database.Load(filepath.Join(path, ".modget"))
+	if err != nil {
+		fmt.Printf("failed to open database: %v\n", err)
+		os.Exit(1)
+	}
+	fmt.Println("Done")
+	IDs, err := slug.Slug(args, db)
+	if err != nil {
+		fmt.Printf("failed read input: %v\n", err)
+		os.Exit(1)
+	}
+	if len(IDs) == 0 { // select all mods
+		for ID := range db.Mods {
+			IDs = append(IDs, ID)
 		}
-		fmt.Println("Done")
-		IDs, err := slug.Slug(args, db)
-		if err != nil {
-			fmt.Printf("failed read input: %v\n", err)
-			os.Exit(1)
-		}
-		if len(IDs) == 0 { // select all mods
-			for ID := range db.Mods {
-				IDs = append(IDs, ID)
-			}
-		}
-		fmt.Printf("Database: %s\nMinecraft: %s\nLoader: %s\n\n", db.Version, db.Minecraft, db.Loader)
-		if !one {
-			showNormal(IDs, db)
-		} else {
-			showOne(IDs, db)
-		}
-	},
+	}
+	fmt.Printf("Database: %s\nMinecraft: %s\nLoader: %s\n\n",
+		db.Version,
+		db.Minecraft,
+		db.Loader)
+	if !one {
+		showNormal(IDs, db)
+	} else {
+		showOneLine(IDs, db)
+	}
 }
 
 // showNormal prints a list of mods and displays a reasonable amount of
@@ -84,17 +94,12 @@ func showNormal(IDs []int, db *database.Database) {
 	}
 }
 
-// showOne prints a list of mods and displays each mod on a single line.
-func showOne(IDs []int, db *database.Database) {
+// showOneLine prints a list of mods and displays each mod on a single line.
+func showOneLine(IDs []int, db *database.Database) {
 	for _, ID := range IDs {
 		fmt.Printf("%d/%s - %s\n",
 			ID,
 			db.Mods[ID].Slug,
 			db.Mods[ID].FileName)
 	}
-}
-
-func init() {
-	rootCmd.AddCommand(showCmd)
-	showCmd.Flags().BoolVarP(&one, "oneline", "l", false, "Show mods one per line")
 }

@@ -33,41 +33,49 @@ var deleteCmd = &cobra.Command{
 	Use:     "delete mod...",
 	Aliases: []string{"d"},
 	Short:   "Remove installed mod(s) based on MODID or Slug.",
-	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) == 0 {
-			fmt.Println("modget delete requires at least one MODID or Slug")
-			os.Exit(1)
-		}
-		fmt.Printf("Reading database... ")
-		db, err := database.Load(filepath.Join(path, ".modget"))
-		if err != nil {
-			fmt.Printf("failed to open database: %v\n", err)
-			os.Exit(1)
-		}
-		fmt.Println("Done")
-		IDs, err := slug.Slug(args, db)
-		if err != nil {
-			fmt.Printf("failed read input: %v\n", err)
-			os.Exit(1)
-		}
-		printer.Show(IDs, "deleted", db.Mods)
-		if !printer.Prompt() {
-			os.Exit(0)
-		}
-		err = remove(IDs, path, db)
-		if err != nil {
-			fmt.Printf("failed to remove mod: %v\n", err)
-		}
-		fmt.Printf("Updating database... ")
-		err = db.Write(filepath.Join(path, ".modget"))
-		if err != nil {
-			fmt.Printf("failed to write database: %v\n", err)
-			os.Exit(1)
-		}
-		fmt.Println("Done")
-	},
+	Run:     del,
 }
 
 func init() {
 	rootCmd.AddCommand(deleteCmd)
+}
+
+func del(cmd *cobra.Command, args []string) {
+	if len(args) == 0 {
+		fmt.Println("modget delete requires at least one MODID or Slug")
+		os.Exit(1)
+	}
+	fmt.Printf("Reading database... ")
+	db, err := database.Load(filepath.Join(path, ".modget"))
+	if err != nil {
+		fmt.Printf("failed to open database: %v\n", err)
+		os.Exit(1)
+	}
+	fmt.Println("Done")
+	IDs, err := slug.Slug(args, db)
+	if err != nil {
+		fmt.Printf("failed read input: %v\n", err)
+		os.Exit(1)
+	}
+	printer.Show(IDs, "deleted", db.Mods)
+	if !printer.Prompt() {
+		os.Exit(0)
+	}
+	for _, ID := range IDs {
+		fmt.Printf("Deleted: %v\n", db.Mods[ID].FileName)
+		err := os.Remove(filepath.Join(path, db.Mods[ID].FileName))
+		if err != nil {
+			if err != nil {
+				fmt.Printf("failed to remove mod: %v\n", err)
+			}
+		}
+		db.Del(ID)
+	}
+	fmt.Printf("Updating database... ")
+	err = db.Write(filepath.Join(path, ".modget"))
+	if err != nil {
+		fmt.Printf("failed to write database: %v\n", err)
+		os.Exit(1)
+	}
+	fmt.Println("Done")
 }

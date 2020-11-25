@@ -30,37 +30,30 @@ var searchCmd = &cobra.Command{
 	Use:     "search string...",
 	Aliases: []string{"s"},
 	Short:   "Search for mods and print the results.",
-	Run: func(cmd *cobra.Command, args []string) {
-		// Exit if no search terms given
-		if len(args) == 0 {
-			fmt.Println("modget search requires at least one search term")
-			os.Exit(1)
-		}
-		for _, arg := range args {
-			err := search(arg)
-			if err != nil {
-				fmt.Printf("Search failed: %v\n", arg)
-				os.Exit(1)
-			}
-		}
-	},
+	Run:     search,
 }
 
 func init() {
 	rootCmd.AddCommand(searchCmd)
 }
 
-func search(s string) error {
-	var search curse.Search
-	search.GameID = 432     // Set game to minecraft
-	search.SectionID = 6    // Set section to mods
-	search.SearchFilter = s // Search string
-	addons, err := curse.AddonSearch(search)
-	if err != nil {
-		return err
+func search(cmd *cobra.Command, args []string) {
+	if len(args) == 0 {
+		fmt.Println("modget search requires at least one search term")
+		os.Exit(1)
 	}
-	for _, addon := range addons {
-		fmt.Println(addon)
+	for _, arg := range args {
+		var search curse.Search
+		search.GameID = 432           // Set game to minecraft
+		search.SectionID = 6          // Set section to mods
+		search.SearchFilter = args[0] // Search string
+		addons, err := curse.AddonSearch(search)
+		if err != nil {
+			fmt.Printf("Search failed: %v\n", arg)
+			os.Exit(1)
+		}
+		for _, addon := range addons {
+			fmt.Println(addon)
+		}
 	}
-	return nil
 }

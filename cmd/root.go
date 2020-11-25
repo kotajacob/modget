@@ -20,10 +20,7 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 
-	"git.sr.ht/~kota/modget/curse"
-	"git.sr.ht/~kota/modget/database"
 	"github.com/spf13/cobra"
 )
 
@@ -49,31 +46,4 @@ func Execute() {
 
 func init() {
 	rootCmd.PersistentFlags().StringVarP(&path, "path", "p", "", "Mod install location.")
-}
-
-// get downloads a map of mods and updates a Database
-func get(mods map[int]database.Mod, path string, db *database.Database) error {
-	for ID, mod := range mods {
-		p := filepath.Join(filepath.Dir(path), mod.FileName)
-		fmt.Printf("Get:%d %v\n", ID, mod.DownloadURL)
-		err := curse.Download(mod.DownloadURL, p)
-		if err != nil {
-			return err
-		}
-		db.Add(ID, mod)
-	}
-	return nil
-}
-
-// remove deletes a list of local mods and updates a Database
-func remove(IDs []int, path string, db *database.Database) error {
-	for _, ID := range IDs {
-		fmt.Printf("Deleted: %v\n", db.Mods[ID].FileName)
-		err := os.Remove(filepath.Join(path, db.Mods[ID].FileName))
-		if err != nil {
-			return err
-		}
-		db.Del(ID)
-	}
-	return nil
 }
