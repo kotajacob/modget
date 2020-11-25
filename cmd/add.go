@@ -25,8 +25,8 @@ import (
 	"git.sr.ht/~kota/modget/curse"
 	"git.sr.ht/~kota/modget/database"
 	"git.sr.ht/~kota/modget/filter"
+	"git.sr.ht/~kota/modget/input"
 	"git.sr.ht/~kota/modget/printer"
-	"git.sr.ht/~kota/modget/slug"
 	"github.com/spf13/cobra"
 )
 
@@ -70,7 +70,7 @@ func add(cmd *cobra.Command, args []string) {
 	minecraft = db.Minecraft
 	loader = db.Loader
 	fmt.Println("Done")
-	ids, err := slug.Slug(args, db)
+	ids, err := input.Slug(args, db)
 	if err != nil {
 		fmt.Printf("failed read input: %v\n", err)
 		os.Exit(1)

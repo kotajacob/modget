@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package slug
+package input
 
 import (
 	"errors"
@@ -45,7 +45,8 @@ func searchModid(s string) (int, error) {
 	return 0, fmt.Errorf("slug not found in search results: %s: %v", s, err)
 }
 
-// readModid takes a string, which is meant to be an addon's slug and attempts to convert it to a MODID by using the local database.
+// readModid takes a string, which is meant to be an addon's slug and attempts
+// to convert it to a MODID by using the local database.
 func readModid(s string, db *database.Database) (int, error) {
 	for id, mod := range db.Mods {
 		if mod.Slug == s {
@@ -56,7 +57,7 @@ func readModid(s string, db *database.Database) (int, error) {
 	return 0, err
 }
 
-// Slug converts a list of strings to MODIDs
+// Slug converts a list of slugs to MODIDs
 func Slug(s []string, db *database.Database) ([]int, error) {
 	var ids []int
 	for _, v := range s {

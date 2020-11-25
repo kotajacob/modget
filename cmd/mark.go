@@ -24,7 +24,7 @@ import (
 	"text/tabwriter"
 
 	"git.sr.ht/~kota/modget/database"
-	"git.sr.ht/~kota/modget/slug"
+	"git.sr.ht/~kota/modget/input"
 	"github.com/spf13/cobra"
 )
 
@@ -54,7 +54,7 @@ func mark(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 	fmt.Println("Done")
-	ids, err := slug.Slug(args, db)
+	ids, err := input.Slug(args, db)
 	if err != nil {
 		fmt.Printf("failed read input: %v\n", err)
 		os.Exit(1)

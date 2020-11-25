@@ -23,8 +23,8 @@ import (
 	"path/filepath"
 
 	"git.sr.ht/~kota/modget/database"
+	"git.sr.ht/~kota/modget/input"
 	"git.sr.ht/~kota/modget/printer"
-	"git.sr.ht/~kota/modget/slug"
 	"github.com/spf13/cobra"
 )
 
@@ -52,7 +52,7 @@ func del(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 	fmt.Println("Done")
-	ids, err := slug.Slug(args, db)
+	ids, err := input.Slug(args, db)
 	if err != nil {
 		fmt.Printf("failed read input: %v\n", err)
 		os.Exit(1)
