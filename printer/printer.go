@@ -17,7 +17,7 @@ func Ask(q string) string {
 }
 
 // Prompt the user with a Yes/No question about continuing
-func Prompt() bool {
+func Continue() bool {
 	fmt.Printf("Do you want to continue? [Y/n] ")
 	var a string
 	fmt.Scanln(&a)

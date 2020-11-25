@@ -58,7 +58,7 @@ func del(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 	printer.Show(ids, "deleted", db.Mods)
-	if !printer.Prompt() {
+	if !printer.Continue() {
 		os.Exit(0)
 	}
 	for _, id := range ids {

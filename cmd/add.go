@@ -91,7 +91,7 @@ func add(cmd *cobra.Command, args []string) {
 		os.Exit(0)
 	}
 	printer.Show(ids, "added", mods)
-	if !printer.Prompt() {
+	if !printer.Continue() {
 		os.Exit(0)
 	}
 	for id, mod := range mods {

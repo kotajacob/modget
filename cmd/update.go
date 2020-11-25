@@ -106,7 +106,7 @@ func update(cmd *cobra.Command, args []string) {
 		os.Exit(0)
 	}
 	printer.Show(updateIDs, "updated", updateMods)
-	if !printer.Prompt() {
+	if !printer.Continue() {
 		os.Exit(0)
 	}
 	for id, mod := range updateMods {
