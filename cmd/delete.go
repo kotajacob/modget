@@ -22,8 +22,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"git.sr.ht/~kota/modget/ask"
 	"git.sr.ht/~kota/modget/database"
+	"git.sr.ht/~kota/modget/printer"
 	"git.sr.ht/~kota/modget/slug"
 	"github.com/spf13/cobra"
 )
@@ -50,8 +50,8 @@ var deleteCmd = &cobra.Command{
 			fmt.Printf("failed read input: %v\n", err)
 			os.Exit(1)
 		}
-		ask.Show(IDs, "deleted", db.Mods)
-		if !ask.Prompt() {
+		printer.Show(IDs, "deleted", db.Mods)
+		if !printer.Prompt() {
 			os.Exit(0)
 		}
 		err = remove(IDs, path, db)

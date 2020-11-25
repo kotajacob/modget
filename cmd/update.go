@@ -23,9 +23,9 @@ import (
 	"path/filepath"
 	"time"
 
-	"git.sr.ht/~kota/modget/ask"
 	"git.sr.ht/~kota/modget/database"
 	"git.sr.ht/~kota/modget/filter"
+	"git.sr.ht/~kota/modget/printer"
 	"git.sr.ht/~kota/modget/slug"
 	"github.com/spf13/cobra"
 )
@@ -76,8 +76,8 @@ var updateCmd = &cobra.Command{
 			}
 		}
 		fmt.Println("Done")
-		ask.Show(updates, "updated", db.Mods)
-		if !ask.Prompt() {
+		printer.Show(updates, "updated", db.Mods)
+		if !printer.Prompt() {
 			os.Exit(0)
 		}
 	},

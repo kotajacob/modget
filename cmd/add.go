@@ -22,10 +22,10 @@ import (
 	"os"
 	"path/filepath"
 
-	"git.sr.ht/~kota/modget/ask"
 	"git.sr.ht/~kota/modget/curse"
 	"git.sr.ht/~kota/modget/database"
 	"git.sr.ht/~kota/modget/filter"
+	"git.sr.ht/~kota/modget/printer"
 	"git.sr.ht/~kota/modget/slug"
 	"github.com/spf13/cobra"
 )
@@ -51,10 +51,10 @@ var addCmd = &cobra.Command{
 		if err != nil {
 			fmt.Println("not found!")
 			if minecraft == "" {
-				minecraft = ask.Ask("minecraft version")
+				minecraft = printer.Ask("minecraft version")
 			}
 			if loader == "" {
-				loader = ask.Ask("modloader")
+				loader = printer.Ask("modloader")
 			}
 			db = &database.Database{
 				Version:   Version,
@@ -82,8 +82,8 @@ var addCmd = &cobra.Command{
 			mods[ID] = database.NewMod(addon, file)
 		}
 		fmt.Println("Done")
-		ask.Show(IDs, "added", mods)
-		if !ask.Prompt() {
+		printer.Show(IDs, "added", mods)
+		if !printer.Prompt() {
 			os.Exit(0)
 		}
 		err = get(mods, path, db)
