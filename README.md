@@ -13,7 +13,7 @@ modget requires the following build dependencies:
 - `scdoc`
 - `make`
 
-1. `git clone https://git.sr.ht/~kota/mdtest`
+1. `git clone https://git.sr.ht/~kota/modget`
 2. `make all`
 3. `sudo make install`
 
