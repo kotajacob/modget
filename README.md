@@ -71,7 +71,7 @@ modget requires the following build dependencies:
 - `-l --loader <modloader>`
 	- Limit install to a specific mod loader. Ex: Fabric
 
-## Slug
+## slug
 
 Every mod on curseforge has a short name called a slug which is found in the
 URL for the mod's page. For example in this url
@@ -89,7 +89,10 @@ API.
 
 ## resources
 
-[Send patches](https://git-send-email.io) and questions to
+Modget uses a public mailing list for contributions and discussion. You can
+browse the list [here](https://lists.sr.ht/~kota/modget) and 
+[email patches](https://git-send-email.io) or questions to 
 [~kota/modget@lists.sr.ht](https://lists.sr.ht/~kota/modget).
 
-Bugs & todo here: [~kota/modget](https://todo.sr.ht/~kota/modget)
+If you're reporting an bug/feature request our issue tracker is here:
+[~kota/modget](https://todo.sr.ht/~kota/modget)
